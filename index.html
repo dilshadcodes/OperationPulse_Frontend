@@ -97,8 +97,10 @@ button.tr{background:none;border:none;cursor:pointer}
 <div class="msg" id="msg"></div>
 </form>
 <p class="ft"><span id="q">Already have an Account?</span><a href="#" id="sw">login</a></p>
+<p class="ft" id="rsWrap" style="display:none;margin-top:8px"><span>Didn't get the email?</span><a href="#" id="rs">resend link</a></p>
 </div></section>
 </div>
+<script src="/assets/js/auth.js"></script>
 <script>
 (function(){var m='signup';
 var t=document.getElementById('t'),s=document.getElementById('s');
@@ -109,8 +111,8 @@ document.getElementById('pw').onclick=function(){
 var p=document.getElementById('password'),i=this.querySelector('i');
 if(p.type==='password'){p.type='text';i.className='fa-solid fa-eye';}
 else{p.type='password';i.className='fa-solid fa-eye-slash';}};
-sw.onclick=function(e){e.preventDefault();msg.className='msg';
-m=(m==='signup')?'login':'signup';
+sw.onclick=function(e){e.preventDefault();msg.className='msg';setMode((m==='signup')?'login':'signup');};
+function setMode(x){m=x;
 if(m==='login'){t.textContent='Welcome Back';s.textContent='Login to continue';
 nw.style.display='none';cta.textContent='Login';
 q.textContent="Don't have an Account?";sw.textContent='sign up';}
@@ -118,17 +120,41 @@ else{t.textContent='Create Account';s.textContent='Join us in one click or with 
 nw.style.display='';cta.textContent='Sign Up';
 q.textContent='Already have an Account?';sw.textContent='login';}};
 f.onsubmit=function(e){e.preventDefault();msg.className='msg';
+cta.disabled=true;cta.textContent='Please wait...';
 var n=document.getElementById('name').value.trim();
-var em=document.getElementById('email').value.trim();
+var em=document.getElementById('email').value.trim().toLowerCase();
 var pw=document.getElementById('password').value;
 if(m==='signup'&&n.length<2){bad('Please enter your name.');return;}
 if(em.indexOf('@')<1||em.indexOf('.')<0){bad('Please enter a valid email.');return;}
-if(pw.length<6){bad('Password must be 6+ characters.');return;}
-try{localStorage.setItem('dilshad.auth',JSON.stringify({name:n||'User',email:em}));}catch(_){}
-msg.textContent=(m==='signup'?'Account created! Redirecting...':'Welcome back! Redirecting...');
-msg.classList.add('ok');
-setTimeout(function(){window.location.href='/home/';},700);
-function bad(x){msg.textContent=x;msg.classList.add('err');}};
+if(!/[A-Za-z]/.test(pw)||!/[0-9]/.test(pw)||pw.length<8||pw.length>72||/^\s|\s$/.test(pw)){bad('Password: 8-72 chars, letters + numbers.');return;}
+if(m==='signup'){doSignup(n,em,pw);}else{doLogin(em,pw);}
+function bad(x){msg.textContent=x;msg.classList.add('err');resetBtn();}
+function ok(x){msg.textContent=x;msg.classList.add('ok');}
+function resetBtn(){cta.disabled=false;cta.textContent=(m==='signup'?'Sign Up':'Login');}
+function goHome(){setTimeout(function(){window.location.href='/home/';},700);}
+function doSignup(n,em,pw){
+DilshadAuth.api('/api/v1/auth/signup',{method:'POST',auth:false,body:{email:em,password:pw,full_name:n||null}}).then(function(){
+return DilshadAuth.login(em,pw);}).then(function(){ok('Account created! Opening Home...');goHome();}).catch(function(e){
+if(e.status===403){ok('Check your inbox, verify, then login.');resetBtn();setMode('login');document.getElementById('rsWrap').style.display='';}else{bad(friendly(e));}});}
+function doLogin(em,pw){
+DilshadAuth.login(em,pw).then(function(){ok('Welcome back! Opening Home...');goHome();}).catch(function(e){
+if(e.status===403){document.getElementById('rsWrap').style.display='';
+bad('Email not verified - check inbox, then retry.');}else{bad(friendly(e));}});}
+function friendly(e){
+if(!navigator.onLine)return 'No internet connection.';
+if(e.status===409)return 'Email already registered. Try login.';
+if(e.status===429)return 'Too many attempts - try later.';
+if(e.status===401)return 'Wrong email or password.';
+return e.message||'Something went wrong.';}
+function toLogin(){setMode('login');document.getElementById('rsWrap').style.display='';}
+document.getElementById('rs').onclick=function(e){e.preventDefault();
+var em=document.getElementById('email').value.trim().toLowerCase();
+if(em.indexOf('@')<0){bad('Enter your email first.');return;}
+msg.className='msg';msg.textContent='Sending...';msg.classList.add('ok');
+DilshadAuth.api('/api/v1/auth/resend-verification',{method:'POST',auth:false,body:{email:em}}).then(function(){
+ok('If that address needs verification, a new link is on its way.');}).catch(function(e2){bad(friendly(e2));});};
+if(DilshadAuth.getAccess()||DilshadAuth.getRefresh()){
+DilshadAuth.ensureAuth().then(function(){window.location.href='/home/';},function(){DilshadAuth.clear();});}
 })();
 </script>
 </body>

@@ -3,5 +3,29 @@ layout: base
 title: Home
 active: home
 ---
+<div id="gate" style="font-family:Montserrat,sans-serif;padding:40px 8px;text-align:center;color:#fff">Checking session...</div>
+<div id="homeUI" style="display:none">
 <h1>Home</h1>
-<p>This is the Home section. Content goes here.</p>
+<p id="hello">Welcome.</p>
+<p><button id="outBtn" style="margin-top:14px;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;font-weight:700">Log out</button></p>
+</div>
+<script src="/assets/js/auth.js"></script>
+<script>
+(function(){
+var gate=document.getElementById('gate'),ui=document.getElementById('homeUI');
+DilshadAuth.ensureAuth().then(function(me){
+gate.style.display='none';ui.style.display='';
+document.getElementById('hello').textContent='Welcome, '+((me&&me.full_name)||(me&&me.email)||'back')+' — you are logged in.';
+try{localStorage.setItem('dilshad.user',JSON.stringify(me));}catch(_){}
+}).catch(function(){
+window.location.href='/';
+});
+document.getElementById('outBtn').onclick=function(){
+var rt=DilshadAuth.getRefresh();
+function done(){DilshadAuth.clear();window.location.href='/';}
+if(!rt){done();return;}
+DilshadAuth.api('/api/v1/auth/logout',{method:'POST',auth:false,body:{refresh_token:rt}}).then(done,done);
+};
+})();
+</script>
+
