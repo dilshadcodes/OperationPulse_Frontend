@@ -100,9 +100,11 @@ button.tr{background:none;border:none;cursor:pointer}
 <p class="ft" id="rsWrap" style="display:none;margin-top:8px"><span>Didn't get the email?</span><a href="#" id="rs">resend link</a></p>
 </div></section>
 </div>
-<script src="/assets/js/auth.js"></script>
+<script src="/assets/js/auth.js?v=2"></script>
 <script>
 (function(){var m='signup';
+var DBG='(JS v2 debug ON)';
+console.log('[auth]',DBG,'DilshadAuth=',typeof DilshadAuth);
 var t=document.getElementById('t'),s=document.getElementById('s');
 var nw=document.getElementById('nw'),cta=document.getElementById('cta');
 var q=document.getElementById('q'),sw=document.getElementById('sw');
@@ -133,13 +135,24 @@ function ok(x){msg.textContent=x;msg.classList.add('ok');}
 function resetBtn(){cta.disabled=false;cta.textContent=(m==='signup'?'Sign Up':'Login');}
 function goHome(){setTimeout(function(){window.location.href='/home/';},700);}
 function doSignup(n,em,pw){
+try{
+if(typeof DilshadAuth==='undefined'){bad('Auth script blocked (adblock?) - disable it and reload.');return;}
+console.log('[auth] signup POST',em);
 DilshadAuth.api('/api/v1/auth/signup',{method:'POST',auth:false,body:{email:em,password:pw,full_name:n||null}}).then(function(){
+console.log('[auth] signup 201, auto-login...');
 return DilshadAuth.login(em,pw);}).then(function(){ok('Account created! Opening Home...');goHome();}).catch(function(e){
-if(e.status===403){ok('Check your inbox, verify, then login.');resetBtn();setMode('login');document.getElementById('rsWrap').style.display='';}else{bad(friendly(e));}});}
+console.log('[auth] signup/login failed',e&&e.status,e&&e.message);
+if(e.status===403){ok('Check your inbox, verify, then login.');resetBtn();setMode('login');document.getElementById('rsWrap').style.display='';}else{bad(friendly(e));}});
+}catch(err){console.log('[auth] sync crash',err);bad('JS error: '+(err&&err.message));}}
 function doLogin(em,pw){
+try{
+if(typeof DilshadAuth==='undefined'){bad('Auth script blocked (adblock?) - disable it and reload.');return;}
+console.log('[auth] login POST',em);
 DilshadAuth.login(em,pw).then(function(){ok('Welcome back! Opening Home...');goHome();}).catch(function(e){
+console.log('[auth] login failed',e&&e.status,e&&e.message);
 if(e.status===403){document.getElementById('rsWrap').style.display='';
-bad('Email not verified - check inbox, then retry.');}else{bad(friendly(e));}});}
+bad('Email not verified - check inbox, then retry.');}else{bad(friendly(e));}});
+}catch(err){console.log('[auth] sync crash',err);bad('JS error: '+(err&&err.message));}}
 function friendly(e){
 if(!navigator.onLine)return 'No internet connection.';
 if(e.status===409)return 'Email already registered. Try login.';
@@ -155,6 +168,7 @@ DilshadAuth.api('/api/v1/auth/resend-verification',{method:'POST',auth:false,bod
 ok('If that address needs verification, a new link is on its way.');}).catch(function(e2){bad(friendly(e2));});};
 if(DilshadAuth.getAccess()||DilshadAuth.getRefresh()){
 DilshadAuth.ensureAuth().then(function(){window.location.href='/home/';},function(){DilshadAuth.clear();});}
+else{console.log('[auth] no saved session, staying on auth page');}
 })();
 </script>
 </body>
