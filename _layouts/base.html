@@ -470,11 +470,19 @@
    * Measured fixed costs: 320px sidebar (0 in compact mode)
    * + 40px header padding + 12px gap + capsule (36px compact / 186px full)
    * + auth buttons (106px Log In, 224px Log In + Connect, 338px all three).
-   * The search never drops below ~237px on desktop, ~169px in compact mode
+   * Sign Up drops first at 1160px; Connect drops at 980px so the search
+   * never drops below ~237px on desktop, ~169px in compact mode
    * and ~126px on a 320px phone, so nothing clips.
    */
   @media (max-width: 1160px) {
-    .auth-hide {
+    /* Sign Up drops first; Connect (auth-keep) stays until 980px. */
+    .auth-hide:not(.auth-keep) {
+      display: none;
+    }
+  }
+
+  @media (max-width: 980px) {
+    .header-small .auth-keep {
       display: none;
     }
   }
