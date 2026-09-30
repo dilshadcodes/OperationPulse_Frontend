@@ -103,8 +103,7 @@ button.tr{background:none;border:none;cursor:pointer}
 <script src="/assets/js/auth.js?v=2"></script>
 <script>
 (function(){var m='signup';
-var DBG='(JS v2 debug ON)';
-console.log('[auth]',DBG,'DilshadAuth=',typeof DilshadAuth);
+console.log('[auth] boot, DilshadAuth=',typeof DilshadAuth);
 var t=document.getElementById('t'),s=document.getElementById('s');
 var nw=document.getElementById('nw'),cta=document.getElementById('cta');
 var q=document.getElementById('q'),sw=document.getElementById('sw');
@@ -129,7 +128,7 @@ var pw=document.getElementById('password').value;
 if(m==='signup'&&n.length<2){bad('Please enter your name.');return;}
 if(em.indexOf('@')<1||em.indexOf('.')<0){bad('Please enter a valid email.');return;}
 if(!/[A-Za-z]/.test(pw)||!/[0-9]/.test(pw)||pw.length<8||pw.length>72||/^\s|\s$/.test(pw)){bad('Password: 8-72 chars, letters + numbers.');return;}
-if(m==='signup'){doSignup(n,em,pw);}else{doLogin(em,pw);}
+if(m==='signup'){doSignup(n,em,pw);}else{doLogin(em,pw);}};
 function bad(x){msg.textContent=x;msg.classList.add('err');resetBtn();}
 function ok(x){msg.textContent=x;msg.classList.add('ok');}
 function resetBtn(){cta.disabled=false;cta.textContent=(m==='signup'?'Sign Up':'Login');}
@@ -166,7 +165,7 @@ if(em.indexOf('@')<0){bad('Enter your email first.');return;}
 msg.className='msg';msg.textContent='Sending...';msg.classList.add('ok');
 DilshadAuth.api('/api/v1/auth/resend-verification',{method:'POST',auth:false,body:{email:em}}).then(function(){
 ok('If that address needs verification, a new link is on its way.');}).catch(function(e2){bad(friendly(e2));});};
-if(DilshadAuth.getAccess()||DilshadAuth.getRefresh()){
+if(typeof DilshadAuth!=='undefined'&&(DilshadAuth.getAccess()||DilshadAuth.getRefresh())){
 DilshadAuth.ensureAuth().then(function(){window.location.href='/home/';},function(){DilshadAuth.clear();});}
 else{console.log('[auth] no saved session, staying on auth page');}
 })();
