@@ -1,8 +1,135 @@
----
-layout: base
-title: Home
-active: home
----
-<h1>Home</h1>
-<p>This is the Home section. Content goes here.</p>
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Create Account - Sign Up</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Montserrat',sans-serif;background:#e9ecf5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;color:#0f172a}
+.shell{width:min(1180px,100%);background:#fff;border-radius:28px;overflow:hidden;display:grid;grid-template-columns:1.05fr 1fr;box-shadow:0 24px 80px rgba(17,24,60,.18)}
+.hero{background:radial-gradient(120% 120% at 20% 10%,#2b3a8f,#1a245e 38%,#0f1538 68%,#090d24);color:#fff;display:flex;flex-direction:column;padding:32px 36px 0;position:relative;overflow:hidden}
+.top{display:flex;align-items:center;gap:10px;z-index:2}
+.dot{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#6366f1,#22d3ee);display:grid;place-items:center;font-weight:800}
+.top b{letter-spacing:.14em;font-size:12px}
+.illu{position:relative;display:grid;place-items:center;flex:1;z-index:2;margin-top:10px}
+.blob{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(129,140,248,.55),transparent 70%)}
+.man{position:relative;width:min(340px,80%);filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
+.copy{text-align:center;padding:18px 10px 28px;z-index:2}
+.copy h2{font-size:22px;font-weight:800}
+.copy p{font-size:13px;color:#c7cdea;margin-top:8px;line-height:1.7}
+.dts{display:flex;gap:8px;justify-content:center;margin-top:14px}
+.dts span{width:26px;height:6px;border-radius:99px;background:rgba(255,255,255,.22)}
+.dts span.on{width:38px;background:#fff}
+.side{display:flex;align-items:center;justify-content:center;padding:40px 44px}
+.card{width:100%;max-width:400px}
+.card h1{font-size:32px;font-weight:800;color:#111540;text-align:center}
+.sub{text-align:center;color:#8a90a6;font-size:13px;margin-top:6px}
+.soc-row{display:flex;gap:14px;justify-content:center;margin:22px 0 18px}
+.soc{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #e6e8f2;color:#2b3350;font-size:17px;text-decoration:none}
+.soc:hover{border-color:#1a2a6c;color:#1a2a6c;transform:translateY(-3px)}
+.div{display:flex;align-items:center;gap:12px;margin:8px 0 20px;color:#9aa0b8;font-size:12px;font-weight:600;white-space:nowrap}
+.div::before,.div::after{content:"";height:1px;flex:1;background:#eef0f6}
+.f{margin-bottom:16px}
+.f label{display:block;font-size:12.5px;font-weight:700;color:#2b3350;margin:0 0 8px 6px}
+.in{position:relative}
+.in input{width:100%;height:52px;border-radius:14px;border:1.6px solid #e7eaf3;background:#f7f8fc;padding:0 48px 0 18px;font-family:inherit;font-size:14px;font-weight:600;outline:none}
+.in input:focus{border-color:#1a2a6c;background:#fff;box-shadow:0 0 0 4px rgba(26,42,108,.12)}
+.tr{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#9aa2bd;font-size:16px}
+button.tr{background:none;border:none;cursor:pointer}
+.cta{width:100%;height:54px;border:none;border-radius:14px;background:linear-gradient(180deg,#23338f,#16225a);color:#fff;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px;font-family:inherit;font-size:15px}
+.ft{margin-top:20px;text-align:center;font-size:13px;color:#7a819c}
+.ft a{color:#1a2a6c;font-weight:800;text-decoration:none;margin-left:4px}
+.msg{display:none;margin-top:12px;font-size:12.5px;font-weight:600;text-align:center;padding:10px;border-radius:10px}
+.msg.ok{display:block;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+.msg.err{display:block;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+@media(max-width:900px){body{padding:0;background:#0f1538}.shell{grid-template-columns:1fr;border-radius:0}.hero{min-height:380px;border-radius:0 0 28px 28px}.man{width:min(250px,72%)}.side{padding:30px 22px 42px}.card h1{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="shell">
+<section class="hero">
+<div class="top"><div class="dot">X</div><b>DILSHAD.OS</b></div>
+<div class="illu"><div class="blob"></div>
+<svg class="man" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Man with glasses and suit">
+<ellipse cx="170" cy="318" rx="105" ry="16" fill="rgba(0,0,0,.45)"/>
+<path d="M100 318 C100 240 125 200 170 196 C215 200 240 240 240 318 Z" fill="#1e2a5a"/>
+<path d="M100 318 C100 240 125 200 170 196 L170 318 Z" fill="#24336e"/>
+<path d="M153 200 L170 252 L187 200 C181 197 176 197 170 197 C164 197 159 197 153 200 Z" fill="#fff"/>
+<path d="M165 207 L170 217 L175 207 L173 238 L170 252 L167 238 Z" fill="#ef4444"/>
+<path d="M153 200 L166 242 L147 228 L140 205 Z" fill="#141c42"/>
+<path d="M187 200 L174 242 L193 228 L200 205 Z" fill="#141c42"/>
+<rect x="157" y="170" width="26" height="26" rx="9" fill="#e8a87c"/>
+<ellipse cx="170" cy="136" rx="55" ry="59" fill="#f0b88a"/>
+<path d="M115 130 C117 89 142 70 170 70 C198 70 223 89 225 130 C221 108 214 97 207 95 C203 113 196 119 170 119 C144 119 137 113 133 95 C126 97 119 108 115 130 Z" fill="#1f2937"/>
+<g stroke="#0f172a" stroke-width="5" fill="rgba(255,255,255,.18)">
+<rect x="124" y="124" width="40" height="30" rx="9"/>
+<rect x="176" y="124" width="40" height="30" rx="9"/>
+<line x1="164" y1="136" x2="176" y2="136" stroke-width="4"/>
+</g>
+<circle cx="144" cy="139" r="5" fill="#0f172a"/><circle cx="196" cy="139" r="5" fill="#0f172a"/>
+<path d="M130 116 Q144 111 160 115" stroke="#1f2937" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M180 115 Q196 111 210 116" stroke="#1f2937" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M156 170 Q170 178 184 170" stroke="#7c3b1e" stroke-width="4" stroke-linecap="round" fill="none"/>
+<path d="M238 302 C250 274 246 236 222 219 C209 210 194 212 189 223 C185 232 192 240 201 242 L226 259 C234 272 236 288 234 302 Z" fill="#24336e"/>
+<ellipse cx="199" cy="224" rx="15" ry="17" fill="#f2c199"/>
+</svg>
+</div>
+<div class="copy"><h2>Think. Create. Ship.</h2><p>Join Dilshad.OS - notes, projects and ideas in one OS.</p><div class="dts"><span class="on"></span><span></span><span></span></div></div>
+</section>
+<section class="side"><div class="card">
+<h1 id="t">Create Account</h1>
+<p class="sub" id="s">Join us in one click or with email</p>
+<div class="soc-row">
+<a class="soc" href="/home/" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+<a class="soc" href="/home/" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+<a class="soc" href="/home/" title="Google"><i class="fa-brands fa-google"></i></a>
+<a class="soc" href="/home/" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+</div>
+<div class="div">- or use your email for registration -</div>
+<form id="f" novalidate>
+<div class="f" id="nw"><label for="name">Name</label><div class="in"><input id="name" type="text" placeholder="Alex Morgan" autocomplete="name" /><span class="tr"><i class="fa-regular fa-user"></i></span></div></div>
+<div class="f"><label for="email">Email</label><div class="in"><input id="email" type="email" placeholder="you@example.com" autocomplete="email" /><span class="tr"><i class="fa-regular fa-envelope"></i></span></div></div>
+<div class="f"><label for="password">Password</label><div class="in"><input id="password" type="password" placeholder="........" autocomplete="new-password" /><button type="button" class="tr" id="pw"><i class="fa-solid fa-eye-slash"></i></button></div></div>
+<button class="cta" type="submit" id="cta">Sign Up</button>
+<div class="msg" id="msg"></div>
+</form>
+<p class="ft"><span id="q">Already have an Account?</span><a href="#" id="sw">login</a></p>
+</div></section>
+</div>
+<script>
+(function(){var m='signup';
+var t=document.getElementById('t'),s=document.getElementById('s');
+var nw=document.getElementById('nw'),cta=document.getElementById('cta');
+var q=document.getElementById('q'),sw=document.getElementById('sw');
+var f=document.getElementById('f'),msg=document.getElementById('msg');
+document.getElementById('pw').onclick=function(){
+var p=document.getElementById('password'),i=this.querySelector('i');
+if(p.type==='password'){p.type='text';i.className='fa-solid fa-eye';}
+else{p.type='password';i.className='fa-solid fa-eye-slash';}};
+sw.onclick=function(e){e.preventDefault();msg.className='msg';
+m=(m==='signup')?'login':'signup';
+if(m==='login'){t.textContent='Welcome Back';s.textContent='Login to continue';
+nw.style.display='none';cta.textContent='Login';
+q.textContent="Don't have an Account?";sw.textContent='sign up';}
+else{t.textContent='Create Account';s.textContent='Join us in one click or with email';
+nw.style.display='';cta.textContent='Sign Up';
+q.textContent='Already have an Account?';sw.textContent='login';}};
+f.onsubmit=function(e){e.preventDefault();msg.className='msg';
+var n=document.getElementById('name').value.trim();
+var em=document.getElementById('email').value.trim();
+var pw=document.getElementById('password').value;
+if(m==='signup'&&n.length<2){bad('Please enter your name.');return;}
+if(em.indexOf('@')<1||em.indexOf('.')<0){bad('Please enter a valid email.');return;}
+if(pw.length<6){bad('Password must be 6+ characters.');return;}
+try{localStorage.setItem('dilshad.auth',JSON.stringify({name:n||'User',email:em}));}catch(_){}
+msg.textContent=(m==='signup'?'Account created! Redirecting...':'Welcome back! Redirecting...');
+msg.classList.add('ok');
+setTimeout(function(){window.location.href='/home/';},700);
+function bad(x){msg.textContent=x;msg.classList.add('err');}};
+})();
+</script>
+</body>
+</html>
