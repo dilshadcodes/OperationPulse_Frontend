@@ -143,13 +143,53 @@ active: branches
     letter-spacing: 0.5px;
     text-transform: uppercase;
   }
+  .form-field[hidden] {
+    display: none;
+  }
   .form-foot {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
     gap: 10px;
     margin-top: 10px;
     padding-top: 10px;
     border-top: 0.4px solid #999;
+  }
+  .form-pages {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .form-pages[hidden] {
+    display: none;
+  }
+  .page-pill {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 0.4px solid #999;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  .page-pill[aria-current="page"] {
+    background: #0a2a7a;
+    border-color: #0a2a7a;
+  }
+  .foot-submit[hidden] {
+    display: none;
   }
   .foot-submit {
     display: flex;
@@ -158,6 +198,7 @@ active: branches
     gap: 8px;
     height: 32px;
     padding: 0 18px;
+    margin-left: auto;
     /* Yellow pill: footer item 1, right-hand corner. */
     border: 0.4px solid #fbbf24;
     border-radius: 999px;
@@ -217,22 +258,79 @@ active: branches
     </div>
   </div>
   <div class="form-foot">
-    <div class="foot-submit" role="button" tabindex="0"><span class="material-symbols-outlined">check</span> Submit</div>
+    <div class="form-pages" id="formPages" role="navigation" aria-label="Form pages"></div>
+    <div class="foot-submit" id="btnNext" role="button" tabindex="0"><span class="material-symbols-outlined">arrow_forward</span> Next</div>
+    <div class="foot-submit" id="btnSubmit" role="button" tabindex="0" hidden><span class="material-symbols-outlined">check</span> Submit</div>
   </div>
 </form>
 <script>
 (function(){
+  var PAGE_SIZE = 5;
   var btn = document.getElementById('btnCreate');
   var form = document.getElementById('branchForm');
   if(!btn || !form) return;
+  var pagesWrap = document.getElementById('formPages');
+  var btnNext = document.getElementById('btnNext');
+  var btnSubmit = document.getElementById('btnSubmit');
+  var fields = Array.prototype.slice.call(form.querySelectorAll('.form-field'));
+  var totalPages = Math.max(1, Math.ceil(fields.length / PAGE_SIZE));
+  var current = 0;
+
+  function renderPages(){
+    if(!pagesWrap) return;
+    pagesWrap.innerHTML = '';
+    pagesWrap.hidden = totalPages <= 1;
+    for(var p = 0; p < totalPages; p++){
+      (function(page){
+        var pill = document.createElement('div');
+        pill.className = 'page-pill';
+        pill.setAttribute('role', 'button');
+        pill.setAttribute('tabindex', '0');
+        pill.setAttribute('aria-label', 'Go to page ' + (page + 1));
+        if(page === current) pill.setAttribute('aria-current', 'page');
+        pill.textContent = String(page + 1);
+        function go(e){
+          if(e) e.preventDefault();
+          showPage(page);
+        }
+        pill.addEventListener('click', go);
+        pill.addEventListener('keydown', function(e){
+          if(e.key === 'Enter' || e.key === ' '){ go(e); }
+        });
+        pagesWrap.appendChild(pill);
+      })(p);
+    }
+  }
+
+  function showPage(page){
+    if(page < 0) page = 0;
+    if(page > totalPages - 1) page = totalPages - 1;
+    current = page;
+    var start = page * PAGE_SIZE;
+    var end = start + PAGE_SIZE;
+    fields.forEach(function(field, idx){
+      field.hidden = !(idx >= start && idx < end);
+    });
+    renderPages();
+    var isLast = (page === totalPages - 1);
+    if(btnNext) btnNext.hidden = isLast;
+    if(btnSubmit) btnSubmit.hidden = !isLast;
+    var first = fields[start] ? fields[start].querySelector('input') : null;
+    if(first && !form.hidden) first.focus();
+  }
+
+  function nextPage(e){
+    if(e) e.preventDefault();
+    if(current >= totalPages - 1) return;
+    showPage(current + 1);
+  }
 
   function setOpen(open){
     form.hidden = !open;
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
     if(open){
       btn.classList.add('is-open');
-      var first = form.querySelector('input');
-      if(first) first.focus();
+      showPage(0);
     }else{
       btn.classList.remove('is-open');
     }
@@ -247,5 +345,29 @@ active: branches
   btn.addEventListener('keydown', function(e){
     if(e.key === 'Enter' || e.key === ' '){ toggle(e); }
   });
+  if(btnNext){
+    btnNext.addEventListener('click', nextPage);
+    btnNext.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ nextPage(e); }
+    });
+  }
+  if(btnSubmit){
+    function submitForm(e){
+      if(e) e.preventDefault();
+      if(form.requestSubmit){ form.requestSubmit(); }
+      else { form.submit(); }
+    }
+    btnSubmit.addEventListener('click', submitForm);
+    btnSubmit.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ submitForm(e); }
+    });
+  }
+  // Prevent implicit Enter-submit from skipping pages: advance instead, submit only on last page.
+  form.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' && e.target && e.target.tagName === 'INPUT'){
+      if(current < totalPages - 1){ e.preventDefault(); showPage(current + 1); }
+    }
+  });
+  showPage(0);
 })();
 </script>
