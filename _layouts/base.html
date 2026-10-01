@@ -182,25 +182,12 @@
   }
 
   /*
-   * Blue press feedback: hover only where a real mouse/trackpad exists,
-   * momentary :active everywhere so touch never gets a sticky highlight.
-   * Touch uses :active only (no sticky :hover) — desktop keeps hover.
+   * Blue feedback rules:
+   * - Desktop (real hover): full :hover + :active.
+   * - Touch: NO hover styling at all — tapping a link navigates away, and
+   *   mobile Safari/Chrome otherwise leave the blue stuck on the tapped item.
+   *   Only the current page (.active) keeps its blue pill.
    */
-  @media (hover: none), (pointer: coarse) {
-    .dash-label:hover,
-    .user-label:hover,
-    .side-item:hover .label,
-    .foot-pill .label:hover,
-    .tool-btn:hover,
-    .eye-btn:hover,
-    .auth-btn:hover {
-      background: inherit;
-      color: inherit;
-    }
-    .side-item:hover .label .material-symbols-outlined {
-      color: inherit;
-    }
-  }
   @media (hover: hover) and (pointer: fine) {
     .dash-label:hover {
       background: #0a2a7a;
@@ -236,17 +223,24 @@
       border: 1px solid #000;
       cursor: grab;
     }
+
+    .dash-label:active,
+    .user-label:active,
+    .side-item:active .label,
+    .foot-pill .label:active {
+      background: #0a2a7a;
+      color: #fff;
+    }
+    .side-item:active .label .material-symbols-outlined {
+      color: #fff;
+    }
   }
 
-  .dash-label:active,
-  .user-label:active,
-  .side-item:active .label,
-  .side-item.active .label,
-  .foot-pill .label:active {
+  /* Current page pill — both desktop and touch. */
+  .side-item.active .label {
     background: #0a2a7a;
     color: #fff;
   }
-  .side-item:active .label .material-symbols-outlined,
   .side-item.active .label .material-symbols-outlined {
     color: #fff;
   }
