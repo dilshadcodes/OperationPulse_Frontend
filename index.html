@@ -165,7 +165,6 @@ function setMode(w){
   tabS.classList.toggle('is-open', s); tabL.classList.toggle('is-open', !s);
   tabS.setAttribute('aria-selected', s ? 'true' : 'false');
   tabL.setAttribute('aria-selected', !s ? 'true' : 'false');
-  var f = (s ? fS : fL).querySelector('input'); if(f) f.focus();
 }
 function goS(e){ if(e) e.preventDefault(); setMode('signup'); }
 function goL(e){ if(e) e.preventDefault(); setMode('login'); }
@@ -180,7 +179,6 @@ function wireEye(b, i){
     inp.type = show ? 'text' : 'password';
     btn.querySelector('.material-symbols-outlined').textContent = show ? 'visibility' : 'visibility_off';
     btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
-    inp.focus();
   });
 }
 wireEye('suEye1', 'suPw1'); wireEye('suEye2', 'suPw2'); wireEye('liEye', 'liPw');
