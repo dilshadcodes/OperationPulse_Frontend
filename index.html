@@ -261,6 +261,9 @@ fL.addEventListener('submit', function(e){
   if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
   busy(btn);
   DilshadAuth.login(em, pw).then(function(){ goB(); }).catch(function(x){
+    fL.reset();
+    document.querySelectorAll('#loginForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
+    document.querySelectorAll('#loginForm .eye-btn').forEach(function(b){ b.setAttribute('aria-label', 'Show password'); });
     idleS(btn);
     if(x.status === 403){ showV('l'); bad(box, 'Email not verified - check inbox, then retry.'); }
     else { bad(box, friendly(x)); }
