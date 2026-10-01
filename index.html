@@ -10,7 +10,7 @@ title: User Authentication
     align-items: center;
     gap: 12px;
   }
-  .toolbar-left { display: flex; justify-content: flex-start; }
+  .toolbar-left { display: flex; justify-content: flex-start; gap: 10px; }
   .toolbar-right { display: flex; justify-content: flex-end; gap: 10px; }
   .tool-btn {
     display: flex; align-items: center; justify-content: center;
@@ -98,8 +98,6 @@ title: User Authentication
   <div class="toolbar-actions">
     <div class="toolbar-left">
       <div class="tool-btn is-open" id="btnSignup" role="button" tabindex="0" aria-selected="true" aria-controls="signupForm"><span class="material-symbols-outlined">person_add</span> Signup</div>
-    </div>
-    <div class="toolbar-right">
       <div class="tool-btn" id="btnLogin" role="button" tabindex="0" aria-selected="false" aria-controls="loginForm"><span class="material-symbols-outlined">login</span> Login</div>
     </div>
   </div>
@@ -193,7 +191,9 @@ function friendly(e){
 }
 function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 && p.length <= 72 && !/^\s|\s$/.test(p); }
 function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
-function goB(){ setTimeout(function(){ window.location.href = '/branches/'; }, 700); }
+function goB(){ window.location.href = '/branches/'; }
+function busy(btn){ btn.disabled = true; btn.innerHTML = 'Processing...'; }
+function idleS(btn){ btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; }
 function showV(k){
   var box = document.getElementById(k === 's' ? 'verifySignup' : 'verifyLogin');
   var sub = document.getElementById(k === 's' ? 'btnSignupSubmit' : 'btnLoginSubmit');
@@ -219,11 +219,11 @@ fS.addEventListener('submit', function(e){
   if(!vPw(p1)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
   if(p1 !== p2){ bad(box, 'Passwords do not match.'); return; }
   if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
-  btn.disabled = true;
+  busy(btn);
   DilshadAuth.api('/api/v1/auth/signup', { method: 'POST', auth: false, body: { email: em, password: p1, full_name: n || null } }).then(function(){
     return DilshadAuth.login(em, p1);
-  }).then(function(){ ok(box, 'Account created! Opening Branches...'); goB(); }).catch(function(x){
-    btn.disabled = false;
+  }).then(function(){ goB(); }).catch(function(x){
+    idleS(btn);
     if(x.status === 403){ ok(box, 'Check your inbox, verify, then login.'); showV('s'); }
     else { bad(box, friendly(x)); }
   });
@@ -237,9 +237,9 @@ fL.addEventListener('submit', function(e){
   if(!vEm(em)){ bad(box, 'Please enter a valid email.'); return; }
   if(!vPw(pw)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
   if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
-  btn.disabled = true;
-  DilshadAuth.login(em, pw).then(function(){ ok(box, 'Welcome back! Opening Branches...'); goB(); }).catch(function(x){
-    btn.disabled = false;
+  busy(btn);
+  DilshadAuth.login(em, pw).then(function(){ goB(); }).catch(function(x){
+    idleS(btn);
     if(x.status === 403){ showV('l'); bad(box, 'Email not verified - check inbox, then retry.'); }
     else { bad(box, friendly(x)); }
   });
