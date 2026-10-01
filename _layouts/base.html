@@ -184,7 +184,23 @@
   /*
    * Blue press feedback: hover only where a real mouse/trackpad exists,
    * momentary :active everywhere so touch never gets a sticky highlight.
+   * Touch uses :active only (no sticky :hover) — desktop keeps hover.
    */
+  @media (hover: none), (pointer: coarse) {
+    .dash-label:hover,
+    .user-label:hover,
+    .side-item:hover .label,
+    .foot-pill .label:hover,
+    .tool-btn:hover,
+    .eye-btn:hover,
+    .auth-btn:hover {
+      background: inherit;
+      color: inherit;
+    }
+    .side-item:hover .label .material-symbols-outlined {
+      color: inherit;
+    }
+  }
   @media (hover: hover) and (pointer: fine) {
     .dash-label:hover {
       background: #0a2a7a;
