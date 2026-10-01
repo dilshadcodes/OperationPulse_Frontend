@@ -228,6 +228,11 @@
   .side-item.active .label,
   .foot-pill .label:active {
     background: #0a2a7a;
+    color: #fff;
+  }
+  .side-item:active .label .material-symbols-outlined,
+  .side-item.active .label .material-symbols-outlined {
+    color: #fff;
   }
   /* ---------- Header ---------- */
   .header {
@@ -613,9 +618,13 @@
   body.light .foot-line {
     background: rgba(0, 0, 0, 0.85);
   }
-  /* Light mode: hovered sidebar item keeps white text on the blue pill. */
+  /* Light mode: hovered + selected sidebar items keep white text on the blue pill. */
   body.light .side-item:hover .label,
-  body.light .side-item:hover .label .material-symbols-outlined {
+  body.light .side-item:hover .label .material-symbols-outlined,
+  body.light .side-item:active .label,
+  body.light .side-item:active .label .material-symbols-outlined,
+  body.light .side-item.active .label,
+  body.light .side-item.active .label .material-symbols-outlined {
     color: #fff;
   }
   body.light input:-webkit-autofill,
