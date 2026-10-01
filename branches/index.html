@@ -4,32 +4,18 @@ title: Branch Setup
 active: branches
 ---
 <style>
-  .branch-toolbar {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 10px;
-    box-sizing: border-box;
-    margin: -24px -24px 0;
-    padding: 11px 16px 11px 20px;
-    border-bottom: 0.4px solid #999;
-  }
-  .branch-title-row {
-    display: flex;
-    justify-content: flex-start;
-    margin-left: -20px;
-  }
-  .branch-actions-row {
+  /* Page header (.page-header/.page-title) comes from _layouts/base.html. */
+  .toolbar-actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
   }
-  .branch-left {
+  .toolbar-left {
     display: flex;
     justify-content: flex-start;
   }
-  .branch-right {
+  .toolbar-right {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -54,14 +40,6 @@ active: branches
   .tool-btn .material-symbols-outlined {
     font-size: 20px;
   }
-  .page-title {
-    background: #0a2a7a;
-    border-color: #0a2a7a;
-    border-left: none;
-    border-radius: 0 999px 999px 0;
-    padding-left: 20px;
-    cursor: default;
-  }
   @media (hover: hover) and (pointer: fine) {
     .tool-btn:hover {
       background: #0a2a7a;
@@ -71,25 +49,25 @@ active: branches
     background: #0a2a7a;
   }
   @media (max-width: 480px) {
-    .branch-actions-row {
+    .toolbar-actions {
       grid-template-columns: 1fr;
     }
-    .branch-right {
+    .toolbar-right {
       justify-content: flex-start;
     }
   }
 </style>
-<div class="branch-toolbar">
-  <div class="branch-title-row">
-    <div class="tool-btn page-title" aria-current="page"><span class="material-symbols-outlined">apartment</span> Branch Setup</div>
+<div class="page-header">
+  <div class="title-row">
+    <div class="page-title" aria-current="page"><span class="material-symbols-outlined">apartment</span> Branch Setup</div>
   </div>
-  <div class="branch-actions-row">
-  <div class="branch-left">
-    <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">add_card</span> Create</div>
-  </div>
-  <div class="branch-right">
-    <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">checklist</span> Select</div>
-    <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">edit_square</span> Update</div>
-  </div>
+  <div class="toolbar-actions">
+    <div class="toolbar-left">
+      <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">add_card</span> Create</div>
+    </div>
+    <div class="toolbar-right">
+      <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">checklist</span> Select</div>
+      <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">edit_square</span> Update</div>
+    </div>
   </div>
 </div>

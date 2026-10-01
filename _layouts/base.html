@@ -424,6 +424,49 @@
     font-size: 14px;
     font-weight: 700;
   }
+
+  /*
+   * ---------- Page header (sub-header inside .main) ----------
+   * Full-bleed title strip: bleeds over .main's 24px padding, flush with the
+   * sidebar border and the viewport edge, and the title pill is flat-left /
+   * round-right so it reads as a sub-header of the base header.
+   */
+  .page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
+    margin: -24px -24px 0;
+    padding: 11px 16px 11px 20px;
+    border-bottom: 0.4px solid #999;
+  }
+
+  .page-header .title-row {
+    display: flex;
+    justify-content: flex-start;
+    /* Cancel the header's left padding so the pill touches the sidebar border. */
+    margin-left: -20px;
+  }
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 18px 0 20px;
+    border-radius: 0 999px 999px 0;
+    background: #0a2a7a;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    cursor: default;
+  }
+
+  .page-title .material-symbols-outlined {
+    font-size: 20px;
+  }
 /* ---------- Footer ---------- */
   .footer {
     grid-area: footer;
