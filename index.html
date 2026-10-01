@@ -77,6 +77,8 @@ title: User Authentication
   }
   .foot-submit .material-symbols-outlined { font-size: 20px; }
   .foot-submit:disabled { opacity: 0.6; cursor: wait; }
+  /* Signup done state: green pill that opens Gmail */
+  .foot-submit.is-done { background: #16a34a; border-color: #16a34a; color: #fff; }
   .tool-btn.is-open { background: #0a2a7a; }
   /* Author display rules override the UA [hidden]; force it back */
   [hidden] { display: none !important; }
@@ -193,7 +195,13 @@ function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 &
 function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
 function goB(){ window.location.href = '/branches/'; }
 function busy(btn){ btn.disabled = true; btn.innerHTML = 'Processing...'; }
-function idleS(btn){ btn.disabled = false; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; }
+function idleS(btn){ btn.disabled = false; btn.classList.remove('is-done'); btn.type = 'submit'; btn.onclick = null; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; }
+function submitted(btn){
+  /* Signup done: green pill, opens Gmail app on click. No inbox text on the page. */
+  btn.disabled = false; btn.classList.add('is-done'); btn.type = 'button';
+  btn.innerHTML = '<span class="material-symbols-outlined">mail</span> Submitted !! Open Email';
+  btn.onclick = function(){ window.open('https://mail.google.com/', '_blank', 'noopener'); };
+}
 function showV(k){
   var box = document.getElementById(k === 's' ? 'verifySignup' : 'verifyLogin');
   var sub = document.getElementById(k === 's' ? 'btnSignupSubmit' : 'btnLoginSubmit');
@@ -223,9 +231,8 @@ fS.addEventListener('submit', function(e){
   DilshadAuth.api('/api/v1/auth/signup', { method: 'POST', auth: false, body: { email: em, password: p1, full_name: n || null } }).then(function(){
     return DilshadAuth.login(em, p1);
   }).then(function(){ goB(); }).catch(function(x){
-    idleS(btn);
-    if(x.status === 403){ ok(box, 'Check your inbox, verify, then login.'); showV('s'); }
-    else { bad(box, friendly(x)); }
+    if(x.status === 403){ submitted(btn); }
+    else { idleS(btn); bad(box, friendly(x)); }
   });
 });
 fL.addEventListener('submit', function(e){
