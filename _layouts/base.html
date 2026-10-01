@@ -837,6 +837,23 @@
     .nav-toggle:checked ~ .profile .profile-theme {
       display: flex;
     }
+    /* Phones/tablets: scrolling stays, the scrollbar track itself hides. */
+    .sidebar {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .sidebar::-webkit-scrollbar {
+      display: none;
+      width: 0;
+    }
+    .main::-webkit-scrollbar {
+      display: none;
+      width: 0;
+    }
+    .main {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
   }
 </style>
 </head>
