@@ -196,6 +196,11 @@
 
     .side-item:hover .label {
       background: #0a2a7a;
+      color: #fff;
+    }
+
+    .side-item:hover .label .material-symbols-outlined {
+      color: #fff;
     }
 
     .foot-pill .label:hover {
@@ -608,6 +613,11 @@
   body.light .foot-line {
     background: rgba(0, 0, 0, 0.85);
   }
+  /* Light mode: hovered sidebar item keeps white text on the blue pill. */
+  body.light .side-item:hover .label,
+  body.light .side-item:hover .label .material-symbols-outlined {
+    color: #fff;
+  }
   body.light input:-webkit-autofill,
   body.light input:-webkit-autofill:hover,
   body.light input:-webkit-autofill:focus,
@@ -740,6 +750,11 @@
       height: 54px;
       z-index: 30;
       background: #000;
+    }
+    body.light .nav-toggle:checked ~ .profile,
+    body.light .nav-toggle:checked ~ .sidebar,
+    body.light .nav-toggle:checked ~ .footer {
+      background: #f4f4f5;
     }
 
     .nav-toggle:checked ~ .sidebar {
