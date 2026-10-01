@@ -79,6 +79,8 @@ title: User Authentication
   .foot-submit:disabled { opacity: 0.6; cursor: wait; }
   /* Signup done state: green pill that opens Gmail */
   .foot-submit.is-done { background: #16a34a; border-color: #16a34a; color: #fff; }
+  /* After submit: green Gmail pill on top, fresh Submit stacked below it */
+  #signupForm .form-foot.is-submitted { flex-direction: column; align-items: flex-end; }
   .tool-btn.is-open { background: #0a2a7a; }
   /* Author display rules override the UA [hidden]; force it back */
   [hidden] { display: none !important; }
@@ -128,6 +130,7 @@ title: User Authentication
   <div class="verify-box" id="verifySignup" hidden>Check your inbox for the verification Email.</div>
   <div class="form-foot">
     <button type="submit" class="foot-submit" id="btnSignupSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
+    <button type="submit" class="foot-submit" id="btnSignupFresh" hidden><span class="material-symbols-outlined">check</span> Submit</button>
   </div>
   <div class="auth-msg" id="msgSignup"></div>
 </form>
@@ -195,12 +198,21 @@ function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 &
 function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
 function goB(){ window.location.href = '/branches/'; }
 function busy(btn){ btn.disabled = true; btn.innerHTML = 'Processing...'; }
-function idleS(btn){ btn.disabled = false; btn.classList.remove('is-done'); btn.type = 'submit'; btn.onclick = null; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; }
+function idleS(btn){ btn.disabled = false; btn.classList.remove('is-done'); btn.type = 'submit'; btn.onclick = null; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; var fr = document.getElementById('btnSignupFresh'); var ft = btn.closest ? btn.closest('.form-foot') : null; if(btn.id === 'btnSignupSubmit' && fr && document.activeElement !== fr){ fr.hidden = true; if(ft) ft.classList.remove('is-submitted'); } }
 function submitted(btn){
-  /* Signup done: green pill, opens Gmail app on click. No inbox text on the page. */
+  /* Signup done: clear fields at once, green pill opens Gmail, fresh Submit appears below it. */
+  document.getElementById('suName').value = '';
+  document.getElementById('suEmail').value = '';
+  document.getElementById('suPw1').value = '';
+  document.getElementById('suPw2').value = '';
+  document.querySelectorAll('#signupForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
   btn.disabled = false; btn.classList.add('is-done'); btn.type = 'button';
   btn.innerHTML = '<span class="material-symbols-outlined">mail</span> Submitted !! Open Email';
   btn.onclick = function(){ window.open('https://mail.google.com/', '_blank', 'noopener'); };
+  var fresh = document.getElementById('btnSignupFresh');
+  if(fresh) fresh.hidden = false;
+  var foot = btn.closest('.form-foot');
+  if(foot) foot.classList.add('is-submitted');
 }
 function showV(k){
   var box = document.getElementById(k === 's' ? 'verifySignup' : 'verifyLogin');
@@ -227,6 +239,8 @@ fS.addEventListener('submit', function(e){
   if(!vPw(p1)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
   if(p1 !== p2){ bad(box, 'Passwords do not match.'); return; }
   if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
+  var fr0 = document.getElementById('btnSignupFresh'); if(fr0){ fr0.hidden = true; }
+  var ft0 = btn.closest ? btn.closest('.form-foot') : null; if(ft0){ ft0.classList.remove('is-submitted'); }
   busy(btn);
   DilshadAuth.api('/api/v1/auth/signup', { method: 'POST', auth: false, body: { email: em, password: p1, full_name: n || null } }).then(function(){
     return DilshadAuth.login(em, p1);
