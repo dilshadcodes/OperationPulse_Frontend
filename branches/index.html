@@ -56,6 +56,120 @@ active: branches
       justify-content: flex-start;
     }
   }
+  /* ---------- Create Branch form (opens below the main header) ---------- */
+  .branch-form {
+    /* Same bleed + side padding as .page-header so it spans the full width. */
+    box-sizing: border-box;
+    margin: 0 -24px;
+    padding: 14px 16px 14px 20px;
+    border-bottom: 0.4px solid #999;
+  }
+  .form-head {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 0.4px solid #999;
+  }
+  .form-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 18px;
+    border-radius: 999px;
+    background: #0a2a7a;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    cursor: default;
+  }
+  .form-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .form-field {
+    position: relative;
+    display: block;
+  }
+  .form-field input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 56px;
+    padding: 22px 14px 8px;
+    /* Rectangular: no rounded corners. */
+    border: 0.4px solid #999;
+    border-radius: 0;
+    background: #111;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    outline: none;
+    /* Body disables selection site-wide; typing/selecting must work here. */
+    -webkit-touch-callout: default;
+    -webkit-user-select: text;
+    user-select: text;
+    touch-action: manipulation;
+  }
+  .form-field input:focus {
+    border-color: #0a2a7a;
+  }
+  .form-field label {
+    position: absolute;
+    left: 14px;
+    top: 18px;
+    color: #888;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    pointer-events: none;
+    transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease;
+  }
+  /* Title stays inside the box: it shrinks into the top of the same input. */
+  .form-field input:focus + label,
+  .form-field input:not(:placeholder-shown) + label {
+    top: 7px;
+    color: #aaa;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .form-foot {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 0.4px solid #999;
+  }
+  .foot-upload {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 18px;
+    /* Yellow pill: footer item 1, right-hand corner. */
+    border: 0.4px solid #fbbf24;
+    border-radius: 999px;
+    background: #fbbf24;
+    color: #111;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .foot-upload .material-symbols-outlined {
+    font-size: 20px;
+  }
+  .tool-btn.is-open {
+    background: #0a2a7a;
+  }
 </style>
 <div class="page-header">
   <div class="title-row">
@@ -63,7 +177,7 @@ active: branches
   </div>
   <div class="toolbar-actions">
     <div class="toolbar-left">
-      <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">add_card</span> Create</div>
+      <div class="tool-btn" id="btnCreate" role="button" tabindex="0" aria-expanded="false" aria-controls="branchForm"><span class="material-symbols-outlined">add_card</span> Create</div>
     </div>
     <div class="toolbar-right">
       <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">checklist</span> Select</div>
@@ -71,3 +185,62 @@ active: branches
     </div>
   </div>
 </div>
+<form class="branch-form" id="branchForm" hidden>
+  <div class="form-head">
+    <div class="form-pill"><span class="material-symbols-outlined">add_card</span> Create Branch</div>
+  </div>
+  <div class="form-body">
+    <div class="form-field">
+      <input id="fHostel" type="text" placeholder=" " autocomplete="organization" />
+      <label for="fHostel">Hostel Name</label>
+    </div>
+    <div class="form-field">
+      <input id="fBranch" type="text" placeholder=" " />
+      <label for="fBranch">Branch Name</label>
+    </div>
+    <div class="form-field">
+      <input id="fCapacity" type="number" inputmode="numeric" min="0" placeholder=" " />
+      <label for="fCapacity">Enter Capacities</label>
+    </div>
+    <div class="form-field">
+      <input id="fAddress" type="text" placeholder=" " autocomplete="street-address" />
+      <label for="fAddress">Enter Address</label>
+    </div>
+    <div class="form-field">
+      <input id="fContact" type="tel" inputmode="tel" placeholder=" " autocomplete="tel" />
+      <label for="fContact">Enter Contact</label>
+    </div>
+  </div>
+  <div class="form-foot">
+    <div class="foot-upload" role="button" tabindex="0"><span class="material-symbols-outlined">upload</span> Upload</div>
+  </div>
+</form>
+<script>
+(function(){
+  var btn = document.getElementById('btnCreate');
+  var form = document.getElementById('branchForm');
+  if(!btn || !form) return;
+
+  function setOpen(open){
+    form.hidden = !open;
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(open){
+      btn.classList.add('is-open');
+      var first = form.querySelector('input');
+      if(first) first.focus();
+    }else{
+      btn.classList.remove('is-open');
+    }
+  }
+
+  function toggle(e){
+    if(e) e.preventDefault();
+    setOpen(form.hidden);
+  }
+
+  btn.addEventListener('click', toggle);
+  btn.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ toggle(e); }
+  });
+})();
+</script>
