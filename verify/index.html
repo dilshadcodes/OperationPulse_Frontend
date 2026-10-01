@@ -35,7 +35,7 @@ if(!tok){fail('Missing token. Open the link from your inbox.');return;}
 DilshadAuth.api('/api/v1/auth/verify',{method:'POST',auth:false,body:{token:tok}}).then(function(r){
 document.querySelector('h1').textContent='Email verified';
 ok((r.message||'Email verified - you can log in now')+' ('+r.email+')');
-sub.textContent='Your account is active. Log in to open Home.';
+sub.textContent='Your account is active. Log in to open Branches.';
 go.style.display='inline-block';
 }).catch(function(e){document.querySelector('h1').textContent='Verification failed';fail(e.message);go.style.display='inline-block';});
 function ok(t){msg.textContent=t;msg.className='msg ok';}

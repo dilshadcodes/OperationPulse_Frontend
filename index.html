@@ -1,175 +1,257 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Create Account - Sign Up</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231a2a6c'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'>D</text></svg>" />
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+---
+layout: base
+title: User Authentication
+---
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Montserrat',sans-serif;background:#e9ecf5;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;color:#0f172a}
-.shell{width:min(1180px,100%);background:#fff;border-radius:28px;overflow:hidden;display:grid;grid-template-columns:1.05fr 1fr;box-shadow:0 24px 80px rgba(17,24,60,.18)}
-.hero{background:radial-gradient(120% 120% at 20% 10%,#2b3a8f,#1a245e 38%,#0f1538 68%,#090d24);color:#fff;display:flex;flex-direction:column;padding:32px 36px 0;position:relative;overflow:hidden}
-.top{display:flex;align-items:center;gap:10px;z-index:2}
-.dot{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#6366f1,#22d3ee);display:grid;place-items:center;font-weight:800}
-.top b{letter-spacing:.14em;font-size:12px}
-.illu{position:relative;display:grid;place-items:center;flex:1;z-index:2;margin-top:10px}
-.blob{position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(129,140,248,.55),transparent 70%)}
-.man{position:relative;width:min(340px,80%);filter:drop-shadow(0 30px 40px rgba(0,0,0,.45))}
-.copy{text-align:center;padding:18px 10px 28px;z-index:2}
-.copy h2{font-size:22px;font-weight:800}
-.copy p{font-size:13px;color:#c7cdea;margin-top:8px;line-height:1.7}
-.dts{display:flex;gap:8px;justify-content:center;margin-top:14px}
-.dts span{width:26px;height:6px;border-radius:99px;background:rgba(255,255,255,.22)}
-.dts span.on{width:38px;background:#fff}
-.side{display:flex;align-items:center;justify-content:center;padding:40px 44px}
-.card{width:100%;max-width:400px}
-.card h1{font-size:32px;font-weight:800;color:#111540;text-align:center}
-.sub{text-align:center;color:#8a90a6;font-size:13px;margin-top:6px}
-.soc-row{display:flex;gap:14px;justify-content:center;margin:22px 0 18px}
-.soc{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1.5px solid #e6e8f2;color:#2b3350;font-size:17px;text-decoration:none}
-.soc:hover{border-color:#1a2a6c;color:#1a2a6c;transform:translateY(-3px)}
-.div{display:flex;align-items:center;gap:12px;margin:8px 0 20px;color:#9aa0b8;font-size:12px;font-weight:600;white-space:nowrap}
-.div::before,.div::after{content:"";height:1px;flex:1;background:#eef0f6}
-.f{margin-bottom:16px}
-.f label{display:block;font-size:12.5px;font-weight:700;color:#2b3350;margin:0 0 8px 6px}
-.in{position:relative}
-.in input{width:100%;height:52px;border-radius:14px;border:1.6px solid #e7eaf3;background:#f7f8fc;padding:0 48px 0 18px;font-family:inherit;font-size:14px;font-weight:600;outline:none}
-.in input:focus{border-color:#1a2a6c;background:#fff;box-shadow:0 0 0 4px rgba(26,42,108,.12)}
-.tr{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#9aa2bd;font-size:16px}
-button.tr{background:none;border:none;cursor:pointer}
-.cta{width:100%;height:54px;border:none;border-radius:14px;background:linear-gradient(180deg,#23338f,#16225a);color:#fff;font-weight:800;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:8px;font-family:inherit;font-size:15px}
-.ft{margin-top:20px;text-align:center;font-size:13px;color:#7a819c}
-.ft a{color:#1a2a6c;font-weight:800;text-decoration:none;margin-left:4px}
-.msg{display:none;margin-top:12px;font-size:12.5px;font-weight:600;text-align:center;padding:10px;border-radius:10px}
-.msg.ok{display:block;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
-.msg.err{display:block;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
-@media(max-width:900px){body{padding:0;background:#0f1538}.shell{grid-template-columns:1fr;border-radius:0}.hero{min-height:380px;border-radius:0 0 28px 28px}.man{width:min(250px,72%)}.side{padding:30px 22px 42px}.card h1{font-size:27px}}
+  /* Header styles live in base.html */
+  .toolbar-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+  }
+  .toolbar-left { display: flex; justify-content: flex-start; }
+  .toolbar-right { display: flex; justify-content: flex-end; gap: 10px; }
+  .tool-btn {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; height: 32px; padding: 0 18px;
+    border: 0.4px solid #999; border-radius: 999px;
+    background: #111; color: #fff;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
+    white-space: nowrap; cursor: pointer;
+  }
+  .tool-btn .material-symbols-outlined { font-size: 20px; }
+  @media (hover: hover) and (pointer: fine) { .tool-btn:hover { background: #0a2a7a; } }
+  .tool-btn:active { background: #0a2a7a; }
+  @media (max-width: 480px) {
+    .toolbar-actions { grid-template-columns: 1fr; }
+    .toolbar-right { justify-content: flex-start; }
+  }
+  /* Auth form slides open right under the header */
+  .branch-form {
+    box-sizing: border-box; margin: 0 -24px; padding: 14px 16px 14px 20px;
+    border-bottom: 0.4px solid #999;
+  }
+  .form-body {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;
+  }
+  .form-field { position: relative; display: block; }
+  .form-field input {
+    box-sizing: border-box; width: 100%; height: 56px; padding: 22px 14px 8px;
+    border: 0.4px solid #999; border-radius: 0; background: #111; color: #fff;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
+    outline: none; -webkit-touch-callout: default; -webkit-user-select: text;
+    user-select: text; touch-action: manipulation;
+  }
+  .form-field input:focus { border-color: #0a2a7a; }
+  .form-field.has-eye input { padding-right: 48px; }
+  .form-field label {
+    position: absolute; left: 14px; top: 18px; max-width: calc(100% - 28px);
+    overflow: hidden; white-space: nowrap; color: #888;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
+    pointer-events: none; transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease;
+  }
+  /* Show/hide eye pinned inside password fields */
+  .eye-btn {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    display: grid; place-items: center; width: 36px; height: 36px;
+    padding: 0; border: none; background: none; color: #888; cursor: pointer;
+  }
+  .eye-btn .material-symbols-outlined { font-size: 22px; }
+  .eye-btn:hover { color: #fff; }
+  .form-foot {
+    display: flex; justify-content: flex-end; gap: 10px;
+    margin-top: 10px; padding-top: 10px; border-top: 0.4px solid #999;
+  }
+  .foot-submit {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    height: 32px; padding: 0 18px; border: 0.4px solid #fbbf24; border-radius: 999px;
+    background: #fbbf24; color: #111;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
+    white-space: nowrap; cursor: pointer;
+  }
+  .foot-submit .material-symbols-outlined { font-size: 20px; }
+  .foot-submit:disabled { opacity: 0.6; cursor: wait; }
+  .tool-btn.is-open { background: #0a2a7a; }
+  /* Verify notice sits between fields and footer */
+  .verify-box {
+    box-sizing: border-box; width: 100%; margin-top: 10px; padding: 14px 16px;
+    border: 0.4px solid #999; border-radius: 0; background: #111; color: #fff;
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
+  }
+  .auth-msg { display: none; margin-top: 10px; padding: 10px 14px; border-radius: 0;
+    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-align: center; }
+  .auth-msg.ok { display: block; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+  .auth-msg.err { display: block; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
 </style>
-</head>
-<body>
-<div class="shell">
-<section class="hero">
-<div class="top"><div class="dot">X</div><b>DILSHAD.OS</b></div>
-<div class="illu"><div class="blob"></div>
-<svg class="man" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Man with glasses and suit">
-<ellipse cx="170" cy="318" rx="105" ry="16" fill="rgba(0,0,0,.45)"/>
-<path d="M100 318 C100 240 125 200 170 196 C215 200 240 240 240 318 Z" fill="#1e2a5a"/>
-<path d="M100 318 C100 240 125 200 170 196 L170 318 Z" fill="#24336e"/>
-<path d="M153 200 L170 252 L187 200 C181 197 176 197 170 197 C164 197 159 197 153 200 Z" fill="#fff"/>
-<path d="M165 207 L170 217 L175 207 L173 238 L170 252 L167 238 Z" fill="#ef4444"/>
-<path d="M153 200 L166 242 L147 228 L140 205 Z" fill="#141c42"/>
-<path d="M187 200 L174 242 L193 228 L200 205 Z" fill="#141c42"/>
-<rect x="157" y="170" width="26" height="26" rx="9" fill="#e8a87c"/>
-<ellipse cx="170" cy="136" rx="55" ry="59" fill="#f0b88a"/>
-<path d="M115 130 C117 89 142 70 170 70 C198 70 223 89 225 130 C221 108 214 97 207 95 C203 113 196 119 170 119 C144 119 137 113 133 95 C126 97 119 108 115 130 Z" fill="#1f2937"/>
-<g stroke="#0f172a" stroke-width="5" fill="rgba(255,255,255,.18)">
-<rect x="124" y="124" width="40" height="30" rx="9"/>
-<rect x="176" y="124" width="40" height="30" rx="9"/>
-<line x1="164" y1="136" x2="176" y2="136" stroke-width="4"/>
-</g>
-<circle cx="144" cy="139" r="5" fill="#0f172a"/><circle cx="196" cy="139" r="5" fill="#0f172a"/>
-<path d="M130 116 Q144 111 160 115" stroke="#1f2937" stroke-width="4" stroke-linecap="round" fill="none"/>
-<path d="M180 115 Q196 111 210 116" stroke="#1f2937" stroke-width="4" stroke-linecap="round" fill="none"/>
-<path d="M156 170 Q170 178 184 170" stroke="#7c3b1e" stroke-width="4" stroke-linecap="round" fill="none"/>
-<path d="M238 302 C250 274 246 236 222 219 C209 210 194 212 189 223 C185 232 192 240 201 242 L226 259 C234 272 236 288 234 302 Z" fill="#24336e"/>
-<ellipse cx="199" cy="224" rx="15" ry="17" fill="#f2c199"/>
-</svg>
+<div class="page-header">
+  <div class="title-row">
+    <div class="page-title" aria-current="page"><span class="material-symbols-outlined">login</span> User Authentication</div>
+  </div>
+  <div class="toolbar-actions">
+    <div class="toolbar-left">
+      <div class="tool-btn is-open" id="btnSignup" role="button" tabindex="0" aria-selected="true" aria-controls="signupForm"><span class="material-symbols-outlined">person_add</span> Signup</div>
+    </div>
+    <div class="toolbar-right">
+      <div class="tool-btn" id="btnLogin" role="button" tabindex="0" aria-selected="false" aria-controls="loginForm"><span class="material-symbols-outlined">login</span> Login</div>
+    </div>
+  </div>
 </div>
-<div class="copy"><h2>Think. Create. Ship.</h2><p>Join Dilshad.OS - notes, projects and ideas in one OS.</p><div class="dts"><span class="on"></span><span></span><span></span></div></div>
-</section>
-<section class="side"><div class="card">
-<h1 id="t">Create Account</h1>
-<p class="sub" id="s">Join us in one click or with email</p>
-<div class="soc-row">
-<a class="soc" href="/home/" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
-<a class="soc" href="/home/" title="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
-<a class="soc" href="/home/" title="Google"><i class="fa-brands fa-google"></i></a>
-<a class="soc" href="/home/" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
-</div>
-<div class="div">- or use your email for registration -</div>
-<form id="f" novalidate>
-<div class="f" id="nw"><label for="name">Name</label><div class="in"><input id="name" type="text" placeholder="Alex Morgan" autocomplete="name" /><span class="tr"><i class="fa-regular fa-user"></i></span></div></div>
-<div class="f"><label for="email">Email</label><div class="in"><input id="email" type="email" placeholder="you@example.com" autocomplete="email" /><span class="tr"><i class="fa-regular fa-envelope"></i></span></div></div>
-<div class="f"><label for="password">Password</label><div class="in"><input id="password" type="password" placeholder="........" autocomplete="new-password" /><button type="button" class="tr" id="pw"><i class="fa-solid fa-eye-slash"></i></button></div></div>
-<button class="cta" type="submit" id="cta">Sign Up</button>
-<div class="msg" id="msg"></div>
+<form class="branch-form" id="signupForm" novalidate>
+  <div class="form-body">
+    <div class="form-field">
+      <input id="suName" type="text" placeholder=" " autocomplete="name" />
+      <label for="suName">Full Name</label>
+    </div>
+    <div class="form-field">
+      <input id="suEmail" type="email" placeholder=" " autocomplete="email" />
+      <label for="suEmail">Enter Email</label>
+    </div>
+    <div class="form-field has-eye">
+      <input id="suPw1" type="password" placeholder=" " autocomplete="new-password" />
+      <label for="suPw1">Enter Password</label>
+      <button type="button" class="eye-btn" id="suEye1" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
+    </div>
+    <div class="form-field has-eye">
+      <input id="suPw2" type="password" placeholder=" " autocomplete="new-password" />
+      <label for="suPw2">Re-Enter Password</label>
+      <button type="button" class="eye-btn" id="suEye2" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
+    </div>
+  </div>
+  <div class="verify-box" id="verifySignup" hidden>Check your inbox for the verification Email.</div>
+  <div class="form-foot">
+    <button type="submit" class="foot-submit" id="btnSignupSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
+    <button type="button" class="foot-submit" id="btnResendSignup" hidden><span class="material-symbols-outlined">mail</span> Resend</button>
+  </div>
+  <div class="auth-msg" id="msgSignup"></div>
 </form>
-<p class="ft"><span id="q">Already have an Account?</span><a href="#" id="sw">login</a></p>
-<p class="ft" id="rsWrap" style="display:none;margin-top:8px"><span>Didn't get the email?</span><a href="#" id="rs">resend link</a></p>
-</div></section>
-</div>
+<form class="branch-form" id="loginForm" hidden novalidate>
+  <div class="form-body">
+    <div class="form-field">
+      <input id="liEmail" type="email" placeholder=" " autocomplete="email" />
+      <label for="liEmail">Enter Email</label>
+    </div>
+    <div class="form-field has-eye">
+      <input id="liPw" type="password" placeholder=" " autocomplete="current-password" />
+      <label for="liPw">Enter Password</label>
+      <button type="button" class="eye-btn" id="liEye" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
+    </div>
+  </div>
+  <div class="verify-box" id="verifyLogin" hidden>Check your inbox for the verification Email.</div>
+  <div class="form-foot">
+    <button type="submit" class="foot-submit" id="btnLoginSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
+    <button type="button" class="foot-submit" id="btnResendLogin" hidden><span class="material-symbols-outlined">mail</span> Resend</button>
+  </div>
+  <div class="auth-msg" id="msgLogin"></div>
+</form>
 <script src="/assets/js/auth.js?v=2"></script>
 <script>
-(function(){var m='signup';
-console.log('[auth] boot, DilshadAuth=',typeof DilshadAuth);
-var t=document.getElementById('t'),s=document.getElementById('s');
-var nw=document.getElementById('nw'),cta=document.getElementById('cta');
-var q=document.getElementById('q'),sw=document.getElementById('sw');
-var f=document.getElementById('f'),msg=document.getElementById('msg');
-document.getElementById('pw').onclick=function(){
-var p=document.getElementById('password'),i=this.querySelector('i');
-if(p.type==='password'){p.type='text';i.className='fa-solid fa-eye';}
-else{p.type='password';i.className='fa-solid fa-eye-slash';}};
-sw.onclick=function(e){e.preventDefault();msg.className='msg';setMode((m==='signup')?'login':'signup');};
-function setMode(x){m=x;
-if(m==='login'){t.textContent='Welcome Back';s.textContent='Login to continue';
-nw.style.display='none';cta.textContent='Login';
-q.textContent="Don't have an Account?";sw.textContent='sign up';}
-else{t.textContent='Create Account';s.textContent='Join us in one click or with email';
-nw.style.display='';cta.textContent='Sign Up';
-q.textContent='Already have an Account?';sw.textContent='login';}};
-f.onsubmit=function(e){e.preventDefault();msg.className='msg';
-cta.disabled=true;cta.textContent='Please wait...';
-var n=document.getElementById('name').value.trim();
-var em=document.getElementById('email').value.trim().toLowerCase();
-var pw=document.getElementById('password').value;
-if(m==='signup'&&n.length<2){bad('Please enter your name.');return;}
-if(em.indexOf('@')<1||em.indexOf('.')<0){bad('Please enter a valid email.');return;}
-if(!/[A-Za-z]/.test(pw)||!/[0-9]/.test(pw)||pw.length<8||pw.length>72||/^\s|\s$/.test(pw)){bad('Password: 8-72 chars, letters + numbers.');return;}
-if(m==='signup'){doSignup(n,em,pw);}else{doLogin(em,pw);}};
-function bad(x){msg.textContent=x;msg.classList.add('err');resetBtn();}
-function ok(x){msg.textContent=x;msg.classList.add('ok');}
-function resetBtn(){cta.disabled=false;cta.textContent=(m==='signup'?'Sign Up':'Login');}
-function goHome(){setTimeout(function(){window.location.href='/home/';},700);}
-function doSignup(n,em,pw){
-try{
-if(typeof DilshadAuth==='undefined'){bad('Auth script blocked (adblock?) - disable it and reload.');return;}
-console.log('[auth] signup POST',em);
-DilshadAuth.api('/api/v1/auth/signup',{method:'POST',auth:false,body:{email:em,password:pw,full_name:n||null}}).then(function(){
-console.log('[auth] signup 201, auto-login...');
-return DilshadAuth.login(em,pw);}).then(function(){ok('Account created! Opening Home...');goHome();}).catch(function(e){
-console.log('[auth] signup/login failed',e&&e.status,e&&e.message);
-if(e.status===403){ok('Check your inbox, verify, then login.');resetBtn();setMode('login');document.getElementById('rsWrap').style.display='';}else{bad(friendly(e));}});
-}catch(err){console.log('[auth] sync crash',err);bad('JS error: '+(err&&err.message));}}
-function doLogin(em,pw){
-try{
-if(typeof DilshadAuth==='undefined'){bad('Auth script blocked (adblock?) - disable it and reload.');return;}
-console.log('[auth] login POST',em);
-DilshadAuth.login(em,pw).then(function(){ok('Welcome back! Opening Home...');goHome();}).catch(function(e){
-console.log('[auth] login failed',e&&e.status,e&&e.message);
-if(e.status===403){document.getElementById('rsWrap').style.display='';
-bad('Email not verified - check inbox, then retry.');}else{bad(friendly(e));}});
-}catch(err){console.log('[auth] sync crash',err);bad('JS error: '+(err&&err.message));}}
+(function(){
+var tabS = document.getElementById('btnSignup');
+var tabL = document.getElementById('btnLogin');
+var fS = document.getElementById('signupForm');
+var fL = document.getElementById('loginForm');
+function setMode(w){
+  var s = (w === 'signup');
+  fS.hidden = !s; fL.hidden = s;
+  tabS.classList.toggle('is-open', s); tabL.classList.toggle('is-open', !s);
+  tabS.setAttribute('aria-selected', s ? 'true' : 'false');
+  tabL.setAttribute('aria-selected', !s ? 'true' : 'false');
+  var f = (s ? fS : fL).querySelector('input'); if(f) f.focus();
+}
+function goS(e){ if(e) e.preventDefault(); setMode('signup'); }
+function goL(e){ if(e) e.preventDefault(); setMode('login'); }
+tabS.addEventListener('click', goS); tabL.addEventListener('click', goL);
+tabS.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goS(e); } });
+tabL.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goL(e); } });
+function wireEye(b, i){
+  var btn = document.getElementById(b), inp = document.getElementById(i);
+  if(!btn || !inp) return;
+  btn.addEventListener('click', function(){
+    var show = (inp.type === 'password');
+    inp.type = show ? 'text' : 'password';
+    btn.querySelector('.material-symbols-outlined').textContent = show ? 'visibility' : 'visibility_off';
+    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+    inp.focus();
+  });
+}
+wireEye('suEye1', 'suPw1'); wireEye('suEye2', 'suPw2'); wireEye('liEye', 'liPw');
+function bad(b, x){ b.textContent = x; b.className = 'auth-msg err'; }
+function ok(b, x){ b.textContent = x; b.className = 'auth-msg ok'; }
+function clr(b){ b.textContent = ''; b.className = 'auth-msg'; }
 function friendly(e){
-if(!navigator.onLine)return 'No internet connection.';
-if(e.status===409)return 'Email already registered. Try login.';
-if(e.status===429)return 'Too many attempts - try later.';
-if(e.status===401)return 'Wrong email or password.';
-return e.message||'Something went wrong.';}
-function toLogin(){setMode('login');document.getElementById('rsWrap').style.display='';}
-document.getElementById('rs').onclick=function(e){e.preventDefault();
-var em=document.getElementById('email').value.trim().toLowerCase();
-if(em.indexOf('@')<0){bad('Enter your email first.');return;}
-msg.className='msg';msg.textContent='Sending...';msg.classList.add('ok');
-DilshadAuth.api('/api/v1/auth/resend-verification',{method:'POST',auth:false,body:{email:em}}).then(function(){
-ok('If that address needs verification, a new link is on its way.');}).catch(function(e2){bad(friendly(e2));});};
-if(typeof DilshadAuth!=='undefined'&&(DilshadAuth.getAccess()||DilshadAuth.getRefresh())){
-DilshadAuth.ensureAuth().then(function(){window.location.href='/home/';},function(){DilshadAuth.clear();});}
-else{console.log('[auth] no saved session, staying on auth page');}
+  if(!navigator.onLine) return 'No internet connection.';
+  if(e.status === 409) return 'Email already registered. Try login.';
+  if(e.status === 429) return 'Too many attempts - try later.';
+  if(e.status === 401) return 'Wrong email or password.';
+  return e.message || 'Something went wrong.';
+}
+function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 && p.length <= 72 && !/^\s|\s$/.test(p); }
+function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
+function goB(){ setTimeout(function(){ window.location.href = '/branches/'; }, 700); }
+function showV(k){
+  var box = document.getElementById(k === 's' ? 'verifySignup' : 'verifyLogin');
+  var sub = document.getElementById(k === 's' ? 'btnSignupSubmit' : 'btnLoginSubmit');
+  var rs = document.getElementById(k === 's' ? 'btnResendSignup' : 'btnResendLogin');
+  if(box) box.hidden = false; if(sub) sub.hidden = true; if(rs) rs.hidden = false;
+}
+function resend(em, box){
+  if(em.indexOf('@') < 0){ bad(box, 'Enter your email first.'); return; }
+  ok(box, 'Sending...');
+  DilshadAuth.api('/api/v1/auth/resend-verification', { method: 'POST', auth: false, body: { email: em } }).then(function(){
+    ok(box, 'If that address needs verification, a new link is on its way.');
+  }).catch(function(x){ bad(box, friendly(x)); });
+}
+fS.addEventListener('submit', function(e){
+  e.preventDefault();
+  var box = document.getElementById('msgSignup'); clr(box);
+  var btn = document.getElementById('btnSignupSubmit');
+  var n = document.getElementById('suName').value.trim();
+  var em = document.getElementById('suEmail').value.trim().toLowerCase();
+  var p1 = document.getElementById('suPw1').value, p2 = document.getElementById('suPw2').value;
+  if(n.length < 2){ bad(box, 'Please enter your name.'); return; }
+  if(!vEm(em)){ bad(box, 'Please enter a valid email.'); return; }
+  if(!vPw(p1)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
+  if(p1 !== p2){ bad(box, 'Passwords do not match.'); return; }
+  if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
+  btn.disabled = true;
+  DilshadAuth.api('/api/v1/auth/signup', { method: 'POST', auth: false, body: { email: em, password: p1, full_name: n || null } }).then(function(){
+    return DilshadAuth.login(em, p1);
+  }).then(function(){ ok(box, 'Account created! Opening Branches...'); goB(); }).catch(function(x){
+    btn.disabled = false;
+    if(x.status === 403){ ok(box, 'Check your inbox, verify, then login.'); showV('s'); }
+    else { bad(box, friendly(x)); }
+  });
+});
+fL.addEventListener('submit', function(e){
+  e.preventDefault();
+  var box = document.getElementById('msgLogin'); clr(box);
+  var btn = document.getElementById('btnLoginSubmit');
+  var em = document.getElementById('liEmail').value.trim().toLowerCase();
+  var pw = document.getElementById('liPw').value;
+  if(!vEm(em)){ bad(box, 'Please enter a valid email.'); return; }
+  if(!vPw(pw)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
+  if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
+  btn.disabled = true;
+  DilshadAuth.login(em, pw).then(function(){ ok(box, 'Welcome back! Opening Branches...'); goB(); }).catch(function(x){
+    btn.disabled = false;
+    if(x.status === 403){ showV('l'); bad(box, 'Email not verified - check inbox, then retry.'); }
+    else { bad(box, friendly(x)); }
+  });
+});
+document.getElementById('btnResendSignup').addEventListener('click', function(){
+  resend(document.getElementById('suEmail').value.trim().toLowerCase(), document.getElementById('msgSignup'));
+});
+document.getElementById('btnResendLogin').addEventListener('click', function(){
+  resend(document.getElementById('liEmail').value.trim().toLowerCase(), document.getElementById('msgLogin'));
+});
+if(typeof DilshadAuth !== 'undefined' && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())){
+  DilshadAuth.ensureAuth().then(function(){ window.location.href = '/branches/'; }, function(){ DilshadAuth.clear(); });
+}
 })();
 </script>
-</body>
-</html>
+
+  .form-field input:focus + label,
+  .form-field input:not(:placeholder-shown) + label {
+    top: 7px; color: #aaa; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
+  }
