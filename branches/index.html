@@ -87,8 +87,9 @@ active: branches
     cursor: default;
   }
   .form-body {
-    display: flex;
-    flex-direction: column;
+    /* Auto-fit: packs as many fields as fit on one row, wrapping down to 1. */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
   }
   .form-field {
@@ -122,6 +123,10 @@ active: branches
     position: absolute;
     left: 14px;
     top: 18px;
+    /* Keep the in-box title on one line when columns get narrow. */
+    max-width: calc(100% - 28px);
+    overflow: hidden;
+    white-space: nowrap;
     color: #888;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
@@ -146,7 +151,7 @@ active: branches
     padding-top: 10px;
     border-top: 0.4px solid #999;
   }
-  .foot-upload {
+  .foot-submit {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -164,7 +169,7 @@ active: branches
     white-space: nowrap;
     cursor: pointer;
   }
-  .foot-upload .material-symbols-outlined {
+  .foot-submit .material-symbols-outlined {
     font-size: 20px;
   }
   .tool-btn.is-open {
@@ -212,7 +217,7 @@ active: branches
     </div>
   </div>
   <div class="form-foot">
-    <div class="foot-upload" role="button" tabindex="0"><span class="material-symbols-outlined">upload</span> Upload</div>
+    <div class="foot-submit" role="button" tabindex="0"><span class="material-symbols-outlined">check</span> Submit</div>
   </div>
 </form>
 <script>
