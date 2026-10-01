@@ -44,6 +44,11 @@ title: User Authentication
     user-select: text; touch-action: manipulation;
   }
   .form-field input:focus { border-color: #0a2a7a; }
+  /* Label floats up and shrinks once you type */
+  .form-field input:focus + label,
+  .form-field input:not(:placeholder-shown) + label {
+    top: 7px; color: #aaa; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
+  }
   .form-field.has-eye input { padding-right: 48px; }
   .form-field label {
     position: absolute; left: 14px; top: 18px; max-width: calc(100% - 28px);
@@ -73,6 +78,8 @@ title: User Authentication
   .foot-submit .material-symbols-outlined { font-size: 20px; }
   .foot-submit:disabled { opacity: 0.6; cursor: wait; }
   .tool-btn.is-open { background: #0a2a7a; }
+  /* Author display rules override the UA [hidden]; force it back */
+  [hidden] { display: none !important; }
   /* Verify notice sits between fields and footer */
   .verify-box {
     box-sizing: border-box; width: 100%; margin-top: 10px; padding: 14px 16px;
@@ -121,7 +128,6 @@ title: User Authentication
   <div class="verify-box" id="verifySignup" hidden>Check your inbox for the verification Email.</div>
   <div class="form-foot">
     <button type="submit" class="foot-submit" id="btnSignupSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
-    <button type="button" class="foot-submit" id="btnResendSignup" hidden><span class="material-symbols-outlined">mail</span> Resend</button>
   </div>
   <div class="auth-msg" id="msgSignup"></div>
 </form>
@@ -140,7 +146,6 @@ title: User Authentication
   <div class="verify-box" id="verifyLogin" hidden>Check your inbox for the verification Email.</div>
   <div class="form-foot">
     <button type="submit" class="foot-submit" id="btnLoginSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
-    <button type="button" class="foot-submit" id="btnResendLogin" hidden><span class="material-symbols-outlined">mail</span> Resend</button>
   </div>
   <div class="auth-msg" id="msgLogin"></div>
 </form>
@@ -192,8 +197,8 @@ function goB(){ setTimeout(function(){ window.location.href = '/branches/'; }, 7
 function showV(k){
   var box = document.getElementById(k === 's' ? 'verifySignup' : 'verifyLogin');
   var sub = document.getElementById(k === 's' ? 'btnSignupSubmit' : 'btnLoginSubmit');
-  var rs = document.getElementById(k === 's' ? 'btnResendSignup' : 'btnResendLogin');
-  if(box) box.hidden = false; if(sub) sub.hidden = true; if(rs) rs.hidden = false;
+  if(box) box.hidden = false;
+  if(sub) sub.hidden = true;
 }
 function resend(em, box){
   if(em.indexOf('@') < 0){ bad(box, 'Enter your email first.'); return; }
@@ -239,19 +244,8 @@ fL.addEventListener('submit', function(e){
     else { bad(box, friendly(x)); }
   });
 });
-document.getElementById('btnResendSignup').addEventListener('click', function(){
-  resend(document.getElementById('suEmail').value.trim().toLowerCase(), document.getElementById('msgSignup'));
-});
-document.getElementById('btnResendLogin').addEventListener('click', function(){
-  resend(document.getElementById('liEmail').value.trim().toLowerCase(), document.getElementById('msgLogin'));
-});
 if(typeof DilshadAuth !== 'undefined' && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())){
   DilshadAuth.ensureAuth().then(function(){ window.location.href = '/branches/'; }, function(){ DilshadAuth.clear(); });
 }
 })();
 </script>
-
-  .form-field input:focus + label,
-  .form-field input:not(:placeholder-shown) + label {
-    top: 7px; color: #aaa; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
-  }
