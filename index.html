@@ -1,275 +1,169 @@
----
-layout: base
-title: User Authentication
----
-<style>
-  /* Header styles live in base.html */
-  .toolbar-actions {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-  }
-  .toolbar-left { display: flex; justify-content: flex-start; gap: 10px; }
-  .toolbar-right { display: flex; justify-content: flex-end; gap: 10px; }
-  .tool-btn {
-    display: flex; align-items: center; justify-content: center;
-    gap: 8px; height: 32px; padding: 0 18px;
-    border: 0.4px solid #999; border-radius: 999px;
-    background: #111; color: #fff;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
-    white-space: nowrap; cursor: pointer;
-  }
-  .tool-btn .material-symbols-outlined { font-size: 20px; }
-  @media (hover: hover) and (pointer: fine) { .tool-btn:hover { background: #0a2a7a; } }
-  .tool-btn:active { background: #0a2a7a; }
-  @media (max-width: 480px) {
-    .toolbar-actions { grid-template-columns: 1fr; }
-    .toolbar-right { justify-content: flex-start; }
-  }
-  /* Auth form slides open right under the header */
-  .branch-form {
-    box-sizing: border-box; margin: 0 -24px; padding: 14px 16px 14px 20px;
-    border-bottom: 0.4px solid #999;
-  }
-  .form-body {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;
-  }
-  .form-field { position: relative; display: block; }
-  .form-field input {
-    box-sizing: border-box; width: 100%; height: 56px; padding: 22px 14px 8px;
-    border: 0.4px solid #999; border-radius: 0; background: #111; color: #fff;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
-    outline: none; -webkit-touch-callout: default; -webkit-user-select: text;
-    user-select: text; touch-action: manipulation;
-  }
-  .form-field input:focus { border-color: #0a2a7a; }
-  /* Autofill stays dark via the site-wide rule in base.html */
-  /* Label floats up and shrinks once you type */
-  .form-field input:focus + label,
-  .form-field input:not(:placeholder-shown) + label {
-    top: 7px; color: #aaa; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
-  }
-  .form-field.has-eye input { padding-right: 48px; }
-  .form-field label {
-    position: absolute; left: 14px; top: 18px; max-width: calc(100% - 28px);
-    overflow: hidden; white-space: nowrap; color: #888;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
-    pointer-events: none; transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease;
-  }
-  /* Show/hide eye pinned inside password fields */
-  .eye-btn {
-    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-    display: grid; place-items: center; width: 36px; height: 36px;
-    padding: 0; border: none; background: none; color: #888; cursor: pointer;
-  }
-  .eye-btn .material-symbols-outlined { font-size: 22px; }
-  .eye-btn:hover { color: #fff; }
-  .form-foot {
-    display: flex; justify-content: flex-end; gap: 10px;
-    margin-top: 10px; padding-top: 10px; border-top: 0.4px solid #999;
-  }
-  .foot-submit {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    height: 32px; padding: 0 18px; border: 0.4px solid #fbbf24; border-radius: 999px;
-    background: #fbbf24; color: #111;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
-    white-space: nowrap; cursor: pointer;
-  }
-  .foot-submit .material-symbols-outlined { font-size: 20px; }
-  .foot-submit:disabled { opacity: 0.6; cursor: wait; }
-  /* Signup done state: green pill that opens Gmail */
-  .foot-submit.is-done { background: #16a34a; border-color: #16a34a; color: #fff; }
-  /* After submit: green Gmail pill on top, fresh Submit stacked below it */
-  #signupForm .form-foot.is-submitted { flex-direction: column; align-items: flex-end; }
-  .tool-btn.is-open { background: #0a2a7a; }
-  /* Author display rules override the UA [hidden]; force it back */
-  [hidden] { display: none !important; }
-  /* Verify notice sits between fields and footer */
-  .verify-box {
-    box-sizing: border-box; width: 100%; margin-top: 10px; padding: 14px 16px;
-    border: 0.4px solid #999; border-radius: 0; background: #111; color: #fff;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 16px;
-  }
-  .auth-msg { display: none; margin-top: 10px; padding: 10px 14px; border-radius: 0;
-    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-align: center; }
-  .auth-msg.ok { display: block; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-  .auth-msg.err { display: block; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-</style>
-<div class="page-header">
-  <div class="title-row">
-    <div class="page-title" aria-current="page"><span class="material-symbols-outlined">login</span> User Authentication</div>
-  </div>
-  <div class="toolbar-actions">
-    <div class="toolbar-left">
-      <div class="tool-btn is-open" id="btnSignup" role="button" tabindex="0" aria-selected="true" aria-controls="signupForm"><span class="material-symbols-outlined">person_add</span> Signup</div>
-      <div class="tool-btn" id="btnLogin" role="button" tabindex="0" aria-selected="false" aria-controls="loginForm"><span class="material-symbols-outlined">login</span> Login</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Under Construction — Dilshad Alam</title>
+  <meta name="description" content="Portfolio of Dilshad Alam is under construction. Reach out at mail@dilshadalam.com.np.">
+  <meta name="color-scheme" content="dark">
+  <style>
+    :root {
+      --bg: #080d1a;
+      --text: #e8edf7;
+      --accent: #4f8cff;
+      --accent-2: #22d3ee;
+      --accent-3: #ffd166;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 48px 24px;
+      color: var(--text);
+      background:
+        radial-gradient(900px 520px at 50% -12%, rgba(79, 140, 255, 0.24), transparent 60%),
+        radial-gradient(700px 420px at 50% 110%, rgba(34, 211, 238, 0.14), transparent 60%),
+        var(--bg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      text-align: center;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+      width: 100%;
+      max-width: 34rem;
+    }
+
+    /* keep children inside the viewport so the centered flex never overflows */
+    main > * {
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .portrait {
+      width: min(100%, 360px);
+      aspect-ratio: 670 / 373;
+      padding: 5px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+      box-shadow: 0 22px 55px rgba(79, 140, 255, 0.28);
+    }
+
+    .portrait img {
+      width: 100%;
+      height: 100%;
+      border: 4px solid var(--bg);
+      border-radius: 14px;
+      object-fit: cover;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.4rem, 5.2vw, 2rem);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+
+    /* ---------- pills ---------- */
+    .tagline-pill {
+      max-width: 100%;
+      margin: 0;
+      padding: 8px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: #05070d;
+      color: var(--text);
+      font-size: clamp(0.92rem, 3.2vw, 1.02rem);
+      font-weight: 700;
+      overflow-wrap: break-word;
+    }
+
+    .contact-pill {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px 8px;
+      max-width: 100%;
+      margin: 4px 0 0;
+      padding: 11px 22px;
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.1);
+      color: var(--text);
+      font-size: clamp(0.92rem, 3.2vw, 1.05rem);
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .contact-pill .text,
+    .contact-pill .email {
+      min-width: 0;
+      overflow-wrap: break-word;
+    }
+
+    .contact-pill .icon {
+      flex: 0 0 auto;
+      width: 1.15em;
+      height: 1.15em;
+      color: var(--accent-2);
+    }
+
+    .contact-pill:hover,
+    .contact-pill:focus-visible {
+      color: var(--accent-2);
+      border-color: rgba(34, 211, 238, 0.75);
+      background: rgba(34, 211, 238, 0.18);
+      transform: translateY(-2px);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .contact-pill {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="portrait">
+      <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373">
     </div>
-  </div>
-</div>
-<form class="branch-form" id="signupForm" novalidate>
-  <div class="form-body">
-    <div class="form-field">
-      <input id="suName" type="text" placeholder=" " autocomplete="name" />
-      <label for="suName">Full Name</label>
-    </div>
-    <div class="form-field">
-      <input id="suEmail" type="email" placeholder=" " autocomplete="email" />
-      <label for="suEmail">Enter Email</label>
-    </div>
-    <div class="form-field has-eye">
-      <input id="suPw1" type="password" placeholder=" " autocomplete="new-password" />
-      <label for="suPw1">Enter Password</label>
-      <button type="button" class="eye-btn" id="suEye1" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
-    </div>
-    <div class="form-field has-eye">
-      <input id="suPw2" type="password" placeholder=" " autocomplete="new-password" />
-      <label for="suPw2">Re-Enter Password</label>
-      <button type="button" class="eye-btn" id="suEye2" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
-    </div>
-  </div>
-  <div class="verify-box" id="verifySignup" hidden>Check your inbox for the verification Email.</div>
-  <div class="form-foot">
-    <button type="submit" class="foot-submit" id="btnSignupSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
-    <button type="submit" class="foot-submit" id="btnSignupFresh" hidden><span class="material-symbols-outlined">check</span> Submit</button>
-  </div>
-  <div class="auth-msg" id="msgSignup"></div>
-</form>
-<form class="branch-form" id="loginForm" hidden novalidate>
-  <div class="form-body">
-    <div class="form-field">
-      <input id="liEmail" type="email" placeholder=" " autocomplete="email" />
-      <label for="liEmail">Enter Email</label>
-    </div>
-    <div class="form-field has-eye">
-      <input id="liPw" type="password" placeholder=" " autocomplete="current-password" />
-      <label for="liPw">Enter Password</label>
-      <button type="button" class="eye-btn" id="liEye" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
-    </div>
-  </div>
-  <div class="verify-box" id="verifyLogin" hidden>Check your inbox for the verification Email.</div>
-  <div class="form-foot">
-    <button type="submit" class="foot-submit" id="btnLoginSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
-  </div>
-  <div class="auth-msg" id="msgLogin"></div>
-</form>
-<script src="/assets/js/auth.js?v=2"></script>
-<script>
-(function(){
-var tabS = document.getElementById('btnSignup');
-var tabL = document.getElementById('btnLogin');
-var fS = document.getElementById('signupForm');
-var fL = document.getElementById('loginForm');
-function setMode(w){
-  var s = (w === 'signup');
-  fS.hidden = !s; fL.hidden = s;
-  tabS.classList.toggle('is-open', s); tabL.classList.toggle('is-open', !s);
-  tabS.setAttribute('aria-selected', s ? 'true' : 'false');
-  tabL.setAttribute('aria-selected', !s ? 'true' : 'false');
-}
-function goS(e){ if(e) e.preventDefault(); setMode('signup'); }
-function goL(e){ if(e) e.preventDefault(); setMode('login'); }
-tabS.addEventListener('click', goS); tabL.addEventListener('click', goL);
-tabS.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goS(e); } });
-tabL.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goL(e); } });
-function wireEye(b, i){
-  var btn = document.getElementById(b), inp = document.getElementById(i);
-  if(!btn || !inp) return;
-  btn.addEventListener('click', function(){
-    var show = (inp.type === 'password');
-    inp.type = show ? 'text' : 'password';
-    btn.querySelector('.material-symbols-outlined').textContent = show ? 'visibility' : 'visibility_off';
-    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
-  });
-}
-wireEye('suEye1', 'suPw1'); wireEye('suEye2', 'suPw2'); wireEye('liEye', 'liPw');
-function bad(b, x){ b.textContent = x; b.className = 'auth-msg err'; autoHide(b); }
-function ok(b, x){ b.textContent = x; b.className = 'auth-msg ok'; autoHide(b); }
-function clr(b){ if(b._t) clearTimeout(b._t); b.textContent = ''; b.className = 'auth-msg'; }
-/* Errors vanish after ~3s so they never stick on screen. */
-function autoHide(b){ if(b._t) clearTimeout(b._t); b._t = setTimeout(function(){ b.textContent = ''; b.className = 'auth-msg'; }, 3000); }
-function friendly(e){
-  if(!navigator.onLine) return 'No internet connection.';
-  if(e.status === 409) return 'Email already registered. Try login.';
-  if(e.status === 429) return 'Too many attempts - try later.';
-  if(e.status === 401) return 'Wrong email or password.';
-  return e.message || 'Something went wrong.';
-}
-function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 && p.length <= 72 && !/^\s|\s$/.test(p); }
-function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
-function goB(){ window.location.href = '/branches/'; }
-function busy(btn){ btn.disabled = true; btn.innerHTML = 'Processing...'; }
-function idleS(btn){ btn.disabled = false; btn.classList.remove('is-done'); btn.type = 'submit'; btn.onclick = null; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; var fr = document.getElementById('btnSignupFresh'); var ft = btn.closest ? btn.closest('.form-foot') : null; if(btn.id === 'btnSignupSubmit' && fr && document.activeElement !== fr){ fr.hidden = true; if(ft) ft.classList.remove('is-submitted'); } }
-function submitted(btn){
-  /* Signup done: clear fields at once, green pill opens Gmail, fresh Submit appears below it. */
-  fS.reset();
-  document.querySelectorAll('#signupForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
-  document.querySelectorAll('#signupForm .eye-btn').forEach(function(b){ b.setAttribute('aria-label', 'Show password'); });
-  btn.disabled = false; btn.classList.add('is-done'); btn.type = 'button';
-  btn.innerHTML = '<span class="material-symbols-outlined">mail</span> Submitted !! Open Email';
-  btn.onclick = function(){ window.open('https://mail.google.com/', '_blank', 'noopener'); };
-  var fresh = document.getElementById('btnSignupFresh');
-  if(fresh) fresh.hidden = false;
-  var foot = btn.closest('.form-foot');
-  if(foot) foot.classList.add('is-submitted');
-}
-function showV(k){
-  var box = document.getElementById(k === 's' ? 'verifySignup' : 'verifyLogin');
-  var sub = document.getElementById(k === 's' ? 'btnSignupSubmit' : 'btnLoginSubmit');
-  if(box) box.hidden = false;
-  if(sub) sub.hidden = true;
-}
-function resend(em, box){
-  if(em.indexOf('@') < 0){ bad(box, 'Enter your email first.'); return; }
-  ok(box, 'Sending...');
-  DilshadAuth.api('/api/v1/auth/resend-verification', { method: 'POST', auth: false, body: { email: em } }).then(function(){
-    ok(box, 'If that address needs verification, a new link is on its way.');
-  }).catch(function(x){ bad(box, friendly(x)); });
-}
-fS.addEventListener('submit', function(e){
-  e.preventDefault();
-  var box = document.getElementById('msgSignup'); clr(box);
-  var btn = document.getElementById('btnSignupSubmit');
-  var n = document.getElementById('suName').value.trim();
-  var em = document.getElementById('suEmail').value.trim().toLowerCase();
-  var p1 = document.getElementById('suPw1').value, p2 = document.getElementById('suPw2').value;
-  if(n.length < 2){ bad(box, 'Please enter your name.'); return; }
-  if(!vEm(em)){ bad(box, 'Please enter a valid email.'); return; }
-  if(!vPw(p1)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
-  if(p1 !== p2){ bad(box, 'Passwords do not match.'); return; }
-  if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
-  var fr0 = document.getElementById('btnSignupFresh'); if(fr0){ fr0.hidden = true; }
-  var ft0 = btn.closest ? btn.closest('.form-foot') : null; if(ft0){ ft0.classList.remove('is-submitted'); }
-  busy(btn);
-  DilshadAuth.api('/api/v1/auth/signup', { method: 'POST', auth: false, body: { email: em, password: p1, full_name: n || null } }).then(function(){
-    return DilshadAuth.login(em, p1);
-  }).then(function(){ goB(); }).catch(function(x){
-    if(x.status === 403){ submitted(btn); }
-    else if(x.status === 409){ fS.reset(); idleS(btn); bad(box, friendly(x)); }
-    else { idleS(btn); bad(box, friendly(x)); }
-  });
-});
-fL.addEventListener('submit', function(e){
-  e.preventDefault();
-  var box = document.getElementById('msgLogin'); clr(box);
-  var btn = document.getElementById('btnLoginSubmit');
-  var em = document.getElementById('liEmail').value.trim().toLowerCase();
-  var pw = document.getElementById('liPw').value;
-  if(!vEm(em)){ bad(box, 'Please enter a valid email.'); return; }
-  if(!vPw(pw)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
-  if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
-  busy(btn);
-  DilshadAuth.login(em, pw).then(function(){ goB(); }).catch(function(x){
-    fL.reset();
-    document.querySelectorAll('#loginForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
-    document.querySelectorAll('#loginForm .eye-btn').forEach(function(b){ b.setAttribute('aria-label', 'Show password'); });
-    idleS(btn);
-    if(x.status === 403){ showV('l'); bad(box, 'Email not verified - check inbox, then retry.'); }
-    else { bad(box, friendly(x)); }
-  });
-});
-if(typeof DilshadAuth !== 'undefined' && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())){
-  DilshadAuth.ensureAuth().then(function(){ window.location.href = '/branches/'; }, function(){ DilshadAuth.clear(); });
-}
-})();
-</script>
+
+    <h1>Portfolio Under Construction <span aria-hidden="true">🚧</span></h1>
+
+    <p class="tagline-pill">Great things take time.</p>
+
+    <a class="contact-pill" href="mailto:mail@dilshadalam.com.np">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+        <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"></rect>
+        <path d="M3 7.5l9 6 9-6"></path>
+      </svg>
+      <span class="text">Get in touch:</span>
+      <span class="email">mail@<wbr>dilshadalam.<wbr>com.np</span>
+    </a>
+  </main>
+</body>
+</html>
