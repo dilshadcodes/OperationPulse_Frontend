@@ -64,28 +64,6 @@ active: branches
     padding: 14px 16px 14px 20px;
     border-bottom: 0.4px solid #999;
   }
-  .form-head {
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 0.4px solid #999;
-  }
-  .form-pill {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    height: 32px;
-    padding: 0 18px;
-    border-radius: 999px;
-    background: #0a2a7a;
-    color: #fff;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    white-space: nowrap;
-    cursor: default;
-  }
   .form-body {
     /* Auto-fit: packs as many fields as fit on one row, wrapping down to 1. */
     display: grid;
@@ -182,7 +160,7 @@ active: branches
   </div>
   <div class="toolbar-actions">
     <div class="toolbar-left">
-      <div class="tool-btn" id="btnCreate" role="button" tabindex="0" aria-expanded="false" aria-controls="branchForm"><span class="material-symbols-outlined">add_card</span> Create</div>
+      <div class="tool-btn" id="btnCreate" role="button" tabindex="0" aria-expanded="false" aria-controls="branchForm"><span class="material-symbols-outlined" id="btnCreateIcon">add_card</span> Create</div>
     </div>
     <div class="toolbar-right">
       <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">checklist</span> Select</div>
@@ -191,9 +169,6 @@ active: branches
   </div>
 </div>
 <form class="branch-form" id="branchForm" hidden>
-  <div class="form-head">
-    <div class="form-pill"><span class="material-symbols-outlined">add_card</span> Create Branch</div>
-  </div>
   <div class="form-body">
     <div class="form-field">
       <input id="fHostel" type="text" placeholder=" " autocomplete="organization" />
@@ -224,11 +199,13 @@ active: branches
 (function(){
   var btn = document.getElementById('btnCreate');
   var form = document.getElementById('branchForm');
+  var icon = document.getElementById('btnCreateIcon');
   if(!btn || !form) return;
 
   function setOpen(open){
     form.hidden = !open;
     btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(icon) icon.textContent = open ? 'expand_less' : 'add_card';
     if(open){
       btn.classList.add('is-open');
       var first = form.querySelector('input');
