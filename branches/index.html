@@ -3,5 +3,70 @@ layout: base
 title: Branch Setup
 active: branches
 ---
+<style>
+  .branch-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 0.4px solid #999;
+  }
+  .branch-left {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .branch-right {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  .tool-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 18px;
+    border: 0.4px solid #999;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .tool-btn .material-symbols-outlined {
+    font-size: 20px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tool-btn:hover {
+      background: #0a2a7a;
+    }
+  }
+  .tool-btn:active {
+    background: #0a2a7a;
+  }
+  @media (max-width: 480px) {
+    .branch-toolbar {
+      grid-template-columns: 1fr;
+    }
+    .branch-right {
+      justify-content: flex-start;
+    }
+  }
+</style>
+<div class="branch-toolbar">
+  <div class="branch-left">
+    <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">add</span> Create</div>
+  </div>
+  <div class="branch-right">
+    <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">checklist</span> Select</div>
+    <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">edit</span> Update</div>
+  </div>
+</div>
 <h1>Branch Setup</h1>
 <p>This is the Branch Setup section. Content goes here.</p>
