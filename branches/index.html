@@ -208,8 +208,7 @@ active: branches
     if(icon) icon.textContent = open ? 'expand_less' : 'add_card';
     if(open){
       btn.classList.add('is-open');
-      var first = form.querySelector('input');
-      if(first) first.focus();
+      /* No auto-focus: keyboard opens only when the user taps a field. */
     }else{
       btn.classList.remove('is-open');
     }
