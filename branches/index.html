@@ -194,11 +194,12 @@ active: branches
     display: flex;
     align-items: center;
     justify-content: center;
+    min-width: 32px;
     height: 32px;
-    padding: 0 18px;
-    border: 0.4px solid #0a2a7a;
-    border-radius: 999px;
-    background: #0a2a7a;
+    padding: 0 10px;
+    border: 0.4px solid #999;
+    border-radius: 0;
+    background: #888;
     color: #fff;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
@@ -314,7 +315,7 @@ active: branches
       <div class="foot-back" id="btnBack" role="button" tabindex="0" hidden><span class="material-symbols-outlined">arrow_back</span> Back</div>
     </div>
     <div class="foot-center">
-      <div class="page-indicator" id="pageIndicator">Page-1</div>
+      <div class="page-indicator" id="pageIndicator">1</div>
     </div>
     <div class="foot-right">
       <div class="foot-submit" id="btnNext" role="button" tabindex="0">Next <span class="material-symbols-outlined">arrow_forward</span></div>
@@ -346,7 +347,7 @@ active: branches
       field.hidden = !(idx >= start && idx < end);
     });
     if(indicator){
-      indicator.textContent = 'Page-' + (page + 1);
+      indicator.textContent = String(page + 1);
       indicator.hidden = totalPages <= 1;
     }
     var isFirst = (page === 0);
