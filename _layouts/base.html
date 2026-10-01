@@ -183,10 +183,9 @@
 
   /*
    * Blue feedback rules:
-   * - Desktop (real hover): full :hover + :active.
-   * - Touch: NO hover styling at all — tapping a link navigates away, and
-   *   mobile Safari/Chrome otherwise leave the blue stuck on the tapped item.
-   *   Only the current page (.active) keeps its blue pill.
+   * - Desktop (real hover): full :hover + :active on all pills.
+   * - Touch: tapped sidebar item keeps the same brand-blue pill (no white flash).
+   *   Only the current page (.active) stays blue persistently.
    */
   @media (hover: hover) and (pointer: fine) {
     .dash-label:hover {
@@ -195,15 +194,6 @@
 
     .user-label:hover {
       background: #0a2a7a;
-    }
-
-    .side-item:hover .label {
-      background: #0a2a7a;
-      color: #fff;
-    }
-
-    .side-item:hover .label .material-symbols-outlined {
-      color: #fff;
     }
 
     .foot-pill .label:hover {
@@ -226,21 +216,21 @@
 
     .dash-label:active,
     .user-label:active,
-    .side-item:active .label,
     .foot-pill .label:active {
       background: #0a2a7a;
       color: #fff;
     }
-    .side-item:active .label .material-symbols-outlined {
-      color: #fff;
-    }
   }
 
-  /* Current page pill — both desktop and touch. */
+  /* Sidebar tap/hover/active: brand-blue pill with white text on every device. */
+  .side-item:hover .label,
+  .side-item:active .label,
   .side-item.active .label {
     background: #0a2a7a;
     color: #fff;
   }
+  .side-item:hover .label .material-symbols-outlined,
+  .side-item:active .label .material-symbols-outlined,
   .side-item.active .label .material-symbols-outlined {
     color: #fff;
   }
