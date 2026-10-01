@@ -147,46 +147,67 @@ active: branches
     display: none;
   }
   .form-foot {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     gap: 10px;
     margin-top: 10px;
     padding-top: 10px;
     border-top: 0.4px solid #999;
   }
-  .form-pages {
+  .foot-left {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    justify-content: flex-start;
   }
-  .form-pages[hidden] {
-    display: none;
+  .foot-center {
+    display: flex;
+    justify-content: center;
   }
-  .page-pill {
+  .foot-right {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .foot-back {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
+    gap: 8px;
     height: 32px;
-    padding: 0;
-    border: 0.4px solid #999;
-    border-radius: 50%;
-    background: #111;
+    padding: 0 18px;
+    border: 0.4px solid #0a2a7a;
+    border-radius: 999px;
+    background: #0a2a7a;
     color: #fff;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     font-size: 16px;
-    line-height: 1;
+    white-space: nowrap;
     cursor: pointer;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-    touch-action: manipulation;
   }
-  .page-pill[aria-current="page"] {
+  .foot-back .material-symbols-outlined {
+    font-size: 20px;
+  }
+  .foot-back[hidden] {
+    display: none;
+  }
+  .page-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    padding: 0 18px;
+    border: 0.4px solid #0a2a7a;
+    border-radius: 999px;
     background: #0a2a7a;
-    border-color: #0a2a7a;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    cursor: default;
+  }
+  .page-indicator[hidden] {
+    display: none;
   }
   .foot-submit[hidden] {
     display: none;
@@ -198,7 +219,6 @@ active: branches
     gap: 8px;
     height: 32px;
     padding: 0 18px;
-    margin-left: auto;
     /* Yellow pill: footer item 1, right-hand corner. */
     border: 0.4px solid #fbbf24;
     border-radius: 999px;
@@ -290,9 +310,16 @@ active: branches
     </div>
   </div>
   <div class="form-foot">
-    <div class="form-pages" id="formPages" role="navigation" aria-label="Form pages"></div>
-    <div class="foot-submit" id="btnNext" role="button" tabindex="0"><span class="material-symbols-outlined">arrow_forward</span> Next</div>
-    <div class="foot-submit" id="btnSubmit" role="button" tabindex="0" hidden><span class="material-symbols-outlined">check</span> Submit</div>
+    <div class="foot-left">
+      <div class="foot-back" id="btnBack" role="button" tabindex="0" hidden><span class="material-symbols-outlined">arrow_back</span> Back</div>
+    </div>
+    <div class="foot-center">
+      <div class="page-indicator" id="pageIndicator">Page-1</div>
+    </div>
+    <div class="foot-right">
+      <div class="foot-submit" id="btnNext" role="button" tabindex="0">Next <span class="material-symbols-outlined">arrow_forward</span></div>
+      <div class="foot-submit" id="btnSubmit" role="button" tabindex="0" hidden><span class="material-symbols-outlined">check</span> Submit</div>
+    </div>
   </div>
 </form>
 <script>
@@ -301,38 +328,13 @@ active: branches
   var btn = document.getElementById('btnCreate');
   var form = document.getElementById('branchForm');
   if(!btn || !form) return;
-  var pagesWrap = document.getElementById('formPages');
+  var indicator = document.getElementById('pageIndicator');
+  var btnBack = document.getElementById('btnBack');
   var btnNext = document.getElementById('btnNext');
   var btnSubmit = document.getElementById('btnSubmit');
   var fields = Array.prototype.slice.call(form.querySelectorAll('.form-field'));
   var totalPages = Math.max(1, Math.ceil(fields.length / PAGE_SIZE));
   var current = 0;
-
-  function renderPages(){
-    if(!pagesWrap) return;
-    pagesWrap.innerHTML = '';
-    pagesWrap.hidden = totalPages <= 1;
-    for(var p = 0; p < totalPages; p++){
-      (function(page){
-        var pill = document.createElement('div');
-        pill.className = 'page-pill';
-        pill.setAttribute('role', 'button');
-        pill.setAttribute('tabindex', '0');
-        pill.setAttribute('aria-label', 'Go to page ' + (page + 1));
-        if(page === current) pill.setAttribute('aria-current', 'page');
-        pill.textContent = String(page + 1);
-        function go(e){
-          if(e) e.preventDefault();
-          showPage(page);
-        }
-        pill.addEventListener('click', go);
-        pill.addEventListener('keydown', function(e){
-          if(e.key === 'Enter' || e.key === ' '){ go(e); }
-        });
-        pagesWrap.appendChild(pill);
-      })(p);
-    }
-  }
 
   function showPage(page){
     if(page < 0) page = 0;
@@ -343,8 +345,13 @@ active: branches
     fields.forEach(function(field, idx){
       field.hidden = !(idx >= start && idx < end);
     });
-    renderPages();
+    if(indicator){
+      indicator.textContent = 'Page-' + (page + 1);
+      indicator.hidden = totalPages <= 1;
+    }
+    var isFirst = (page === 0);
     var isLast = (page === totalPages - 1);
+    if(btnBack) btnBack.hidden = isFirst || totalPages <= 1;
     if(btnNext) btnNext.hidden = isLast;
     if(btnSubmit) btnSubmit.hidden = !isLast;
     var first = fields[start] ? fields[start].querySelector('input') : null;
@@ -355,6 +362,12 @@ active: branches
     if(e) e.preventDefault();
     if(current >= totalPages - 1) return;
     showPage(current + 1);
+  }
+
+  function backPage(e){
+    if(e) e.preventDefault();
+    if(current <= 0) return;
+    showPage(current - 1);
   }
 
   function setOpen(open){
@@ -381,6 +394,12 @@ active: branches
     btnNext.addEventListener('click', nextPage);
     btnNext.addEventListener('keydown', function(e){
       if(e.key === 'Enter' || e.key === ' '){ nextPage(e); }
+    });
+  }
+  if(btnBack){
+    btnBack.addEventListener('click', backPage);
+    btnBack.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' || e.key === ' '){ backPage(e); }
     });
   }
   if(btnSubmit){
