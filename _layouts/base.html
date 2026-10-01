@@ -149,9 +149,15 @@
     grid-area: profile;
     display: flex;
     align-items: center;
+    gap: 8px;
     padding: 6px 12px;
     border-bottom: 0.4px solid #999;
     border-right: 0.4px solid #999;
+  }
+  /* Theme toggle beside the Dashboard pill — mobile drawer only. */
+  .profile-theme {
+    display: none;
+    flex: 0 0 auto;
   }
 
   .dash-label {
@@ -784,6 +790,13 @@
     .auth-keep {
       display: none;
     }
+    /* Phones: header toggle moves to the drawer beside Dashboard (frees search room). */
+    #themeBtn {
+      display: none;
+    }
+    .nav-toggle:checked ~ .profile .profile-theme {
+      display: flex;
+    }
   }
 </style>
 </head>
@@ -796,6 +809,7 @@
         <span class="material-symbols-outlined">dashboard_2_gear</span>
         Dashboard
       </div>
+      <div class="auth-btn profile-theme" id="themeBtnProfile" role="button" tabindex="0" title="Toggle dark / light mode"><span class="material-symbols-outlined" id="themeIconProfile">dark_mode</span></div>
     </div>
     <div class="header">
       <div class="header-long">
@@ -935,8 +949,12 @@ function paintTheme(){
   document.body.classList.toggle('light', light);
   var ic = document.getElementById('themeIcon');
   if(ic) ic.textContent = light ? 'light_mode' : 'dark_mode';
+  var icP = document.getElementById('themeIconProfile');
+  if(icP) icP.textContent = light ? 'light_mode' : 'dark_mode';
   var tb = document.getElementById('themeBtn');
   if(tb) tb.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
+  var tbP = document.getElementById('themeBtnProfile');
+  if(tbP) tbP.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
   document.documentElement.classList.remove('pre-light');
 }
 paintTheme();
@@ -951,6 +969,12 @@ if(themeBtn){
   themeBtn.style.cursor = 'pointer';
   themeBtn.addEventListener('click', onTheme);
   themeBtn.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ onTheme(e); } });
+}
+var themeBtnP = document.getElementById('themeBtnProfile');
+if(themeBtnP){
+  themeBtnP.style.cursor = 'pointer';
+  themeBtnP.addEventListener('click', onTheme);
+  themeBtnP.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ onTheme(e); } });
 }
 function cachedUser(){try{return JSON.parse(localStorage.getItem('dilshad.user')||'null');}catch(_){return null;}}
 function displayName(me){return (me&&(me.full_name||me.email))||'Guest';}
