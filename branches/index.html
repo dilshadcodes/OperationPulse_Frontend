@@ -9,8 +9,10 @@ active: branches
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
+    height: 54px;
+    box-sizing: border-box;
     margin: -24px -24px 16px;
-    padding: 12px 24px 16px;
+    padding: 0 16px 0 20px;
     border-bottom: 0.4px solid #999;
   }
   .branch-left {
@@ -53,6 +55,8 @@ active: branches
   @media (max-width: 480px) {
     .branch-toolbar {
       grid-template-columns: 1fr;
+      height: auto;
+      padding: 12px 16px 12px 20px;
     }
     .branch-right {
       justify-content: flex-start;
