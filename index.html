@@ -44,17 +44,7 @@ title: User Authentication
     user-select: text; touch-action: manipulation;
   }
   .form-field input:focus { border-color: #0a2a7a; }
-  /* Kill the white autofill box: keep dark field + white text always */
-  .form-field input:-webkit-autofill,
-  .form-field input:-webkit-autofill:hover,
-  .form-field input:-webkit-autofill:focus,
-  .form-field input:-webkit-autofill:active {
-    -webkit-text-fill-color: #fff;
-    caret-color: #fff;
-    -webkit-box-shadow: 0 0 0 1000px #111 inset;
-    box-shadow: 0 0 0 1000px #111 inset;
-    transition: background-color 9999s ease-in-out 0s;
-  }
+  /* Autofill stays dark via the site-wide rule in base.html */
   /* Label floats up and shrinks once you type */
   .form-field input:focus + label,
   .form-field input:not(:placeholder-shown) + label {

@@ -279,6 +279,20 @@
     color: #888;
   }
 
+  /* Site-wide dark inputs: autofill must never flip white anywhere. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-text-fill-color: #fff;
+    caret-color: #fff;
+    -webkit-box-shadow: 0 0 0 1000px #111 inset;
+    box-shadow: 0 0 0 1000px #111 inset;
+    transition: background-color 9999s ease-in-out 0s;
+  }
+
   .header-small {
     display: flex;
     align-items: center;
