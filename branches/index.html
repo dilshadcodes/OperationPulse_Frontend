@@ -5,15 +5,24 @@ active: branches
 ---
 <style>
   .branch-toolbar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    box-sizing: border-box;
+    margin: -24px -24px 0;
+    padding: 11px 16px 11px 20px;
+    border-bottom: 0.4px solid #999;
+  }
+  .branch-title-row {
+    display: flex;
+    justify-content: flex-start;
+  }
+  .branch-actions-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px;
-    height: 54px;
-    box-sizing: border-box;
-    margin: -24px -24px 16px;
-    padding: 0 16px 0 20px;
-    border-bottom: 0.4px solid #999;
   }
   .branch-left {
     display: flex;
@@ -44,6 +53,11 @@ active: branches
   .tool-btn .material-symbols-outlined {
     font-size: 20px;
   }
+  .page-title {
+    background: #0a2a7a;
+    border-color: #0a2a7a;
+    cursor: default;
+  }
   @media (hover: hover) and (pointer: fine) {
     .tool-btn:hover {
       background: #0a2a7a;
@@ -53,10 +67,8 @@ active: branches
     background: #0a2a7a;
   }
   @media (max-width: 480px) {
-    .branch-toolbar {
+    .branch-actions-row {
       grid-template-columns: 1fr;
-      height: auto;
-      padding: 12px 16px 12px 20px;
     }
     .branch-right {
       justify-content: flex-start;
@@ -64,6 +76,10 @@ active: branches
   }
 </style>
 <div class="branch-toolbar">
+  <div class="branch-title-row">
+    <div class="tool-btn page-title" aria-current="page"><span class="material-symbols-outlined">apartment</span> Branch Setup</div>
+  </div>
+  <div class="branch-actions-row">
   <div class="branch-left">
     <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">add</span> Create</div>
   </div>
@@ -71,6 +87,5 @@ active: branches
     <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">checklist</span> Select</div>
     <div class="tool-btn" role="button" tabindex="0"><span class="material-symbols-outlined">edit</span> Update</div>
   </div>
+  </div>
 </div>
-<h1>Branch Setup</h1>
-<p>This is the Branch Setup section. Content goes here.</p>
