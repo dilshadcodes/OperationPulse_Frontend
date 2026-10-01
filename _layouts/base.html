@@ -8,10 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet" />
 <!-- Material Symbols icon font (icon names listed so unused glyphs are trimmed) -->
 <link
-  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap&icon_names=home,explore,notifications,mail,bookmark,list,person,more_horiz,settings,help,dashboard_2_gear,person_text,login,logout,apartment,bed,event_seat,person_add,group,feedback,price_change,receipt_long,payments,history,receipt,assessment,manage_accounts,add,checklist,edit,edit_note,edit_square,add_card,check,expand_less,expand_more,visibility,visibility_off"
+  href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap&icon_names=home,explore,notifications,mail,bookmark,list,person,more_horiz,settings,help,dashboard_2_gear,person_text,login,logout,apartment,bed,event_seat,person_add,group,feedback,price_change,receipt_long,payments,history,receipt,assessment,manage_accounts,add,checklist,edit,edit_note,edit_square,add_card,check,expand_less,expand_more,visibility,visibility_off,dark_mode,light_mode"
   rel="stylesheet"
 />
 <title>{{ page.title | default: "Skeleton" }}</title>
+<script>
+/* Theme first: avoids a dark flash on light-mode reloads. Defaults to dark. */
+(function(){try{if(localStorage.getItem('dilshad.theme')==='light'){document.documentElement.className+=' pre-light';}}catch(_){}})();
+</script>
+<style>
+  html.pre-light, html.pre-light body { background: #f4f4f5; }
+</style>
 {% if page.active %}
 <script>
 /* Guard: logged-out visits bounce to '/' before anything paints. Auth page has no `active`, so it is skipped. */
@@ -306,6 +313,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
     height: 32px;
     padding: 0 18px;
     border: 0.4px solid #999;
@@ -317,6 +325,9 @@
     font-size: 16px;
     white-space: nowrap;
     cursor: pointer;
+  }
+  .auth-btn .material-symbols-outlined {
+    font-size: 20px;
   }
   /* ---------- Sidebar ---------- */
   .sidebar {
@@ -512,6 +523,95 @@
 
   .page-title .material-symbols-outlined {
     font-size: 20px;
+  }
+  /* ---------- Light mode (toggled from the header, saved per device) ---------- */
+  body.light {
+    color-scheme: light;
+  }
+  body.light,
+  body.light html {
+    background: #f4f4f5;
+  }
+  body.light .layout,
+  body.light .layout > div,
+  body.light .header-long,
+  body.light .header-small {
+    background: #f4f4f5;
+  }
+  body.light .profile,
+  body.light .header,
+  body.light .sidebar,
+  body.light .footer,
+  body.light .page-header,
+  body.light .branch-form,
+  body.light .form-foot {
+    border-color: #c9c9ce;
+  }
+  body.light .dash-label,
+  body.light .user-label,
+  body.light .auth-btn,
+  body.light .foot-pill,
+  body.light .foot-pill .label,
+  body.light .tool-btn,
+  body.light .search,
+  body.light .form-field input,
+  body.light .verify-box,
+  body.light .eye-btn {
+    background: #fff;
+    color: #111;
+    border-color: #c9c9ce;
+  }
+  body.light .search::placeholder,
+  body.light .form-field label,
+  body.light .eye-btn {
+    color: #666;
+  }
+  body.light .eye-btn:hover {
+    color: #111;
+  }
+  body.light .form-field input:focus + label,
+  body.light .form-field input:not(:placeholder-shown) + label {
+    color: #555;
+  }
+  body.light .sidebar,
+  body.light .side-item,
+  body.light a.side-item,
+  body.light a.side-item:link,
+  body.light a.side-item:visited,
+  body.light a.side-item .label,
+  body.light .side-item .label,
+  body.light .group-title,
+  body.light .home-pill,
+  body.light .main,
+  body.light .main h1 {
+    color: #111;
+  }
+  body.light .main p {
+    color: #555;
+  }
+  body.light .group-title,
+  body.light .foot-pill,
+  body.light .dash-label,
+  body.light .user-label,
+  body.light .foot-pill .label {
+    background: #e8e8eb;
+  }
+  body.light .side-group:not(:last-child)::after {
+    background: rgba(0, 0, 0, 0.12);
+  }
+  body.light .foot-line {
+    background: rgba(0, 0, 0, 0.85);
+  }
+  body.light input:-webkit-autofill,
+  body.light input:-webkit-autofill:hover,
+  body.light input:-webkit-autofill:focus,
+  body.light input:-webkit-autofill:active,
+  body.light textarea:-webkit-autofill,
+  body.light select:-webkit-autofill {
+    -webkit-text-fill-color: #111;
+    caret-color: #111;
+    -webkit-box-shadow: 0 0 0 1000px #fff inset;
+    box-shadow: 0 0 0 1000px #fff inset;
   }
 /* ---------- Footer ---------- */
   .footer {
@@ -709,7 +809,7 @@
 
       <div class="header-small">
         <div class="auth-btn auth-hide auth-keep">Connect</div>
-        <div class="auth-btn auth-hide">Sign Up</div>
+        <div class="auth-btn" id="themeBtn" role="button" tabindex="0" title="Toggle dark / light mode"><span class="material-symbols-outlined" id="themeIcon">dark_mode</span></div>
         <div class="auth-btn" id="authBtn" role="button" tabindex="0" title="Log in or out"><span id="authBtnText">Log In</span></div>
       </div>
     </div>
@@ -827,6 +927,31 @@
 <script src="/assets/js/auth.js"></script>
 <script>
 (function(){
+/* Theme: header toggle, saved per device, applied before paint on every page. */
+function paintTheme(){
+  var t = 'dark';
+  try { t = localStorage.getItem('dilshad.theme') || 'dark'; } catch(_) {}
+  var light = (t === 'light');
+  document.body.classList.toggle('light', light);
+  var ic = document.getElementById('themeIcon');
+  if(ic) ic.textContent = light ? 'light_mode' : 'dark_mode';
+  var tb = document.getElementById('themeBtn');
+  if(tb) tb.setAttribute('aria-label', light ? 'Switch to dark mode' : 'Switch to light mode');
+  document.documentElement.classList.remove('pre-light');
+}
+paintTheme();
+function onTheme(e){
+  if(e) e.preventDefault();
+  var light = !document.body.classList.contains('light');
+  try { localStorage.setItem('dilshad.theme', light ? 'light' : 'dark'); } catch(_) {}
+  paintTheme();
+}
+var themeBtn = document.getElementById('themeBtn');
+if(themeBtn){
+  themeBtn.style.cursor = 'pointer';
+  themeBtn.addEventListener('click', onTheme);
+  themeBtn.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ onTheme(e); } });
+}
 function cachedUser(){try{return JSON.parse(localStorage.getItem('dilshad.user')||'null');}catch(_){return null;}}
 function displayName(me){return (me&&(me.full_name||me.email))||'Guest';}
 function paint(me){
