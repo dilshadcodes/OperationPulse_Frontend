@@ -474,10 +474,38 @@
 
     .interesting .interesting__sub {
       margin-top: 12px;
-      font-weight: 400;
-      font-size: 16px;
+      font-weight: 700;
+      font-size: 18px;
       line-height: 1.6;
       color: rgba(232, 237, 247, 0.72);
+    }
+
+    .interesting .interesting__rule {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .interesting .interesting__rule span {
+      display: block;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .interesting .interesting__rule span:nth-child(1) {
+      width: 52px;
+      background: #e56e1c;
+    }
+
+    .interesting .interesting__rule span:nth-child(2) {
+      width: 124px;
+      background: linear-gradient(90deg, #f5a623, #f7b733);
+    }
+
+    .interesting .interesting__rule span:nth-child(3) {
+      width: 58px;
+      background: #d89145;
     }
 
     /* ---------- under-construction section ---------- */
@@ -625,6 +653,7 @@
       <h2 class="interesting__pill">Interesting Stuffs</h2>
       <span class="interesting__divider" aria-hidden="true"></span>
       <p class="interesting__sub">Found Something Interesting</p>
+      <div class="interesting__rule" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
     <!-- Section 4: Portrait illustration + under construction -->
