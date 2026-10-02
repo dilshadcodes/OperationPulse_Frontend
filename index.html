@@ -267,6 +267,22 @@
       width: 100%;
     }
 
+    .construction .construction__pill {
+      display: inline-block;
+      margin: 0;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #3d0a0a;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      color: var(--text);
+      font-size: clamp(1.4rem, 5.2vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+
     /* ---------- email pill ---------- */
     .email-pill {
       display: inline-block;
@@ -350,7 +366,7 @@
     </div>
 
     <section class="construction" aria-label="Under construction">
-      <h1>Portfolio Under Construction <span aria-hidden="true">🚧</span></h1>
+      <h1 class="construction__pill">Still Under Construction <span aria-hidden="true">🚧</span></h1>
 
       <a class="email-pill" href="mailto:mail@dilshadalam.com.np">mail@<wbr>dilshadalam.<wbr>com.np</a>
     </section>
