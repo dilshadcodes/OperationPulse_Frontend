@@ -45,7 +45,7 @@
       min-height: 100%;
       min-height: 100dvh;
       margin: 0;
-      padding: 110px 20px 64px;
+      padding: max(20px, env(safe-area-inset-top)) 20px 64px;
       overflow-x: hidden;
       overscroll-behavior-y: none;
       color: var(--text);
@@ -71,6 +71,7 @@
       gap: 14px;
       width: 100%;
       max-width: 56rem;
+      margin-top: 28px;
     }
 
     /* keep children inside the viewport so the centered flex never overflows */
@@ -105,12 +106,9 @@
       text-wrap: balance;
     }
 
-    /* ---------- corner identity badge ---------- */
+    /* ---------- top identity badge ---------- */
     .corner-id {
-      position: fixed;
-      top: max(20px, env(safe-area-inset-top));
-      left: max(20px, env(safe-area-inset-left));
-      z-index: 2;
+      align-self: flex-start;
       width: max-content;
       max-width: calc(100vw - 40px);
       text-align: left;
@@ -276,12 +274,12 @@
     @media (max-height: 740px) {
       body {
         justify-content: flex-start;
-        padding-top: 158px;
+        padding-top: max(20px, env(safe-area-inset-top));
       }
 
       main {
         gap: 10px;
-        margin-top: 0;
+        margin-top: 24px;
       }
 
       .portrait {
@@ -306,14 +304,20 @@
   </style>
 </head>
 <body>
-  <div class="corner-id">
+  <header class="corner-id">
     <p class="corner-id__name">Dilshad Alam<span class="corner-id__dot">.</span></p>
     <span class="corner-id__divider" aria-hidden="true"></span>
     <p class="corner-id__role">Computer Engineering | Tech Enthusiast</p>
     <div class="corner-id__rule" aria-hidden="true"><span></span><span></span><span></span></div>
-  </div>
+  </header>
 
   <main>
+    <section class="section-head" aria-label="From Learning To Building">
+      <p class="section-head__title">From Learning To Building</p>
+      <p class="section-head__sub">I am a Computer Engineering student exploring technology through hands-on learning and building.</p>
+      <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
+    </section>
+
     <div class="portrait">
       <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373" draggable="false">
     </div>
@@ -321,12 +325,6 @@
     <h1>Portfolio Under Construction <span aria-hidden="true">🚧</span></h1>
 
     <a class="email-pill" href="mailto:mail@dilshadalam.com.np">mail@<wbr>dilshadalam.<wbr>com.np</a>
-
-    <section class="section-head" aria-label="From Learning To Building">
-      <p class="section-head__title">From Learning To Building</p>
-      <p class="section-head__sub">I am a Computer Engineering student exploring technology through hands-on learning and building.</p>
-      <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
-    </section>
   </main>
 
   <script>
