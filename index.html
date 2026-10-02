@@ -108,7 +108,8 @@
       top: max(20px, env(safe-area-inset-top));
       left: max(20px, env(safe-area-inset-left));
       z-index: 2;
-      max-width: min(20rem, calc(100vw - 40px));
+      width: max-content;
+      max-width: calc(100vw - 40px);
       text-align: left;
       pointer-events: none;
     }
@@ -130,6 +131,7 @@
       font-size: 18px;
       color: rgba(232, 237, 247, 0.72);
       letter-spacing: -0.01em;
+      white-space: nowrap;
     }
 
     .corner-id .corner-id__divider {
@@ -140,6 +142,34 @@
       border-radius: 999px;
       background: linear-gradient(90deg, var(--accent), var(--accent-2), transparent);
       opacity: 0.75;
+    }
+
+    .corner-id .corner-id__rule {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .corner-id .corner-id__rule span {
+      display: block;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .corner-id .corner-id__rule span:nth-child(1) {
+      width: 52px;
+      background: #e56e1c;
+    }
+
+    .corner-id .corner-id__rule span:nth-child(2) {
+      width: 124px;
+      background: linear-gradient(90deg, #f5a623, #f7b733);
+    }
+
+    .corner-id .corner-id__rule span:nth-child(3) {
+      width: 58px;
+      background: #d89145;
     }
 
     /* ---------- email pill ---------- */
@@ -184,6 +214,7 @@
     <p class="corner-id__name">Dilshad Alam</p>
     <span class="corner-id__divider" aria-hidden="true"></span>
     <p class="corner-id__role">Computer Engineering | Tech Enthusiast</p>
+    <div class="corner-id__rule" aria-hidden="true"><span></span><span></span><span></span></div>
   </div>
 
   <main>
