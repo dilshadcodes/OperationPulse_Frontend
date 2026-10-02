@@ -308,6 +308,24 @@
       line-height: 1;
     }
 
+    .education .education__list {
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .education .education__list li {
+      margin: 0;
+    }
+
+    .education .education__list li + li {
+      margin-top: 8px;
+    }
+
     /* ---------- under-construction section ---------- */
     .construction {
       display: flex;
@@ -413,6 +431,10 @@
       </div>
       <section class="education" aria-label="Education">
         <h2 class="education__pill"><span class="material-symbols-outlined" aria-hidden="true">school</span>Education</h2>
+        <ul class="education__list">
+          <li>• BE Computer - UESC PoU</li>
+          <li>• +2 Science - National Infotech</li>
+        </ul>
       </section>
       <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
