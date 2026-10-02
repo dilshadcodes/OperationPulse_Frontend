@@ -6,7 +6,7 @@
   <title>Dilshad Alam - Computer Engineering Student</title>
   <meta name="description" content="Portfolio of Dilshad Alam, Computer Engineering student. Reach out at mail@dilshadalam.com.np.">
   <meta name="color-scheme" content="dark">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=school,contacts,copyright,psychology">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=school,contacts,copyright,psychology,inbox">
   <style>
     :root {
       --bg: #080d1a;
@@ -412,7 +412,9 @@
     }
 
     .contact .contact__email {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       padding: 6px 14px;
       border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 999px;
@@ -424,6 +426,11 @@
       line-height: 1.6;
       text-decoration: none;
       overflow-wrap: break-word;
+    }
+
+    .contact .contact__email .material-symbols-outlined {
+      font-size: 1.1em;
+      line-height: 1;
     }
 
     /* ---------- under-construction section ---------- */
@@ -556,7 +563,7 @@
         <h2 class="contact-pill"><span class="material-symbols-outlined" aria-hidden="true">contacts</span>Contact</h2>
         <div class="contact__box">
           <div class="contact__row">
-            <a class="contact__email" href="mailto:mail@dilshadalam.com.np">mail@dilshadalam.com.np</a>
+            <a class="contact__email" href="mailto:mail@dilshadalam.com.np"><span class="material-symbols-outlined" aria-hidden="true">inbox</span>Email Me</a>
           </div>
         </div>
       </section>
