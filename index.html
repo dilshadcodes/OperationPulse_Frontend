@@ -333,6 +333,16 @@
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
     }
 
+    .education .education__list li.edu-done {
+      border-color: rgba(34, 197, 94, 0.6);
+      background: #14532d;
+    }
+
+    .education .education__list li.edu-progress {
+      border-color: rgba(34, 197, 94, 0.6);
+      background: linear-gradient(90deg, #14532d 0 25%, #0d1322 25% 100%);
+    }
+
     .education .education__list li + li {
       margin-top: 10px;
     }
@@ -454,8 +464,8 @@
       <section class="education" aria-label="Education">
         <h2 class="education__pill"><span class="material-symbols-outlined" aria-hidden="true">school</span>Education</h2>
         <ul class="education__list">
-          <li>BE Computer - UESC PoU</li>
-          <li>+2 Science - National Infotech</li>
+          <li class="edu-progress">BE Computer - UESC PoU</li>
+          <li class="edu-done">+2 Science - National Infotech</li>
         </ul>
       </section>
 
