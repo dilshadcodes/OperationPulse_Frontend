@@ -374,9 +374,7 @@
     }
 
     .contact .contact__email {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      display: inline-block;
       padding: 6px 14px;
       border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 999px;
@@ -388,11 +386,6 @@
       line-height: 1.6;
       text-decoration: none;
       overflow-wrap: break-word;
-    }
-
-    .contact .contact__email .material-symbols-outlined {
-      font-size: 1.1em;
-      line-height: 1;
     }
 
     /* ---------- under-construction section ---------- */
@@ -422,7 +415,9 @@
 
     /* ---------- email pill ---------- */
     .email-pill {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       max-width: 100%;
       margin: 0;
       padding: 14px 30px;
@@ -437,6 +432,11 @@
       text-decoration: none;
       overflow-wrap: break-word;
       transition: border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .email-pill .material-symbols-outlined {
+      font-size: 1.1em;
+      line-height: 1;
     }
 
     .email-pill:hover,
@@ -510,7 +510,7 @@
         <h2 class="contact-pill"><span class="material-symbols-outlined" aria-hidden="true">contacts</span>Contact</h2>
         <div class="contact__box">
           <div class="contact__row">
-            <span class="contact__email"><span class="material-symbols-outlined" aria-hidden="true">copyright</span>2026 — Dilshad Alam</span>
+            <a class="contact__email" href="mailto:mail@dilshadalam.com.np">mail@dilshadalam.com.np</a>
           </div>
         </div>
       </section>
@@ -524,7 +524,7 @@
     <section class="construction" aria-label="Under construction">
       <h1 class="construction__pill">Still Under Construction <span aria-hidden="true">🚧</span></h1>
 
-      <a class="email-pill" href="mailto:mail@dilshadalam.com.np">mail@<wbr>dilshadalam.<wbr>com.np</a>
+      <span class="email-pill"><span class="material-symbols-outlined" aria-hidden="true">copyright</span>2026 — Dilshad Alam</span>
     </section>
   </main>
 
