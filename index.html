@@ -545,12 +545,13 @@
     }
 
     .interesting .interesting__item-meta {
-      display: block;
-      width: fit-content;
-      max-width: 100%;
-      margin: 0 0 12px;
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      display: inline-block;
+      margin: 0;
       padding: 6px 14px;
-      border-radius: 0;
+      border-radius: 999px;
       background: #000000;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
       color: var(--text);
@@ -558,6 +559,12 @@
       font-weight: 700;
       line-height: 1.4;
       letter-spacing: -0.01em;
+    }
+
+    .interesting .interesting__media-frame {
+      position: relative;
+      display: block;
+      margin: 14px 0 0;
     }
 
     .interesting .interesting__item-sub {
@@ -572,7 +579,7 @@
       display: block;
       width: 100%;
       max-width: 100%;
-      margin: 14px 0 0;
+      margin: 0;
       border: 0;
       border-radius: 0;
       object-fit: cover;
@@ -726,10 +733,12 @@
       <span class="interesting__divider interesting__divider--white" aria-hidden="true"></span>
       <article class="interesting__item">
         <span class="interesting__item-id">Stuff #1</span>
-        <span class="interesting__item-meta">October 2 — 2026</span>
         <h3 class="interesting__item-title">AI Data Center In Space</h3>
         <p class="interesting__item-sub">Google is testing whether AI processors can run in orbit — A first step toward the possibility of solar-powered data centers in space.</p>
-        <img class="interesting__media" src="https://vzydykuudcosiflhwobl.supabase.co/storage/v1/object/public/Personal%20Buc_/space_datacenter.jpg" alt="AI Data Center In Space illustration" loading="lazy" draggable="false">
+        <div class="interesting__media-frame">
+          <img class="interesting__media" src="https://vzydykuudcosiflhwobl.supabase.co/storage/v1/object/public/Personal%20Buc_/space_datacenter.jpg" alt="AI Data Center In Space illustration" loading="lazy" draggable="false">
+          <span class="interesting__item-meta">October 2 — 2026</span>
+        </div>
       </article>
       <div class="interesting__rule" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
