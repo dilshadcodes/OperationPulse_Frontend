@@ -245,35 +245,9 @@
     .construction {
       display: flex;
       flex-direction: column;
-      align-items: flex-start;
+      align-items: center;
       gap: 14px;
       width: 100%;
-      text-align: left;
-    }
-
-    .construction h1 {
-      text-align: left;
-    }
-
-    /* ---------- two-column row (desktop) ---------- */
-    .content-row {
-      display: flex;
-      flex-direction: column;
-      gap: 40px;
-      width: 100%;
-    }
-
-    @media (min-width: 900px) {
-      .content-row {
-        flex-direction: row;
-        align-items: start;
-        gap: 48px;
-      }
-
-      .content-row > * {
-        flex: 1 1 0;
-        min-width: 0;
-      }
     }
 
     /* ---------- email pill ---------- */
@@ -347,23 +321,21 @@
   </header>
 
   <main>
-    <div class="content-row">
-      <section class="section-head" aria-label="From Learning To Building">
-        <p class="section-head__title">From Learning To Building</p>
-        <p class="section-head__sub">I am a Computer Engineering student exploring engineering through hands-on learning and building.</p>
-        <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
-      </section>
-
-      <section class="construction" aria-label="Under construction">
-        <h1>Portfolio Under Construction <span aria-hidden="true">🚧</span></h1>
-
-        <a class="email-pill" href="mailto:mail@dilshadalam.com.np">mail@<wbr>dilshadalam.<wbr>com.np</a>
-      </section>
-    </div>
+    <section class="section-head" aria-label="From Learning To Building">
+      <p class="section-head__title">From Learning To Building</p>
+      <p class="section-head__sub">I am a Computer Engineering student exploring engineering through hands-on learning and building.</p>
+      <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
+    </section>
 
     <div class="portrait">
       <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373" draggable="false">
     </div>
+
+    <section class="construction" aria-label="Under construction">
+      <h1>Portfolio Under Construction <span aria-hidden="true">🚧</span></h1>
+
+      <a class="email-pill" href="mailto:mail@dilshadalam.com.np">mail@<wbr>dilshadalam.<wbr>com.np</a>
+    </section>
   </main>
 
   <script>
