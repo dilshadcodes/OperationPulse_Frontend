@@ -512,6 +512,40 @@
       background: #d89145;
     }
 
+    .interesting .interesting__item {
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    .interesting .interesting__item-title {
+      margin: 0;
+      font-size: clamp(1.4rem, 5.2vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+
+    .interesting .interesting__item-sub {
+      margin: 12px 0 0;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.6;
+      color: rgba(232, 237, 247, 0.72);
+    }
+
+    .interesting .interesting__media {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      margin: 14px 0 0;
+      border: 0;
+      border-radius: 0;
+      object-fit: cover;
+    }
+
     /* ---------- under-construction section ---------- */
     .construction {
       display: flex;
@@ -658,6 +692,11 @@
       <span class="interesting__divider" aria-hidden="true"></span>
       <p class="interesting__sub">Found Something Interesting</p>
       <span class="interesting__divider interesting__divider--white" aria-hidden="true"></span>
+      <article class="interesting__item">
+        <h3 class="interesting__item-title">AI Data Center In Space</h3>
+        <p class="interesting__item-sub">Google is testing whether AI processors can run in orbit — A first step toward the possibility of solar-powered data centers in space.</p>
+        <img class="interesting__media" src="https://vzydykuudcosiflhwobl.supabase.co/storage/v1/object/public/Personal%20Buc_/space_datacenter.jpg" alt="AI Data Center In Space illustration" loading="lazy" draggable="false">
+      </article>
       <div class="interesting__rule" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
