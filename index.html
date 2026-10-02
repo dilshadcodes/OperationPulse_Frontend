@@ -438,6 +438,48 @@
       line-height: 1;
     }
 
+    /* ---------- interesting stuffs section ---------- */
+    .interesting {
+      align-self: stretch;
+      margin: 18px 0 0;
+      text-align: left;
+    }
+
+    .interesting .interesting__pill {
+      display: inline-block;
+      margin: 0;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #f5a623;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+      color: #1a1206;
+      font-size: clamp(1.4rem, 5.2vw, 2rem);
+      font-weight: 700;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      overflow-wrap: break-word;
+      text-wrap: balance;
+    }
+
+    .interesting .interesting__divider {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: 2px;
+      margin: 8px 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), transparent);
+      opacity: 0.75;
+    }
+
+    .interesting .interesting__sub {
+      margin-top: 12px;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.6;
+      color: rgba(232, 237, 247, 0.72);
+    }
+
     /* ---------- under-construction section ---------- */
     .construction {
       display: flex;
@@ -533,6 +575,7 @@
   </style>
 </head>
 <body>
+  <!-- Section 1: Identity badge -->
   <header class="corner-id">
     <p class="corner-id__name">Dilshad Alam<span class="corner-id__dot">.</span></p>
     <span class="corner-id__divider" aria-hidden="true"></span>
@@ -541,6 +584,7 @@
   </header>
 
   <main>
+    <!-- Section 2: From Learning To Building (hero + education / competencies / contact) -->
     <section class="section-head" aria-label="From Learning To Building">
       <p class="section-head__title">From Learning To Building</p>
       <span class="section-head__divider" aria-hidden="true"></span>
@@ -576,6 +620,14 @@
       <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
+    <!-- Section 3: Interesting Stuffs -->
+    <section class="interesting" aria-label="Interesting Stuffs">
+      <h2 class="interesting__pill">Interesting Stuffs</h2>
+      <span class="interesting__divider" aria-hidden="true"></span>
+      <p class="interesting__sub">Found Something Interesting</p>
+    </section>
+
+    <!-- Section 4: Portrait illustration + under construction -->
     <div class="portrait">
       <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373" draggable="false">
     </div>
