@@ -364,7 +364,7 @@
       display: grid;
       grid-auto-flow: column;
       grid-template-rows: repeat(2, auto);
-      grid-auto-columns: max-content;
+      grid-auto-columns: 1fr;
       gap: 10px;
       margin: 14px 0 0;
       padding: 16px 18px 12px;
@@ -387,8 +387,7 @@
 
     .competencies .competencies__box li {
       scroll-snap-align: start;
-      width: max-content;
-      max-width: calc(100vw - 120px);
+      width: 100%;
       margin: 0;
       padding: 6px 14px;
       border: 0;
@@ -402,6 +401,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-align: center;
     }
 
     .competencies .competencies__dots {
