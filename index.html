@@ -68,10 +68,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      gap: 40px;
       width: 100%;
       max-width: 56rem;
-      margin-top: 28px;
+      margin-top: 40px;
     }
 
     /* keep children inside the viewport so the centered flex never overflows */
@@ -189,7 +189,7 @@
     /* ---------- main section header ---------- */
     .section-head {
       align-self: stretch;
-      margin: 56px 0 0;
+      margin: 0;
       text-align: left;
     }
 
@@ -241,6 +241,15 @@
       background: #d89145;
     }
 
+    /* ---------- under-construction section ---------- */
+    .construction {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+    }
+
     /* ---------- email pill ---------- */
     .email-pill {
       display: inline-block;
@@ -278,8 +287,8 @@
       }
 
       main {
-        gap: 10px;
-        margin-top: 24px;
+        gap: 40px;
+        margin-top: 40px;
       }
 
       .portrait {
@@ -322,9 +331,11 @@
       <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373" draggable="false">
     </div>
 
-    <h1>Portfolio Under Construction <span aria-hidden="true">🚧</span></h1>
+    <section class="construction" aria-label="Under construction">
+      <h1>Portfolio Under Construction <span aria-hidden="true">🚧</span></h1>
 
-    <a class="email-pill" href="mailto:mail@dilshadalam.com.np">mail@<wbr>dilshadalam.<wbr>com.np</a>
+      <a class="email-pill" href="mailto:mail@dilshadalam.com.np">mail@<wbr>dilshadalam.<wbr>com.np</a>
+    </section>
   </main>
 
   <script>
