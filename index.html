@@ -361,22 +361,34 @@
     }
 
     .competencies .competencies__box {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-auto-flow: column;
+      grid-template-rows: repeat(2, auto);
+      grid-auto-columns: max-content;
       gap: 10px;
       margin: 14px 0 0;
-      padding: 16px 18px;
+      padding: 16px 18px 12px;
       border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 14px;
       background: #05070d;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
       list-style: none;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .competencies .competencies__box::-webkit-scrollbar {
+      display: none;
     }
 
     .competencies .competencies__box li {
-      flex: 0 1 auto;
+      scroll-snap-align: start;
       width: max-content;
-      max-width: 100%;
+      max-width: calc(100vw - 120px);
       margin: 0;
       padding: 6px 14px;
       border: 0;
@@ -387,6 +399,34 @@
       font-size: 16px;
       line-height: 1.6;
       color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .competencies .competencies__dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 0;
+      padding: 12px 0 4px;
+    }
+
+    .competencies .competencies__dots button {
+      width: 8px;
+      height: 8px;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: background 0.2s ease, width 0.2s ease;
+    }
+
+    .competencies .competencies__dots button[aria-current="true"] {
+      width: 24px;
+      background: #f5a623;
     }
 
     /* ---------- contact section ---------- */
@@ -555,6 +595,7 @@
           <li>Redis</li>
           <li>GitHub</li>
         </ul>
+        <div class="competencies__dots" role="tablist" aria-label="Competency pages"></div>
       </section>
 
       <section class="contact" aria-label="Contact">
@@ -622,6 +663,61 @@
 
       document.addEventListener("touchstart", blockPinch, { passive: true });
       document.addEventListener("touchmove", blockPinch, { passive: true });
+
+      var compBox = document.querySelector(".competencies__box");
+      var compDots = document.querySelector(".competencies__dots");
+
+      if (compBox && compDots) {
+        var compPage = 0;
+        var compPages = 1;
+
+        var renderCompDots = function () {
+          compDots.innerHTML = "";
+          for (var i = 0; i < compPages; i++) {
+            (function (index) {
+              var dot = document.createElement("button");
+              dot.type = "button";
+              dot.setAttribute("role", "tab");
+              dot.setAttribute("aria-label", "Go to page " + (index + 1));
+              dot.setAttribute("aria-current", index === compPage ? "true" : "false");
+              dot.addEventListener("click", function () {
+                compBox.scrollTo({ left: index * compBox.clientWidth, behavior: "smooth" });
+              });
+              compDots.appendChild(dot);
+            })(i);
+          }
+          compDots.style.display = compPages > 1 ? "flex" : "none";
+        };
+
+        var measureCompPages = function () {
+          var maxScroll = compBox.scrollWidth - compBox.clientWidth;
+          compPages = maxScroll > 4 ? Math.ceil(compBox.scrollWidth / compBox.clientWidth) : 1;
+          compPage = Math.min(compPage, compPages - 1);
+          renderCompDots();
+        };
+
+        var syncCompPage = function () {
+          var page = Math.round(compBox.scrollLeft / compBox.clientWidth);
+          page = Math.max(0, Math.min(page, compPages - 1));
+          if (page !== compPage) {
+            compPage = page;
+            renderCompDots();
+          }
+        };
+
+        var compRaf = 0;
+        compBox.addEventListener("scroll", function () {
+          if (compRaf) return;
+          compRaf = window.requestAnimationFrame(function () {
+            compRaf = 0;
+            syncCompPage();
+          });
+        }, { passive: true });
+
+        window.addEventListener("resize", measureCompPages);
+        window.addEventListener("load", measureCompPages);
+        measureCompPages();
+      }
     })();
   </script>
 </body>
