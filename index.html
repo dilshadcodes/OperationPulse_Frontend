@@ -230,6 +230,25 @@
       color: rgba(232, 237, 247, 0.72);
     }
 
+    .section-head .profile-frame {
+      width: 200px;
+      height: 200px;
+      margin-top: 18px;
+      padding: 5px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+      box-shadow: 0 22px 55px rgba(79, 140, 255, 0.28);
+    }
+
+    .section-head .profile-frame img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 4px solid var(--bg);
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
     .section-head .section-head__rule {
       display: flex;
       align-items: center;
@@ -358,6 +377,9 @@
       <p class="section-head__title">From Learning To Building</p>
       <span class="section-head__divider" aria-hidden="true"></span>
       <p class="section-head__sub">I am a Computer Engineering student exploring engineering through hands-on learning and building.</p>
+      <div class="profile-frame">
+        <img src="images/Dimeo.svg" alt="Portrait of Dilshad Alam" draggable="false">
+      </div>
       <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
