@@ -6,6 +6,7 @@
   <title>Dilshad Alam - Computer Engineering Student</title>
   <meta name="description" content="Portfolio of Dilshad Alam, Computer Engineering student. Reach out at mail@dilshadalam.com.np.">
   <meta name="color-scheme" content="dark">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=school">
   <style>
     :root {
       --bg: #080d1a;
@@ -285,7 +286,9 @@
     }
 
     .education .education__pill {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       margin: 0;
       padding: 6px 14px;
       border-radius: 999px;
@@ -298,6 +301,11 @@
       letter-spacing: -0.02em;
       overflow-wrap: break-word;
       text-wrap: balance;
+    }
+
+    .education .education__pill .material-symbols-outlined {
+      font-size: 1.1em;
+      line-height: 1;
     }
 
     /* ---------- under-construction section ---------- */
@@ -407,7 +415,7 @@
     </section>
 
     <section class="education" aria-label="Education">
-      <h2 class="education__pill">Education</h2>
+      <h2 class="education__pill"><span class="material-symbols-outlined" aria-hidden="true">school</span>Education</h2>
     </section>
 
     <div class="portrait">
