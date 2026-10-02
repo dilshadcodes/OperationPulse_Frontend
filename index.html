@@ -24,7 +24,7 @@
     html {
       height: auto;
       min-height: 100%;
-      overflow-x: hidden;
+      overflow-x: clip;
       overflow-y: auto;
       scrollbar-width: none;
       -ms-overflow-style: none;
@@ -46,15 +46,15 @@
       min-height: 100dvh;
       margin: 0;
       padding: max(20px, env(safe-area-inset-top)) 20px 64px;
-      overflow-x: hidden;
-      overscroll-behavior-y: none;
+      overflow-x: clip;
+      overscroll-behavior-y: auto;
       color: var(--text);
       user-select: none;
       -webkit-user-select: none;
       -ms-user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
-      touch-action: pan-x pan-y;
+      touch-action: auto;
       background:
         radial-gradient(900px 520px at 50% -12%, rgba(79, 140, 255, 0.24), transparent 60%),
         radial-gradient(700px 420px at 50% 110%, rgba(34, 211, 238, 0.14), transparent 60%),
@@ -413,8 +413,8 @@
         }
       };
 
-      document.addEventListener("touchstart", blockPinch, { passive: false });
-      document.addEventListener("touchmove", blockPinch, { passive: false });
+      document.addEventListener("touchstart", blockPinch, { passive: true });
+      document.addEventListener("touchmove", blockPinch, { passive: true });
     })();
   </script>
 </body>
