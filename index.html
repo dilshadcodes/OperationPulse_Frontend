@@ -215,6 +215,31 @@
       outline-offset: 3px;
     }
 
+    @media (max-height: 740px) {
+      body {
+        justify-content: flex-start;
+        padding-top: 172px;
+      }
+
+      main {
+        gap: 10px;
+        margin-top: 0;
+      }
+
+      .portrait {
+        width: min(100%, 300px, calc((100vh - 380px) * 1.7962));
+      }
+
+      h1 {
+        font-size: 1.25rem;
+      }
+
+      .email-pill {
+        padding: 10px 22px;
+        font-size: 1rem;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .email-pill {
         transition: none;
