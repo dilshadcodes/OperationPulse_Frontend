@@ -389,32 +389,6 @@
       color: var(--text);
     }
 
-    .competencies .competencies__box li.is-extra {
-      display: none;
-    }
-
-    .competencies.expanded .competencies__box li.is-extra {
-      display: block;
-    }
-
-    .competencies .competencies__toggle {
-      flex: 0 1 auto;
-      width: max-content;
-      max-width: 100%;
-      margin: 0;
-      padding: 6px 14px;
-      border: 0;
-      border-radius: 999px;
-      background: #7c2d12;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      color: var(--text);
-      font: inherit;
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 1.6;
-      cursor: pointer;
-    }
-
     /* ---------- contact section ---------- */
     .contact {
       align-self: stretch;
@@ -575,12 +549,11 @@
         <ul class="competencies__box">
           <li>C Programming Language</li>
           <li>C++ Programming Language</li>
-          <li class="is-extra">Python Programming Language</li>
-          <li class="is-extra">FastAPI</li>
-          <li class="is-extra">PostgreSQL</li>
-          <li class="is-extra">Redis</li>
-          <li class="is-extra">GitHub</li>
-          <li><button class="competencies__toggle" type="button" aria-expanded="false">More</button></li>
+          <li>Python Programming Language</li>
+          <li>FastAPI</li>
+          <li>PostgreSQL</li>
+          <li>Redis</li>
+          <li>GitHub</li>
         </ul>
       </section>
 
@@ -649,17 +622,6 @@
 
       document.addEventListener("touchstart", blockPinch, { passive: true });
       document.addEventListener("touchmove", blockPinch, { passive: true });
-
-      var competencies = document.querySelector(".competencies");
-      var competenciesToggle = document.querySelector(".competencies__toggle");
-
-      if (competencies && competenciesToggle) {
-        competenciesToggle.addEventListener("click", function () {
-          var expanded = competencies.classList.toggle("expanded");
-          competenciesToggle.textContent = expanded ? "Less" : "More";
-          competenciesToggle.setAttribute("aria-expanded", expanded ? "true" : "false");
-        });
-      }
     })();
   </script>
 </body>
