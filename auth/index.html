@@ -172,6 +172,14 @@ function goL(e){ if(e) e.preventDefault(); setMode('login'); }
 tabS.addEventListener('click', goS); tabL.addEventListener('click', goL);
 tabS.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goS(e); } });
 tabL.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goL(e); } });
+/* Deep link from the landing page pills: /auth/?mode=signup or ?mode=login.
+   Signup is the default tab, so only an explicit mode=login switches. */
+(function(){
+  try {
+    var mode = new URLSearchParams(window.location.search).get('mode');
+    if (mode === 'login') { setMode('login'); }
+  } catch(_) {}
+})();
 function wireEye(b, i){
   var btn = document.getElementById(b), inp = document.getElementById(i);
   if(!btn || !inp) return;

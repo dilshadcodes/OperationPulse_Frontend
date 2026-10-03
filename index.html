@@ -322,7 +322,7 @@
       text-wrap: balance;
     }
 
-    /* ---------- continue-to-dashboard pill ---------- */
+    /* ---------- auth-aware action pills ---------- */
     .email-pill {
       display: inline-flex;
       align-items: center;
@@ -350,7 +350,8 @@
     }
 
     /* Green action pill: sends the visitor on to the dashboard (or the auth page). */
-    button.email-pill {
+    button.email-pill,
+    a.email-pill {
       font-family: inherit;
       /* Matches .corner-id__role (the "Computer Engineering | Tech Enthusiast" line). */
       font-size: 18px;
@@ -368,18 +369,24 @@
     /* Dark green keeps the white label at a comfortable contrast ratio. */
     button.email-pill,
     button.email-pill:hover,
-    button.email-pill:focus-visible {
+    button.email-pill:focus-visible,
+    a.email-pill,
+    a.email-pill:hover,
+    a.email-pill:focus-visible {
       background: #14532d;
       border-color: transparent;
       color: #ffffff;
     }
 
     button.email-pill:hover,
-    button.email-pill:focus-visible {
+    button.email-pill:focus-visible,
+    a.email-pill:hover,
+    a.email-pill:focus-visible {
       background: #166534;
     }
 
-    button.email-pill:active {
+    button.email-pill:active,
+    a.email-pill:active {
       background: #052e16;
     }
 
@@ -389,21 +396,75 @@
     }
 
     /*
+     * Auth-aware action group: one primary pill, optionally followed by a
+     * divider + secondary pill. Signed out, the primary becomes "Signup" and
+     * the secondary "Login"; signed in, the primary is "Continue Learning"
+     * and the whole trailing pair is hidden.
+     */
+    .pill-group {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-width: 100%;
+    }
+
+    /*
+     * Divider between the two pills. Same blue gradient used by
+     * .corner-id__divider and .section-head__rule, rotated to run vertically
+     * so it sits between two side-by-side pills.
+     */
+    .pill-group__divider {
+      display: block;
+      flex: 0 0 auto;
+      width: 2px;
+      height: 22px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2), transparent);
+      opacity: 0.75;
+    }
+
+    .pill-group[hidden] {
+      display: none;
+    }
+
+    /*
      * Phones/tablets get a second copy of the same pill directly under the
      * name-and-role header, so the dashboard action is reachable without
      * scrolling past the portrait. Desktop hides it (the pill in the
      * construction block covers it there).
      */
-    button.email-pill.header-dash {
+    /*
+     * Hidden on desktop: the construction-block group covers it there.
+     * Kept on phones/tablets so the action is reachable without scrolling.
+     */
+    .header-dash-group {
+      display: none;
+    }
+
+    /*
+     * `hidden` alone is not enough here. Both .email-pill and
+     * .pill-group__divider set an explicit `display`, and any author rule
+     * beats the UA stylesheet's [hidden] { display: none } regardless of
+     * specificity — so without these the "Login" pill would stay on screen
+     * for a signed-in visitor.
+     */
+    .email-pill[hidden],
+    .pill-group__divider[hidden] {
       display: none;
     }
 
     @media (max-width: 999px) {
-      button.email-pill.header-dash {
+      .header-dash-group {
         display: inline-flex;
         max-width: calc(100% - 40px);
         /* body is a centred flex column; keep clear of the header above. */
         margin-top: 20px;
+      }
+
+      .header-dash-group .email-pill {
+        max-width: 100%;
       }
     }
 
@@ -586,8 +647,12 @@
     <div class="corner-id__rule" aria-hidden="true"><span></span><span></span><span></span></div>
   </header>
 
-  <!-- mobile-only shortcut pill, sits directly under the header -->
-  <button type="button" class="email-pill header-dash" id="goDashboardHeader">Continue to Dashboard</button>
+  <!-- mobile-only action pills, sit directly under the header -->
+  <div class="pill-group header-dash-group">
+    <a class="email-pill" data-auth-primary href="/auth/">Continue Learning</a>
+    <span class="pill-group__divider" data-auth-divider aria-hidden="true"></span>
+    <a class="email-pill" data-auth-secondary href="/auth/" hidden>Login</a>
+  </div>
 
   <main>
     <!-- intro on the left, illustration and notice on the right -->
@@ -616,7 +681,11 @@
         <section class="construction" aria-label="Under construction">
           <h1 class="construction__pill">Still Under Construction <span aria-hidden="true">🚧</span></h1>
 
-          <button type="button" class="email-pill" id="goDashboard">Continue to Dashboard</button>
+          <div class="pill-group">
+            <a class="email-pill" data-auth-primary href="/auth/">Continue Learning</a>
+            <span class="pill-group__divider" data-auth-divider aria-hidden="true"></span>
+            <a class="email-pill" data-auth-secondary href="/auth/" hidden>Login</a>
+          </div>
         </section>
       </div>
 
@@ -669,66 +738,66 @@
       document.addEventListener("touchstart", blockPinch, { passive: true });
       document.addEventListener("touchmove", blockPinch, { passive: true });
 
-      /* "Continue to Dashboard" — the only place this page ever navigates.
-         Logged in -> /branches/, otherwise -> /auth/. The landing page itself
-         never redirects on load, so a signed-in visitor still sees it.
-         Two pills share this behaviour: the header one (phones/tablets) and
-         the construction one (desktop). Whichever is clicked drives both, so
-         they dim together and cannot be double-triggered. */
-      var goDashboard = [].slice.call(document.querySelectorAll("#goDashboard, #goDashboardHeader"));
+      /*
+       * Auth-aware pills. Two identical groups exist: the header one
+       * (phones/tablets) and the construction one (desktop). Both are driven
+       * from the same code so they can never disagree.
+       *
+       *   signed out -> primary "Signup", divider + secondary "Login"
+       *   signed in  -> primary "Continue Learning", trailing pair hidden
+       *
+       * The markup ships in the signed-out state so a visitor with no session
+       * (and one who never runs this script) still sees working links.
+       */
+      var AUTH = {
+        primary: [].slice.call(document.querySelectorAll("[data-auth-primary]")),
+        divider: [].slice.call(document.querySelectorAll("[data-auth-divider]")),
+        secondary: [].slice.call(document.querySelectorAll("[data-auth-secondary]"))
+      };
 
-      if (goDashboard.length) {
-        /* The pills are only dimmed while their navigation is in flight. Coming back
-           via the Back button restores this page from bfcache with the DOM
-           exactly as it was, so the disabled flag has to be cleared on restore
-           or the pills would stay dead on the landing page. */
-        var rearm = function () {
-          goDashboard.forEach(function (pill) {
-            pill.disabled = false;
-          });
-        };
-
-        var onGoDashboard = function (event) {
-          var pill = event.currentTarget;
-
-          if (pill.disabled) {
-            return;
-          }
-
-          goDashboard.forEach(function (each) {
-            each.disabled = true;
-          });
-
-          /* If the navigation never happens (blocked, offline, same-page), do
-             not leave the pills stuck off. */
-          window.setTimeout(rearm, 4000);
-
-          if (!window.DilshadAuth) {
-            window.location.href = "/auth/";
-            return;
-          }
-
-          DilshadAuth.ensureAuth().then(
-            function () {
-              window.location.href = "/branches/";
-            },
-            function () {
-              try {
-                DilshadAuth.clear();
-              } catch (_) {}
-
-              window.location.href = "/auth/";
-            }
-          );
-        };
-
-        window.addEventListener("pageshow", rearm);
-        window.addEventListener("popstate", rearm);
-        document.addEventListener("visibilitychange", rearm);
-
-        goDashboard.forEach(function (pill) {
-          pill.addEventListener("click", onGoDashboard);
+      var setPillState = function (signedIn) {
+        AUTH.primary.forEach(function (el) {
+          el.textContent = signedIn ? "Continue Learning" : "Signup";
+          el.setAttribute("href", signedIn ? "/branches/" : "/auth/?mode=signup");
         });
+
+        /* Signed in, the divider + Login are meaningless, so drop them. */
+        AUTH.divider.forEach(function (el) {
+          el.hidden = signedIn;
+        });
+
+        AUTH.secondary.forEach(function (el) {
+          el.textContent = "Login";
+          el.setAttribute("href", "/auth/?mode=login");
+          el.hidden = signedIn;
+        });
+      };
+
+      setPillState(false);
+
+      /*
+       * A cached token only proves a session existed at some point. Confirm it
+       * against the API before showing "Continue Learning", so a stale or
+       * revoked token never sends someone to a dashboard that bounces them
+       * straight back to /auth/. A failure just leaves the signed-out pills.
+       */
+      if (window.DilshadAuth && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())) {
+        DilshadAuth.ensureAuth().then(
+          function (me) {
+            try {
+              localStorage.setItem("dilshad.user", JSON.stringify(me));
+            } catch (_) {}
+
+            setPillState(true);
+          },
+          function () {
+            try {
+              DilshadAuth.clear();
+            } catch (_) {}
+
+            setPillState(false);
+          }
+        );
       }
     })();
   </script>
