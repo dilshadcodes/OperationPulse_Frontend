@@ -21,8 +21,9 @@
 </style>
 {% if page.active %}
 <script>
-/* Guard: logged-out visits bounce to '/' before anything paints. Auth page has no `active`, so it is skipped. */
-(function(){try{if(!localStorage.getItem('dilshad.access')&&!localStorage.getItem('dilshad.refresh')){window.location.replace('/');}}catch(_){}})();
+/* Guard: logged-out visits bounce to the auth page before anything paints.
+   Auth page has no `active`, so it is skipped. */
+(function(){try{if(!localStorage.getItem('dilshad.access')&&!localStorage.getItem('dilshad.refresh')){window.location.replace('/auth/');}}catch(_){}})();
 </script>
 {% endif %}
 <style>
@@ -1030,19 +1031,19 @@ if(b)b.setAttribute('aria-label',me?'Log out':'Log in');
 var me=cachedUser();paint(me);
 if(window.DilshadAuth){
 DilshadAuth.ensureAuth().then(function(u){try{localStorage.setItem('dilshad.user',JSON.stringify(u));}catch(_){}paint(u);},function(){
-/* Guard: inner pages bounce to '/' when the session is dead. Auth page has no `active`, so it is skipped. */
+/* Guard: inner pages bounce to the auth page when the session is dead. Auth page has no `active`, so it is skipped. */
 paint(null);
-{% if page.active %}DilshadAuth.clear();window.location.replace('/');{% endif %}
+{% if page.active %}DilshadAuth.clear();window.location.replace('/auth/');{% endif %}
 });
 var btn=document.getElementById('authBtn');
 if(btn){btn.style.cursor='pointer';
 function onAuthBtn(e){if(e)e.preventDefault();
 if(!window.DilshadAuth)return;
 var hasSession=!!(DilshadAuth.getAccess()||DilshadAuth.getRefresh());
-/* Signed out -> the auth page (unless we are already on it); signing out -> the landing page. */
+/* Signed out -> the auth page (unless we are already on it); signing out -> the auth page too. */
 if(!hasSession){if(!/^\/auth\/?$/.test(location.pathname)){window.location.href='/auth/';}return;}
 var rt=DilshadAuth.getRefresh();
-function done(){DilshadAuth.clear();paint(null);window.location.href='/';}
+function done(){DilshadAuth.clear();paint(null);window.location.href='/auth/';}
 if(!rt){done();return;}
 btn.style.opacity='.6';
 DilshadAuth.api('/api/v1/auth/logout',{method:'POST',auth:false,body:{refresh_token:rt}}).then(done,done);}

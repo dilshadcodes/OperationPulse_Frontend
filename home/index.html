@@ -13,7 +13,7 @@ DilshadAuth.ensureAuth().then(function(me){
 try{localStorage.setItem('dilshad.user',JSON.stringify(me));}catch(_){}
 var h=document.getElementById('hello');
 if(h)h.textContent='Welcome, '+((me&&me.full_name)||(me&&me.email)||'back')+' — you are logged in.';
-},function(){window.location.href='/';});
+},function(){window.location.href='/auth/';});
 })();
 </script>
 
