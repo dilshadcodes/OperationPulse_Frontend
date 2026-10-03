@@ -400,6 +400,25 @@
       background: rgba(0, 0, 0, 0.22);
     }
 
+    /*
+     * Tiny "school" glyph sitting to the left of the "Continue Learning"
+     * label. The font is already loaded in <head> with `school` in
+     * icon_names, so no extra stylesheet request is needed. The link is an
+     * inline-flex row, so the glyph lines up on the cross-axis for free.
+     * Only shown in the signed-in state; the script toggles [hidden].
+     */
+    .email-pill__icon {
+      flex: 0 0 auto;
+      font-size: 13px;
+      margin-right: 6px;
+    }
+
+    /* Same reason as .email-pill__link[hidden]: an author `display` would
+       otherwise beat the UA's [hidden] rule. */
+    .email-pill__icon[hidden] {
+      display: none;
+    }
+
     /* White divider splitting the pill into its two halves. */
     .email-pill__divider {
       display: block;
@@ -628,7 +647,7 @@
   <!-- mobile-only action pill, sits directly under the header -->
   <div class="header-dash-group">
     <span class="email-pill">
-      <a class="email-pill__link" data-auth-primary href="/auth/">Continue Learning</a>
+      <a class="email-pill__link" data-auth-primary href="/auth/"><span class="material-symbols-outlined email-pill__icon" data-auth-icon aria-hidden="true">school</span><span data-auth-label>Continue Learning</span></a>
       <span class="email-pill__divider" data-auth-divider aria-hidden="true"></span>
       <a class="email-pill__link" data-auth-secondary href="/auth/" hidden>Login</a>
     </span>
@@ -662,7 +681,7 @@
           <h1 class="construction__pill">Still Under Construction <span aria-hidden="true">🚧</span></h1>
 
           <span class="email-pill">
-            <a class="email-pill__link" data-auth-primary href="/auth/">Continue Learning</a>
+            <a class="email-pill__link" data-auth-primary href="/auth/"><span class="material-symbols-outlined email-pill__icon" data-auth-icon aria-hidden="true">school</span><span data-auth-label>Continue Learning</span></a>
             <span class="email-pill__divider" data-auth-divider aria-hidden="true"></span>
             <a class="email-pill__link" data-auth-secondary href="/auth/" hidden>Login</a>
           </span>
@@ -723,21 +742,35 @@
        * (phones/tablets) and the construction one (desktop). Both are driven
        * from the same code so they can never disagree.
        *
-       *   signed out -> primary "Signup", divider + secondary "Login"
-       *   signed in  -> primary "Continue Learning", trailing pair hidden
+       *   signed out -> primary "Signup" (no school icon), divider + secondary "Login"
+       *   signed in  -> primary "Continue Learning" + school icon, trailing pair hidden
        *
        * The markup ships in the signed-out state so a visitor with no session
        * (and one who never runs this script) still sees working links.
        */
       var AUTH = {
         primary: [].slice.call(document.querySelectorAll("[data-auth-primary]")),
+        primaryLabel: [].slice.call(document.querySelectorAll("[data-auth-label]")),
+        primaryIcon: [].slice.call(document.querySelectorAll("[data-auth-icon]")),
         divider: [].slice.call(document.querySelectorAll("[data-auth-divider]")),
         secondary: [].slice.call(document.querySelectorAll("[data-auth-secondary]"))
       };
 
       var setPillState = function (signedIn) {
-        AUTH.primary.forEach(function (el) {
+        /*
+         * Only the label span is rewritten. Writing textContent on the <a>
+         * itself would delete the "school" icon it now contains.
+         */
+        AUTH.primaryLabel.forEach(function (el) {
           el.textContent = signedIn ? "Continue Learning" : "Signup";
+        });
+
+        /* The school glyph belongs to "Continue Learning" only. */
+        AUTH.primaryIcon.forEach(function (el) {
+          el.hidden = !signedIn;
+        });
+
+        AUTH.primary.forEach(function (el) {
           el.setAttribute("href", signedIn ? "/branches/" : "/auth/?mode=signup");
         });
 
