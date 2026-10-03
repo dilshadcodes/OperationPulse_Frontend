@@ -131,13 +131,27 @@
 
     .corner-id .corner-id__name {
       display: inline-block;
+      margin: 0;
       padding: 6px 14px;
+      border: 1px solid transparent;
       border-radius: 999px;
       background: #f5a623;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
       font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
       color: #1a1206;
       letter-spacing: -0.01em;
+      text-decoration: none;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .corner-id .corner-id__name:hover,
+    .corner-id .corner-id__name:focus-visible {
+      border-color: rgba(34, 211, 238, 0.6);
+      box-shadow: 0 8px 22px rgba(34, 211, 238, 0.28);
     }
 
     .corner-id .corner-id__name .corner-id__dot {
@@ -673,7 +687,8 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .email-pill {
+      .email-pill,
+      .corner-id__name {
         transition: none;
       }
     }
@@ -682,7 +697,7 @@
 <body>
   <!-- Section 1: Identity badge -->
   <header class="corner-id">
-    <p class="corner-id__name">Dilshad Alam<span class="corner-id__dot">.</span></p>
+    <a class="corner-id__name" href="mailto:mail@dilshadalam.com.np">Dilshad Alam<span class="corner-id__dot">.</span></a>
     <span class="corner-id__divider" aria-hidden="true"></span>
     <p class="corner-id__role">Computer Engineering | Tech Enthusiast</p>
     <div class="corner-id__rule" aria-hidden="true"><span></span><span></span><span></span></div>
