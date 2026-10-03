@@ -155,12 +155,13 @@
     border-bottom: 0.4px solid #999;
     border-right: 0.4px solid #999;
   }
-  /* Theme toggle beside the Dashboard pill — mobile drawer only. */
+  /* Theme toggle beside the OperationPulse pill — mobile drawer only. */
   .profile-theme {
     display: none;
     flex: 0 0 auto;
   }
 
+  /* Brand pill: orange background, bold letters — the app identity mark. */
   .dash-label {
     display: flex;
     align-items: center;
@@ -170,11 +171,12 @@
     height: 36px;
     padding: 0 18px;
     border-radius: 999px;
-    background: #1a1a1a;
+    background: #f97316;
     color: #fff;
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
     font-size: 15px;
+    letter-spacing: 0.2px;
     cursor: pointer;
     transition: background 0.15s ease;
   }
@@ -190,7 +192,7 @@
    */
   @media (hover: hover) and (pointer: fine) {
     .dash-label:hover {
-      background: #0a2a7a;
+      background: #ea6a0c;
     }
 
     .user-label:hover {
@@ -215,7 +217,11 @@
       cursor: grab;
     }
 
-    .dash-label:active,
+    .dash-label:active {
+      background: #d95f0a;
+      color: #fff;
+    }
+
     .user-label:active,
     .foot-pill .label:active {
       background: #0a2a7a;
@@ -613,6 +619,11 @@
   body.light .foot-pill .label {
     background: #e8e8eb;
   }
+  /* The OperationPulse brand pill stays orange in light mode (wins over the rules above). */
+  body.light .dash-label {
+    background: #f97316;
+    color: #fff;
+  }
   body.light .side-group:not(:last-child)::after {
     background: rgba(0, 0, 0, 0.12);
   }
@@ -727,7 +738,7 @@
   /* Sidebar keeps --sidebar-w at every window size (never minimizes). */
 
   /*
-   * Minimize view: Dashboard + sidebar items + Dilshad iCloud footer move
+   * Minimize view: OperationPulse pill + sidebar items + Dilshad iCloud footer move
    * inside a drawer opened by the icon-only Profile capsule, while
    * Home + Log In stay in the header.
    */
@@ -815,7 +826,7 @@
     .auth-keep {
       display: none;
     }
-    /* Phones: header toggle moves to the drawer beside Dashboard (frees search room). */
+    /* Phones: header toggle moves to the drawer beside OperationPulse (frees search room). */
     #themeBtn {
       display: none;
     }
@@ -849,7 +860,7 @@
     <div class="profile">
       <div class="dash-label">
         <span class="material-symbols-outlined">dashboard_2_gear</span>
-        Dashboard
+        OperationPulse
       </div>
       <div class="auth-btn profile-theme" id="themeBtnProfile" role="button" tabindex="0" title="Toggle dark / light mode"><span class="material-symbols-outlined" id="themeIconProfile">dark_mode</span></div>
     </div>
