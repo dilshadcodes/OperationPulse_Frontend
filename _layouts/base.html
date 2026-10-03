@@ -352,6 +352,23 @@
   .auth-btn .material-symbols-outlined {
     font-size: 20px;
   }
+  /* ---------- Mobile dashboard pill ---------- */
+  /*
+   * Phones hide the Profile drawer, so "Continue to Dashboard" gets its own
+   * row under the header. Hidden on desktop (the drawer shows the pill there).
+   */
+  .dash-row {
+    display: none;
+  }
+  .dash-row .dash-label {
+    justify-content: center;
+    gap: 10px;
+    border: 0;
+  }
+  .dash-row .dash-label[aria-disabled="true"] {
+    opacity: 0.6;
+    cursor: default;
+  }
   /* ---------- Sidebar ---------- */
   .sidebar {
     grid-area: sidebar;
@@ -745,10 +762,23 @@
   @media (max-width: 820px) {
     .layout {
       grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: 54px minmax(0, 1fr);
+      grid-template-rows: 54px auto minmax(0, 1fr);
       grid-template-areas:
         "header"
+        "dashrow"
         "main";
+    }
+
+    /* Mobile-only dashboard pill row, directly under the header. */
+    .dash-row {
+      display: flex;
+      grid-area: dashrow;
+      align-items: center;
+      padding: 8px 12px;
+      background: #000;
+    }
+    body.light .dash-row {
+      background: #f4f4f5;
     }
 
     .profile,
@@ -803,6 +833,11 @@
 
     .nav-toggle:checked ~ .header .user-label {
       background: #0a2a7a;
+    }
+
+    /* Drawer overlays this row, so drop it while the drawer is open. */
+    .nav-toggle:checked ~ .dash-row {
+      display: none;
     }
 
     .nav-toggle:checked ~ .nav-overlay {
@@ -880,6 +915,14 @@
         <div class="auth-btn" id="authBtn" role="button" tabindex="0" title="Log in or out"><span id="authBtnText">Log In</span></div>
       </div>
     </div>
+    {% if page.url contains '/auth' %}{% elsif page.url contains '/verify' %}{% else %}
+    <div class="dash-row">
+      <div class="dash-label" id="dashRowPill" role="button" tabindex="0">
+        <span class="material-symbols-outlined">dashboard_2_gear</span>
+        Continue to Dashboard
+      </div>
+    </div>
+    {% endif %}
     <div class="sidebar">
       <div class="side-group">
         <div class="group-title">HOSTEL MANAGEMENT</div>
@@ -1066,6 +1109,29 @@ if(homeBtn){homeBtn.style.cursor='pointer';
 function onHome(e){if(e)e.preventDefault();window.location.href='/';}
 homeBtn.addEventListener('click',onHome);
 homeBtn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){onHome(e);}});}
+/* Mobile "Continue to Dashboard" pill: signed in -> /branches/, otherwise -> /auth/.
+   Same guard + re-arm behaviour as the landing page pill, so a failed nav
+   (offline, blocked) never leaves the pill stuck in its loading state. */
+var dashPill=document.getElementById('dashRowPill');
+if(dashPill){
+dashPill.style.cursor='pointer';
+var dashBusy=false;
+function rearmDash(){dashBusy=false;dashPill.removeAttribute('aria-disabled');}
+function onDash(e){
+if(e)e.preventDefault();
+if(dashBusy)return;
+dashBusy=true;
+dashPill.setAttribute('aria-disabled','true');
+window.setTimeout(rearmDash,4000);
+if(!window.DilshadAuth){window.location.href='/auth/';return;}
+DilshadAuth.ensureAuth().then(function(){window.location.href='/branches/';},function(){
+try{DilshadAuth.clear();}catch(_){}
+window.location.href='/auth/';});}
+window.addEventListener('pageshow',rearmDash);
+window.addEventListener('popstate',rearmDash);
+document.addEventListener('visibilitychange',rearmDash);
+dashPill.addEventListener('click',onDash);
+dashPill.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){onDash(e);}});}
 }
 })();
 </script>
