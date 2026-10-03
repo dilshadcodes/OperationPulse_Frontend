@@ -686,6 +686,39 @@
       }
     }
 
+    /* ---------- wide layout: Section 2 on the left, last section on the right ---------- */
+    @media (min-width: 1000px) {
+      main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "head visual"
+          "head foot";
+        column-gap: 64px;
+        row-gap: 32px;
+        max-width: 78rem;
+        margin-top: 24px;
+      }
+
+      main > .section-head {
+        grid-area: head;
+        align-self: center;
+      }
+
+      main > .portrait {
+        grid-area: visual;
+        width: 100%;
+        max-width: min(440px, calc(46vh * 1.7962));
+        justify-self: end;
+      }
+
+      main > .construction {
+        grid-area: foot;
+        align-items: flex-end;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .email-pill,
       .corner-id__name {
