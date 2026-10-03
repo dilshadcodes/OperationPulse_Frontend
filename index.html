@@ -357,26 +357,30 @@
       font-weight: 700;
       line-height: 1.2;
       letter-spacing: -0.01em;
+      /* Keeps the label centred when the pill grows wider than its text. */
+      justify-content: center;
+      text-align: center;
       cursor: pointer;
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
 
+    /* Dark green keeps the white label at a comfortable contrast ratio. */
     button.email-pill,
     button.email-pill:hover,
     button.email-pill:focus-visible {
-      background: #16a34a;
+      background: #14532d;
       border-color: transparent;
       color: #ffffff;
     }
 
     button.email-pill:hover,
     button.email-pill:focus-visible {
-      background: #15803d;
+      background: #166534;
     }
 
     button.email-pill:active {
-      background: #166534;
+      background: #052e16;
     }
 
     button.email-pill[disabled] {
@@ -649,12 +653,28 @@
       var goDashboard = document.getElementById("goDashboard");
 
       if (goDashboard) {
+        /* The pill is only dimmed while its navigation is in flight. Coming back
+           via the Back button restores this page from bfcache with the DOM
+           exactly as it was, so the disabled flag has to be cleared on restore
+           or the pill would stay dead on the landing page. */
+        var rearm = function () {
+          goDashboard.disabled = false;
+        };
+
+        window.addEventListener("pageshow", rearm);
+        window.addEventListener("popstate", rearm);
+        document.addEventListener("visibilitychange", rearm);
+
         goDashboard.addEventListener("click", function () {
           if (goDashboard.disabled) {
             return;
           }
 
           goDashboard.disabled = true;
+
+          /* If the navigation never happens (blocked, offline, same-page), do
+             not leave the pill stuck off. */
+          window.setTimeout(rearm, 4000);
 
           if (!window.DilshadAuth) {
             window.location.href = "/auth/";
