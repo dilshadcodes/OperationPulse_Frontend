@@ -1,0 +1,46 @@
+---
+layout: none
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verify Email - Dilshad.OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Montserrat',sans-serif;background:#0f1538;color:#fff;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.box{background:#fff;color:#0f172a;border-radius:20px;padding:36px 32px;max-width:440px;width:100%;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.4)}
+h1{font-size:22px} p{font-size:13px;color:#5b6280;margin-top:10px;line-height:1.7}
+.msg{margin-top:16px;font-size:13px;font-weight:700;padding:12px;border-radius:12px;display:none}
+.msg.ok{display:block;background:#ecfdf5;color:#047857;border:1px solid #a7f3d0}
+.msg.err{display:block;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+a.btn{display:inline-block;margin-top:18px;background:#1a2a6c;color:#fff;text-decoration:none;font-weight:800;font-size:13px;padding:12px 26px;border-radius:12px}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>Verifying...</h1>
+<p id="sub">Please wait while we confirm your email.</p>
+<div class="msg" id="msg"></div>
+<a class="btn" id="go" href="/" style="display:none">Go to Login</a>
+</div>
+<script src="/assets/js/auth.js"></script>
+<script>
+(function(){
+var msg=document.getElementById('msg'),go=document.getElementById('go'),sub=document.getElementById('sub');
+var tok=new URLSearchParams(location.search).get('token')||'';
+if(!tok){fail('Missing token. Open the link from your inbox.');return;}
+DilshadAuth.api('/api/v1/auth/verify',{method:'POST',auth:false,body:{token:tok}}).then(function(r){
+document.querySelector('h1').textContent='Email verified';
+ok((r.message||'Email verified - you can log in now')+' ('+r.email+')');
+sub.textContent='Your account is active. Log in to open Branches.';
+go.style.display='inline-block';
+}).catch(function(e){document.querySelector('h1').textContent='Verification failed';fail(e.message);go.style.display='inline-block';});
+function ok(t){msg.textContent=t;msg.className='msg ok';}
+function fail(t){msg.textContent=t;msg.className='msg err';}
+})();
+</script>
+</body>
+</html>
