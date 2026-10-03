@@ -686,35 +686,112 @@
       }
     }
 
-    /* ---------- wide layout: Section 2 on the left, last section on the right ---------- */
+    /* ---------- split unit: section 2 (left) + last section (right) ---------- */
+    .split {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      width: 100%;
+    }
+
+    .split__rule {
+      display: none;
+    }
+
     @media (min-width: 1000px) {
       main {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        grid-template-rows: auto auto;
-        grid-template-areas:
-          "head visual"
-          "head foot";
-        column-gap: 64px;
-        row-gap: 32px;
-        max-width: 78rem;
+        max-width: 80rem;
         margin-top: 24px;
       }
 
-      main > .section-head {
-        grid-area: head;
-        align-self: center;
+      .split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-areas:
+          "top top"
+          "left right"
+          "bottom bottom";
+        gap: 28px;
+        padding: 36px 40px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 22px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015));
+        box-shadow: 0 22px 55px rgba(0, 0, 0, 0.35);
       }
 
-      main > .portrait {
-        grid-area: visual;
+      .split__rule {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .split__rule span {
+        display: block;
+        height: 7px;
+        border-radius: 999px;
+      }
+
+      .split__rule span:nth-child(1) {
+        width: 52px;
+        background: #e56e1c;
+      }
+
+      .split__rule span:nth-child(2) {
+        flex: 1 1 auto;
+        min-width: 60px;
+        background: linear-gradient(90deg, #f5a623, #f7b733);
+      }
+
+      .split__rule span:nth-child(3) {
+        width: 58px;
+        background: #d89145;
+      }
+
+      .split__rule--top {
+        grid-area: top;
+      }
+
+      .split__rule--bottom {
+        grid-area: bottom;
+      }
+
+      .split__col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 0;
+      }
+
+      .split__col--left {
+        grid-area: left;
+        align-items: flex-start;
+        padding-right: 40px;
+        border-right: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      .split__col--right {
+        grid-area: right;
+        align-items: flex-end;
+        gap: 28px;
+        padding-left: 40px;
+      }
+
+      .split__col--left .section-head {
+        align-self: stretch;
+      }
+
+      /* the unit already has a full-width closing rule */
+      .split__col--left .section-head__rule {
+        display: none;
+      }
+
+      .split__col--right .portrait {
         width: 100%;
         max-width: min(440px, calc(46vh * 1.7962));
-        justify-self: end;
       }
 
-      main > .construction {
-        grid-area: foot;
+      .split__col--right .construction {
         align-items: flex-end;
       }
     }
@@ -737,27 +814,38 @@
   </header>
 
   <main>
-    <!-- Section 2: From Learning To Building -->
-    <section class="section-head" aria-label="From Learning To Building">
-      <p class="section-head__title">From Learning To Building</p>
-      <span class="section-head__divider" aria-hidden="true"></span>
-      <p class="section-head__sub">I am a Computer Engineering student exploring engineering through hands-on learning and building.</p>
-      <div class="profile-frame">
-        <img src="https://vzydykuudcosiflhwobl.supabase.co/storage/v1/object/sign/Personal%20Buc_/DIMEP.png?token=eyJraWQiOiI1NzJmODdlMS1kZDI3LTRhMjktOGQ4Yi04YjI2ZDVhMTlkNTgiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJQZXJzb25hbCBCdWNfL0RJTUVQLnBuZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTA5NjM5MjEsImV4cCI6MzE3MTUwOTYzOTIxfQ.JDhHStL7NlD_3tBAcd75_wuXO3ibJxSC3OeTQW5rUAx51b62uUnEUthc4n1Di8cmyV5-KGaezEIW6uclKYbkZQ" alt="Portrait of Dilshad Alam" draggable="false">
+    <!-- Unified unit: Section 2 (left) + last section (right) -->
+    <div class="split">
+      <div class="split__rule split__rule--top" aria-hidden="true"><span></span><span></span><span></span></div>
+
+      <div class="split__col split__col--left">
+        <!-- Section 2: From Learning To Building -->
+        <section class="section-head" aria-label="From Learning To Building">
+          <p class="section-head__title">From Learning To Building</p>
+          <span class="section-head__divider" aria-hidden="true"></span>
+          <p class="section-head__sub">I am a Computer Engineering student exploring engineering through hands-on learning and building.</p>
+          <div class="profile-frame">
+            <img src="https://vzydykuudcosiflhwobl.supabase.co/storage/v1/object/sign/Personal%20Buc_/DIMEP.png?token=eyJraWQiOiI1NzJmODdlMS1kZDI3LTRhMjktOGQ4Yi04YjI2ZDVhMTlkNTgiLCJhbGciOiJIUzUxMiJ9.eyJ1cmwiOiJQZXJzb25hbCBCdWNfL0RJTUVQLnBuZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3OTA5NjM5MjEsImV4cCI6MzE3MTUwOTYzOTIxfQ.JDhHStL7NlD_3tBAcd75_wuXO3ibJxSC3OeTQW5rUAx51b62uUnEUthc4n1Di8cmyV5-KGaezEIW6uclKYbkZQ" alt="Portrait of Dilshad Alam" draggable="false">
+          </div>
+          <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
+        </section>
       </div>
-      <div class="section-head__rule" aria-hidden="true"><span></span><span></span><span></span></div>
-    </section>
 
-    <!-- Section 3: Portrait illustration + under construction -->
-    <div class="portrait">
-      <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373" draggable="false">
+      <div class="split__col split__col--right">
+        <!-- Section 3: Portrait illustration + under construction -->
+        <div class="portrait">
+          <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373" draggable="false">
+        </div>
+
+        <section class="construction" aria-label="Under construction">
+          <h1 class="construction__pill">Still Under Construction <span aria-hidden="true">🚧</span></h1>
+
+          <span class="email-pill"><span class="material-symbols-outlined" aria-hidden="true">copyright</span>2026 — Dilshad Alam</span>
+        </section>
+      </div>
+
+      <div class="split__rule split__rule--bottom" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
-
-    <section class="construction" aria-label="Under construction">
-      <h1 class="construction__pill">Still Under Construction <span aria-hidden="true">🚧</span></h1>
-
-      <span class="email-pill"><span class="material-symbols-outlined" aria-hidden="true">copyright</span>2026 — Dilshad Alam</span>
-    </section>
   </main>
 
   <script>
