@@ -343,124 +343,101 @@
       transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
     }
 
-    .email-pill:hover,
-    .email-pill:focus-visible {
-      color: var(--accent-2);
-      border-color: rgba(34, 211, 238, 0.6);
-    }
+    /* No hover rule here: the pill shell is not clickable, only its halves
+       are. One on the shell would win on specificity and paint a cyan border
+       across the whole pill on hover. */
 
-    /* Green action pill: sends the visitor on to the dashboard (or the auth page). */
-    button.email-pill,
-    a.email-pill {
+    /*
+     * The pill is ONE shape holding one or two actions. Signed out it reads
+     * "Signup | Login"; signed in the trailing half is hidden and it reads
+     * "Continue Learning". Each half is its own <a>, so they keep working as
+     * separate links inside the single pill.
+     */
+    span.email-pill {
       font-family: inherit;
       /* Matches .corner-id__role (the "Computer Engineering | Tech Enthusiast" line). */
       font-size: 18px;
       font-weight: 700;
       line-height: 1.2;
       letter-spacing: -0.01em;
-      /* Keeps the label centred when the pill grows wider than its text. */
-      justify-content: center;
-      text-align: center;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
+      align-items: stretch;
+      /* The halves carry the padding now; the pill itself is a plain shell. */
+      padding: 0;
+      /* Clips each half's hover fill to the pill's rounded ends. */
+      overflow: hidden;
+      cursor: default;
     }
 
     /* Dark green keeps the white label at a comfortable contrast ratio. */
-    button.email-pill,
-    button.email-pill:hover,
-    button.email-pill:focus-visible,
-    a.email-pill,
-    a.email-pill:hover,
-    a.email-pill:focus-visible {
+    span.email-pill {
       background: #14532d;
       border-color: transparent;
       color: #ffffff;
     }
 
-    button.email-pill:hover,
-    button.email-pill:focus-visible,
-    a.email-pill:hover,
-    a.email-pill:focus-visible {
-      background: #166534;
-    }
-
-    button.email-pill:active,
-    a.email-pill:active {
-      background: #052e16;
-    }
-
-    button.email-pill[disabled] {
-      opacity: 0.6;
-      cursor: progress;
-    }
-
-    /*
-     * Auth-aware action group: one primary pill, optionally followed by a
-     * divider + secondary pill. Signed out, the primary becomes "Signup" and
-     * the secondary "Login"; signed in, the primary is "Continue Learning"
-     * and the whole trailing pair is hidden.
-     */
-    .pill-group {
+    /* A clickable half of the pill. */
+    .email-pill__link {
       display: inline-flex;
       align-items: center;
-      flex-wrap: wrap;
       justify-content: center;
-      gap: 12px;
-      max-width: 100%;
+      padding: 14px 30px;
+      color: #ffffff;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      transition: background-color 0.2s ease;
+    }
+
+    .email-pill__link:hover,
+    .email-pill__link:focus-visible {
+      /* Light overlay, so the shared green pill underneath never breaks. */
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .email-pill__link:active {
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    /* White divider splitting the pill into its two halves. */
+    .email-pill__divider {
+      display: block;
+      flex: 0 0 auto;
+      align-self: center;
+      width: 1px;
+      height: 22px;
+      background: rgba(255, 255, 255, 0.85);
     }
 
     /*
-     * Divider between the two pills. Same blue gradient used by
-     * .corner-id__divider and .section-head__rule, rotated to run vertically
-     * so it sits between two side-by-side pills.
+     * `hidden` alone is not enough: both .email-pill__link and
+     * .email-pill__divider set an explicit `display`, and any author rule
+     * beats the UA stylesheet's [hidden] { display: none } regardless of
+     * specificity — so without these the "Login" half would stay visible
+     * for a signed-in visitor.
      */
-    .pill-group__divider {
-      display: block;
-      flex: 0 0 auto;
-      width: 2px;
-      height: 22px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, var(--accent), var(--accent-2), transparent);
-      opacity: 0.75;
-    }
-
-    .pill-group[hidden] {
+    .email-pill__link[hidden],
+    .email-pill__divider[hidden] {
       display: none;
     }
 
     /*
      * Phones/tablets get a second copy of the same pill directly under the
-     * name-and-role header, so the dashboard action is reachable without
-     * scrolling past the portrait. Desktop hides it (the pill in the
-     * construction block covers it there).
-     */
-    /*
-     * Hidden on desktop: the construction-block group covers it there.
-     * Kept on phones/tablets so the action is reachable without scrolling.
+     * name-and-role header, so the action is reachable without scrolling past
+     * the portrait. Hidden on desktop, where the construction-block pill
+     * already covers it.
      */
     .header-dash-group {
       display: none;
     }
 
-    /*
-     * `hidden` alone is not enough here. Both .email-pill and
-     * .pill-group__divider set an explicit `display`, and any author rule
-     * beats the UA stylesheet's [hidden] { display: none } regardless of
-     * specificity — so without these the "Login" pill would stay on screen
-     * for a signed-in visitor.
-     */
-    .email-pill[hidden],
-    .pill-group__divider[hidden] {
-      display: none;
-    }
-
     @media (max-width: 999px) {
       .header-dash-group {
-        display: inline-flex;
+        display: block;
         max-width: calc(100% - 40px);
         /* body is a centred flex column; keep clear of the header above. */
-        margin-top: 20px;
+        margin: 20px auto 0;
       }
 
       .header-dash-group .email-pill {
@@ -492,8 +469,8 @@
         font-size: 1.25rem;
       }
 
-      /* Font size is fixed by button.email-pill above, so only padding shrinks here. */
-      .email-pill {
+      /* Font size is fixed above, so only the halves' padding shrinks here. */
+      .email-pill__link {
         padding: 10px 22px;
       }
     }
@@ -632,6 +609,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .email-pill,
+      .email-pill__link,
       .corner-id__name {
         transition: none;
       }
@@ -647,11 +625,13 @@
     <div class="corner-id__rule" aria-hidden="true"><span></span><span></span><span></span></div>
   </header>
 
-  <!-- mobile-only action pills, sit directly under the header -->
-  <div class="pill-group header-dash-group">
-    <a class="email-pill" data-auth-primary href="/auth/">Continue Learning</a>
-    <span class="pill-group__divider" data-auth-divider aria-hidden="true"></span>
-    <a class="email-pill" data-auth-secondary href="/auth/" hidden>Login</a>
+  <!-- mobile-only action pill, sits directly under the header -->
+  <div class="header-dash-group">
+    <span class="email-pill">
+      <a class="email-pill__link" data-auth-primary href="/auth/">Continue Learning</a>
+      <span class="email-pill__divider" data-auth-divider aria-hidden="true"></span>
+      <a class="email-pill__link" data-auth-secondary href="/auth/" hidden>Login</a>
+    </span>
   </div>
 
   <main>
@@ -681,11 +661,11 @@
         <section class="construction" aria-label="Under construction">
           <h1 class="construction__pill">Still Under Construction <span aria-hidden="true">🚧</span></h1>
 
-          <div class="pill-group">
-            <a class="email-pill" data-auth-primary href="/auth/">Continue Learning</a>
-            <span class="pill-group__divider" data-auth-divider aria-hidden="true"></span>
-            <a class="email-pill" data-auth-secondary href="/auth/" hidden>Login</a>
-          </div>
+          <span class="email-pill">
+            <a class="email-pill__link" data-auth-primary href="/auth/">Continue Learning</a>
+            <span class="email-pill__divider" data-auth-divider aria-hidden="true"></span>
+            <a class="email-pill__link" data-auth-secondary href="/auth/" hidden>Login</a>
+          </span>
         </section>
       </div>
 
