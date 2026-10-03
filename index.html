@@ -698,6 +698,21 @@
       display: none;
     }
 
+    /* keep the stacked layout spaced as two distinct blocks */
+    .split__col {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .split__col--left {
+      gap: 40px;
+    }
+
+    .split__col--right {
+      gap: 40px;
+    }
+
     @media (min-width: 1000px) {
       main {
         max-width: 80rem;
