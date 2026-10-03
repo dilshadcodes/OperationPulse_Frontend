@@ -388,6 +388,25 @@
       cursor: progress;
     }
 
+    /*
+     * Phones/tablets get a second copy of the same pill directly under the
+     * name-and-role header, so the dashboard action is reachable without
+     * scrolling past the portrait. Desktop hides it (the pill in the
+     * construction block covers it there).
+     */
+    button.email-pill.header-dash {
+      display: none;
+    }
+
+    @media (max-width: 999px) {
+      button.email-pill.header-dash {
+        display: inline-flex;
+        max-width: calc(100% - 40px);
+        /* body is a centred flex column; keep clear of the header above. */
+        margin-top: 20px;
+      }
+    }
+
     :focus-visible {
       outline: 2px solid var(--accent);
       outline-offset: 3px;
@@ -567,6 +586,9 @@
     <div class="corner-id__rule" aria-hidden="true"><span></span><span></span><span></span></div>
   </header>
 
+  <!-- mobile-only shortcut pill, sits directly under the header -->
+  <button type="button" class="email-pill header-dash" id="goDashboardHeader">Continue to Dashboard</button>
+
   <main>
     <!-- intro on the left, illustration and notice on the right -->
     <div class="split">
@@ -649,31 +671,36 @@
 
       /* "Continue to Dashboard" — the only place this page ever navigates.
          Logged in -> /branches/, otherwise -> /auth/. The landing page itself
-         never redirects on load, so a signed-in visitor still sees it. */
-      var goDashboard = document.getElementById("goDashboard");
+         never redirects on load, so a signed-in visitor still sees it.
+         Two pills share this behaviour: the header one (phones/tablets) and
+         the construction one (desktop). Whichever is clicked drives both, so
+         they dim together and cannot be double-triggered. */
+      var goDashboard = [].slice.call(document.querySelectorAll("#goDashboard, #goDashboardHeader"));
 
-      if (goDashboard) {
-        /* The pill is only dimmed while its navigation is in flight. Coming back
+      if (goDashboard.length) {
+        /* The pills are only dimmed while their navigation is in flight. Coming back
            via the Back button restores this page from bfcache with the DOM
            exactly as it was, so the disabled flag has to be cleared on restore
-           or the pill would stay dead on the landing page. */
+           or the pills would stay dead on the landing page. */
         var rearm = function () {
-          goDashboard.disabled = false;
+          goDashboard.forEach(function (pill) {
+            pill.disabled = false;
+          });
         };
 
-        window.addEventListener("pageshow", rearm);
-        window.addEventListener("popstate", rearm);
-        document.addEventListener("visibilitychange", rearm);
+        var onGoDashboard = function (event) {
+          var pill = event.currentTarget;
 
-        goDashboard.addEventListener("click", function () {
-          if (goDashboard.disabled) {
+          if (pill.disabled) {
             return;
           }
 
-          goDashboard.disabled = true;
+          goDashboard.forEach(function (each) {
+            each.disabled = true;
+          });
 
           /* If the navigation never happens (blocked, offline, same-page), do
-             not leave the pill stuck off. */
+             not leave the pills stuck off. */
           window.setTimeout(rearm, 4000);
 
           if (!window.DilshadAuth) {
@@ -693,6 +720,14 @@
               window.location.href = "/auth/";
             }
           );
+        };
+
+        window.addEventListener("pageshow", rearm);
+        window.addEventListener("popstate", rearm);
+        document.addEventListener("visibilitychange", rearm);
+
+        goDashboard.forEach(function (pill) {
+          pill.addEventListener("click", onGoDashboard);
         });
       }
     })();
