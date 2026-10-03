@@ -713,6 +713,13 @@
       gap: 40px;
     }
 
+    /* the illustration stays centered when stacked */
+    @media (max-width: 999px) {
+      .split__col--right .portrait {
+        align-self: center;
+      }
+    }
+
     @media (min-width: 1000px) {
       main {
         max-width: 80rem;
