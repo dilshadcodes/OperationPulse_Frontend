@@ -75,7 +75,7 @@
       margin-top: 40px;
     }
 
-    /* keep children inside the viewport so the centered flex never overflows */
+    /* stop wide children from pushing the centred column off screen */
     main > * {
       max-width: 100%;
       min-width: 0;
@@ -113,7 +113,7 @@
       text-wrap: balance;
     }
 
-    /* ---------- top identity badge ---------- */
+    /* ---------- name and role, top left ---------- */
     .corner-id {
       align-self: flex-start;
       width: max-content;
@@ -207,7 +207,7 @@
       background: #d89145;
     }
 
-    /* ---------- main section header ---------- */
+    /* ---------- intro copy and photo ---------- */
     .section-head {
       align-self: stretch;
       margin: 0;
@@ -292,314 +292,7 @@
       background: #d89145;
     }
 
-    /* ---------- education section ---------- */
-    .education {
-      align-self: stretch;
-      margin: 18px 0 0;
-      text-align: left;
-    }
-
-    .education .education__pill,
-    .competencies__pill,
-    .contact-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin: 0;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #3d0a0a;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      color: var(--text);
-      font-size: clamp(1.4rem, 5.2vw, 2rem);
-      font-weight: 700;
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-      overflow-wrap: break-word;
-      text-wrap: balance;
-    }
-
-    .education .education__pill .material-symbols-outlined,
-    .competencies__pill .material-symbols-outlined,
-    .contact-pill .material-symbols-outlined {
-      font-size: 1.1em;
-      line-height: 1;
-    }
-
-    .education .education__list {
-      margin: 14px 0 0;
-      padding: 16px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 14px;
-      background: #05070d;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      list-style: none;
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--text);
-    }
-
-    .education .education__list li {
-      margin: 0;
-      padding: 6px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 999px;
-      background: #0d1322;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    }
-
-    .education .education__list li.edu-done {
-      border-color: rgba(34, 197, 94, 0.6);
-      background: #14532d;
-    }
-
-    .education .education__list li.edu-progress {
-      border-color: rgba(34, 197, 94, 0.6);
-      background: linear-gradient(90deg, #14532d 0 25%, #0d1322 25% 100%);
-    }
-
-    .education .education__list li + li {
-      margin-top: 10px;
-    }
-
-    .education .education__list .list-divider {
-      display: none;
-    }
-
-    /* ---------- competencies section ---------- */
-    .competencies {
-      align-self: stretch;
-      margin: 18px 0 0;
-      text-align: left;
-    }
-
-    .competencies .competencies__box {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 14px 0 0;
-      padding: 16px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 14px;
-      background: #05070d;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      list-style: none;
-    }
-
-    .competencies .competencies__box li {
-      flex: 0 1 auto;
-      width: max-content;
-      max-width: 100%;
-      margin: 0;
-      padding: 6px 14px;
-      border: 0;
-      border-radius: 999px;
-      background: #052e16;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--text);
-    }
-
-    .competencies .competencies__box li.competencies__more {
-      background: #f5a623;
-      color: #1a1206;
-    }
-
-    /* ---------- contact section ---------- */
-    .contact {
-      align-self: stretch;
-      margin: 18px 0 0;
-      text-align: left;
-    }
-
-    .contact .contact__box {
-      margin: 14px 0 0;
-      padding: 16px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 14px;
-      background: #05070d;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-    }
-
-    .contact .contact__row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .contact .contact__email {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 999px;
-      background: #123a8f;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      color: var(--text);
-      font-weight: 700;
-      font-size: 16px;
-      line-height: 1.6;
-      text-decoration: none;
-      overflow-wrap: break-word;
-    }
-
-    .contact .contact__email .material-symbols-outlined {
-      font-size: 1.35em;
-      line-height: 1;
-    }
-
-    /* ---------- interesting stuffs section ---------- */
-    .interesting {
-      align-self: stretch;
-      margin: 18px 0 0;
-      text-align: left;
-    }
-
-    .interesting .interesting__pill {
-      display: inline-block;
-      margin: 0;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #f5a623;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      color: #1a1206;
-      font-size: clamp(1.4rem, 5.2vw, 2rem);
-      font-weight: 700;
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-      overflow-wrap: break-word;
-      text-wrap: balance;
-    }
-
-    .interesting .interesting__divider {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      height: 2px;
-      margin: 8px 0;
-      border-radius: 999px;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2), transparent);
-      opacity: 0.75;
-    }
-
-    .interesting .interesting__divider--white {
-      background: linear-gradient(90deg, #ffffff, transparent);
-    }
-
-    .interesting .interesting__sub {
-      margin-top: 12px;
-      font-weight: 700;
-      font-size: 18px;
-      line-height: 1.6;
-      color: rgba(232, 237, 247, 0.72);
-    }
-
-    .interesting .interesting__rule {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-    }
-
-    .interesting .interesting__rule span {
-      display: block;
-      height: 7px;
-      border-radius: 999px;
-    }
-
-    .interesting .interesting__rule span:nth-child(1) {
-      width: 52px;
-      background: #e56e1c;
-    }
-
-    .interesting .interesting__rule span:nth-child(2) {
-      width: 124px;
-      background: linear-gradient(90deg, #f5a623, #f7b733);
-    }
-
-    .interesting .interesting__rule span:nth-child(3) {
-      width: 58px;
-      background: #d89145;
-    }
-
-    .interesting .interesting__item {
-      margin-top: 18px;
-      text-align: left;
-    }
-
-    .interesting .interesting__item-id {
-      display: block;
-      width: fit-content;
-      max-width: 100%;
-      margin: 0 0 8px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #3d0a0a;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      color: #ffffff;
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
-    }
-
-    .interesting .interesting__item-title {
-      margin: 0;
-      font-size: clamp(1.4rem, 5.2vw, 2rem);
-      font-weight: 700;
-      line-height: 1.25;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      overflow-wrap: break-word;
-      text-wrap: balance;
-    }
-
-    .interesting .interesting__item-meta {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
-      display: inline-block;
-      margin: 0;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: #000000;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.4;
-      letter-spacing: -0.01em;
-    }
-
-    .interesting .interesting__media-frame {
-      position: relative;
-      display: block;
-      margin: 14px 0 0;
-    }
-
-    .interesting .interesting__item-sub {
-      margin: 12px 0 0;
-      font-weight: 400;
-      font-size: 18px;
-      line-height: 1.6;
-      color: rgba(232, 237, 247, 0.72);
-    }
-
-    .interesting .interesting__media {
-      display: block;
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-      border: 0;
-      border-radius: 0;
-      object-fit: cover;
-    }
-
-    /* ---------- under-construction section ---------- */
+    /* ---------- construction notice ---------- */
     .construction {
       display: flex;
       flex-direction: column;
@@ -624,7 +317,7 @@
       text-wrap: balance;
     }
 
-    /* ---------- email pill ---------- */
+    /* ---------- copyright pill ---------- */
     .email-pill {
       display: inline-flex;
       align-items: center;
@@ -686,7 +379,7 @@
       }
     }
 
-    /* ---------- split unit: section 2 (left) + last section (right) ---------- */
+    /* ---------- the two halves, side by side on roomy screens ---------- */
     .split {
       display: flex;
       flex-direction: column;
@@ -698,7 +391,7 @@
       display: none;
     }
 
-    /* keep the stacked layout spaced as two distinct blocks */
+    /* each half keeps its own rhythm when stacked */
     .split__col {
       display: flex;
       flex-direction: column;
@@ -713,7 +406,7 @@
       gap: 40px;
     }
 
-    /* the illustration stays centered when stacked */
+    /* illustration keeps its centre line once the column narrows */
     @media (max-width: 999px) {
       .split__col--right .portrait {
         align-self: center;
@@ -803,7 +496,7 @@
         align-self: stretch;
       }
 
-      /* the unit already has a full-width closing rule */
+      /* the shared rule below already closes this half */
       .split__col--left .section-head__rule {
         display: none;
       }
@@ -827,7 +520,7 @@
   </style>
 </head>
 <body>
-  <!-- Section 1: Identity badge -->
+  <!-- name and role -->
   <header class="corner-id">
     <a class="corner-id__name" href="mailto:mail@dilshadalam.com.np">Dilshad Alam<span class="corner-id__dot">.</span></a>
     <span class="corner-id__divider" aria-hidden="true"></span>
@@ -836,12 +529,12 @@
   </header>
 
   <main>
-    <!-- Unified unit: Section 2 (left) + last section (right) -->
+    <!-- intro on the left, illustration and notice on the right -->
     <div class="split">
       <div class="split__rule split__rule--top" aria-hidden="true"><span></span><span></span><span></span></div>
 
       <div class="split__col split__col--left">
-        <!-- Section 2: From Learning To Building -->
+        <!-- intro -->
         <section class="section-head" aria-label="From Learning To Building">
           <p class="section-head__title">From Learning To Building</p>
           <span class="section-head__divider" aria-hidden="true"></span>
@@ -854,7 +547,7 @@
       </div>
 
       <div class="split__col split__col--right">
-        <!-- Section 3: Portrait illustration + under construction -->
+        <!-- illustration and construction notice -->
         <div class="portrait">
           <img src="images/image.png" alt="Illustration of Dilshad Alam" width="670" height="373" draggable="false">
         </div>
