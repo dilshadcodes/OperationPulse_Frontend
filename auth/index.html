@@ -207,6 +207,41 @@ function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 &
 function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
 function goB(){ window.location.href = '/branches/'; }
 function busy(btn){ btn.disabled = true; btn.innerHTML = 'Processing...'; }
+/* Back-navigation recovery.
+   A successful login calls goB() while the Submit button still reads
+   "Processing...". Back then restores this page from bfcache with that DOM
+   intact, so the frozen label would otherwise stick forever. On restore we
+   re-run the session check: a live session goes straight back to the
+   dashboard (same as a fresh load), otherwise the forms are reset so they
+   are usable again. `replace` is deliberate — pushing /branches/ again would
+   leave /auth/ in the history and trap the user in a back-and-forth loop. */
+function resetLoginForm(){
+  fL.reset();
+  document.querySelectorAll('#loginForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
+  document.querySelectorAll('#loginForm .eye-btn').forEach(function(b){ b.setAttribute('aria-label', 'Show password'); });
+  var v = document.getElementById('verifyLogin'); if(v) v.hidden = true;
+  var li = document.getElementById('btnLoginSubmit'); if(li){ li.hidden = false; idleS(li); }
+}
+function resetSignupForm(){
+  idleS(document.getElementById('btnSignupSubmit'));
+  var sub = document.getElementById('btnSignupSubmit'); if(sub) sub.hidden = false;
+  var vs = document.getElementById('verifySignup'); if(vs) vs.hidden = true;
+  var fresh = document.getElementById('btnSignupFresh'); if(fresh) fresh.hidden = true;
+  var foot = document.querySelector('#signupForm .form-foot'); if(foot) foot.classList.remove('is-submitted');
+}
+function restoreOnBack(){
+  if (window.DilshadAuth && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())) {
+    DilshadAuth.ensureAuth().then(function(){
+      window.location.replace('/branches/');
+    }, function(){
+      try { DilshadAuth.clear(); } catch(_) {}
+      resetLoginForm(); resetSignupForm();
+    });
+  } else {
+    resetLoginForm(); resetSignupForm();
+  }
+}
+window.addEventListener('pageshow', function(e){ if(e.persisted) restoreOnBack(); });
 function idleS(btn){ btn.disabled = false; btn.classList.remove('is-done'); btn.type = 'submit'; btn.onclick = null; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; var fr = document.getElementById('btnSignupFresh'); var ft = btn.closest ? btn.closest('.form-foot') : null; if(btn.id === 'btnSignupSubmit' && fr && document.activeElement !== fr){ fr.hidden = true; if(ft) ft.classList.remove('is-submitted'); } }
 function submitted(btn){
   /* Signup done: clear fields at once, green pill opens Gmail, fresh Submit appears below it. */
@@ -268,10 +303,7 @@ fL.addEventListener('submit', function(e){
   if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
   busy(btn);
   DilshadAuth.login(em, pw).then(function(){ goB(); }).catch(function(x){
-    fL.reset();
-    document.querySelectorAll('#loginForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
-    document.querySelectorAll('#loginForm .eye-btn').forEach(function(b){ b.setAttribute('aria-label', 'Show password'); });
-    idleS(btn);
+    resetLoginForm();
     if(x.status === 403){ showV('l'); bad(box, 'Email not verified - check inbox, then retry.'); }
     else { bad(box, friendly(x)); }
   });
