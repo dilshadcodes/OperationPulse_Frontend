@@ -409,8 +409,10 @@
      */
     .email-pill__icon {
       flex: 0 0 auto;
-      font-size: 13px;
-      margin-right: 6px;
+      /* Slightly larger than the 18px label, so the glyph reads as an icon
+         and not as a stray character. */
+      font-size: 22px;
+      margin-right: 8px;
     }
 
     /* Same reason as .email-pill__link[hidden]: an author `display` would
