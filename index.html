@@ -357,7 +357,7 @@ description: Self-paced online learning platform designed to help students with 
   </div>
   <div class="auth-msg" id="msgLogin"></div>
 </form>
-<div class="page-title section-title" id="sectionTitle" aria-current="page"><span class="material-symbols-outlined">list</span> <span id="moduleTitleText" class="module-title-text" style="display:none;"></span><span id="sectionTitleText">Popular Stuffs</span></div>
+<div class="page-title section-title" id="sectionTitle" aria-current="page"><span class="material-symbols-outlined">list</span> <span id="sectionTitleText">Popular Stuffs</span></div>
 <div class="cards" id="cardsContainer"></div>
 
 <script src="/assets/js/auth.js?v=2"></script>
@@ -701,7 +701,6 @@ function renderContent() {
   if (!cachedContents) return;
   var chapter = getQueryChapter();
   var titleText = 'Popular Stuffs';
-  var modTitle = getModuleTitle(chapter);
   if (chapter) {
     if (cachedContents.chapters && cachedContents.chapters[chapter]) {
       titleText = cachedContents.chapters[chapter];
@@ -710,20 +709,26 @@ function renderContent() {
     }
   }
 
-  var modEl = document.getElementById('moduleTitleText');
-  if (modEl) {
-    if (chapter) {
-      modEl.textContent = modTitle + ' \u00B7 ';
-      modEl.style.display = 'inline';
-    } else {
-      modEl.textContent = '';
-      modEl.style.display = 'none';
-    }
+  var fullTitle = titleText;
+  var displayTitle = titleText;
+  if (displayTitle.length > 30) {
+    displayTitle = displayTitle.slice(0, 30) + '...';
   }
 
   var titleEl = document.getElementById('sectionTitleText');
   if (titleEl) {
-    titleEl.textContent = titleText;
+    titleEl.textContent = displayTitle;
+    if (fullTitle !== displayTitle) {
+      titleEl.setAttribute('title', fullTitle);
+    } else {
+      titleEl.removeAttribute('title');
+    }
+  }
+
+  var modEl = document.getElementById('moduleTitleText');
+  if (modEl) {
+    modEl.textContent = '';
+    modEl.style.display = 'none';
   }
 
   updateSidebarContent(chapter);

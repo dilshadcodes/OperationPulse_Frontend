@@ -508,14 +508,24 @@ function loadVideo(videoId) {
   if (authorEl) authorEl.textContent = current.author || 'StudiTube CEE';
 
   var chapterName = (cachedContents.chapters && cachedContents.chapters[current.chapter_id]) || ('Chapter ' + current.chapter_id);
+  var fullChapterName = chapterName;
+  if (chapterName.length > 30) {
+    chapterName = chapterName.slice(0, 30) + '...';
+  }
   var chapterEl = document.getElementById('watchChapter');
-  if (chapterEl) chapterEl.textContent = chapterName;
+  if (chapterEl) {
+    chapterEl.textContent = chapterName;
+    if (fullChapterName !== chapterName) {
+      chapterEl.setAttribute('title', fullChapterName);
+    } else {
+      chapterEl.removeAttribute('title');
+    }
+  }
 
-  var modTitle = getModuleTitle(current.chapter_id);
   var modEl = document.getElementById('watchModule');
   if (modEl) {
-    modEl.textContent = modTitle + ' \u00B7 ';
-    modEl.style.display = 'inline';
+    modEl.textContent = '';
+    modEl.style.display = 'none';
   }
 
   // Recommendation sidebar: display remaining videos from same chapter in order of date
