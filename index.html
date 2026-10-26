@@ -627,59 +627,74 @@ function renderStuffsCard(item) {
   }
 }
 
-function getModuleTitle(chapterId) {
+function getModuleTitle(modOrChapterId) {
   if (!cachedContents) return 'Electricity and Magnetism';
-  if (cachedContents.module_title) return cachedContents.module_title;
-  if (cachedContents.modules) {
-    if (chapterId && cachedContents.modules[chapterId]) return cachedContents.modules[chapterId];
-    var p = chapterId ? String(chapterId).split('.')[0] : '1';
-    if (cachedContents.modules[p]) return cachedContents.modules[p];
+  var modId = '1';
+  if (modOrChapterId != null) {
+    var str = String(modOrChapterId).trim();
+    modId = str.indexOf('.') !== -1 ? str.split('.')[0] : str;
   }
-  if (cachedContents.chapters) {
-    if (chapterId && cachedContents.chapters[chapterId] && !/^\d+\.\d+\.?\s+/.test(cachedContents.chapters[chapterId])) {
-      return cachedContents.chapters[chapterId];
-    }
-    if (cachedContents.chapters['2.1']) {
-      return cachedContents.chapters['2.1'];
-    }
-    if (cachedContents.chapters['1']) {
-      return cachedContents.chapters['1'];
-    }
-    if (cachedContents.chapters['module']) {
-      return cachedContents.chapters['module'];
-    }
+  if (cachedContents.modules && cachedContents.modules[modId]) {
+    return cachedContents.modules[modId];
   }
-  return 'Electricity and Magnetism';
+  if (cachedContents.module_titles && cachedContents.module_titles[modId]) {
+    return cachedContents.module_titles[modId];
+  }
+  if (cachedContents.module_title && modId === '1') {
+    return cachedContents.module_title;
+  }
+  if (modId === '1') return 'Electricity and Magnetism';
+  if (modId === '2') return 'Magnetism';
+  return 'Module ' + modId;
 }
 
 function updateSidebarContent(activeChapter) {
-  if (!cachedContents) return;
-  var modTitle = getModuleTitle(activeChapter);
-  document.querySelectorAll('.sidebar .group-title').forEach(function(el){
-    el.textContent = modTitle.toUpperCase();
-  });
-
-  if (!cachedContents.chapters) return;
-  var sideGroup = document.querySelector('.sidebar .side-group');
-  if (!sideGroup) return;
+  if (!cachedContents || !cachedContents.chapters) return;
+  var sidebarEl = document.querySelector('.sidebar:not(.watch-sidebar)');
+  if (!sidebarEl) return;
 
   var chapterKeys = Object.keys(cachedContents.chapters);
+  var moduleGroups = {};
   chapterKeys.forEach(function(key){
-    var rawTitle = cachedContents.chapters[key];
-    var existing = sideGroup.querySelector('a.side-item[href*="chapter=' + key + '"]');
-    if (existing) {
-      var label = existing.querySelector('.label');
-      if (label) {
-        label.innerHTML = '<span class="material-symbols-outlined">list</span> ' + escapeHtml(rawTitle);
-      }
-    } else {
-      var a = document.createElement('a');
-      a.className = 'side-item';
-      a.href = '/auth/?chapter=' + encodeURIComponent(key);
-      a.innerHTML = '<span class="label"><span class="material-symbols-outlined">list</span> ' + escapeHtml(rawTitle) + '</span>';
-      sideGroup.appendChild(a);
+    var modId = key.indexOf('.') !== -1 ? key.split('.')[0] : '1';
+    if (!moduleGroups[modId]) {
+      moduleGroups[modId] = [];
     }
+    moduleGroups[modId].push(key);
   });
+
+  if (cachedContents.modules) {
+    Object.keys(cachedContents.modules).forEach(function(mId){
+      if (!moduleGroups[mId]) {
+        moduleGroups[mId] = [];
+      }
+    });
+  }
+
+  var sortedModIds = Object.keys(moduleGroups).sort(function(a, b){
+    var numA = parseFloat(a), numB = parseFloat(b);
+    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+    return a.localeCompare(b);
+  });
+
+  var html = '';
+  sortedModIds.forEach(function(modId){
+    var modTitle = getModuleTitle(modId);
+    html += '<div class="side-group" data-module="' + escapeHtml(modId) + '">';
+    html += '<div class="group-title">' + escapeHtml(modTitle.toUpperCase()) + '</div>';
+    
+    var keys = moduleGroups[modId];
+    keys.forEach(function(key){
+      var chapterTitle = cachedContents.chapters[key];
+      var isActive = (activeChapter && String(activeChapter).trim() === String(key).trim());
+      html += '<a class="side-item' + (isActive ? ' active' : '') + '" href="/auth/?chapter=' + encodeURIComponent(key) + '">';
+      html += '<span class="label"><span class="material-symbols-outlined">list</span> ' + escapeHtml(chapterTitle) + '</span>';
+      html += '</a>';
+    });
+    html += '</div>';
+  });
+
+  sidebarEl.innerHTML = html;
 }
 
 function renderContent() {

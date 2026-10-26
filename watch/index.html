@@ -440,29 +440,25 @@ function renderRecommendedCard(item) {
   '</div>';
 }
 
-function getModuleTitle(chapterId) {
+function getModuleTitle(modOrChapterId) {
   if (!cachedContents) return 'Electricity and Magnetism';
-  if (cachedContents.module_title) return cachedContents.module_title;
-  if (cachedContents.modules) {
-    if (chapterId && cachedContents.modules[chapterId]) return cachedContents.modules[chapterId];
-    var p = chapterId ? String(chapterId).split('.')[0] : '1';
-    if (cachedContents.modules[p]) return cachedContents.modules[p];
+  var modId = '1';
+  if (modOrChapterId != null) {
+    var str = String(modOrChapterId).trim();
+    modId = str.indexOf('.') !== -1 ? str.split('.')[0] : str;
   }
-  if (cachedContents.chapters) {
-    if (chapterId && cachedContents.chapters[chapterId] && !/^\d+\.\d+\.?\s+/.test(cachedContents.chapters[chapterId])) {
-      return cachedContents.chapters[chapterId];
-    }
-    if (cachedContents.chapters['2.1']) {
-      return cachedContents.chapters['2.1'];
-    }
-    if (cachedContents.chapters['1']) {
-      return cachedContents.chapters['1'];
-    }
-    if (cachedContents.chapters['module']) {
-      return cachedContents.chapters['module'];
-    }
+  if (cachedContents.modules && cachedContents.modules[modId]) {
+    return cachedContents.modules[modId];
   }
-  return 'Electricity and Magnetism';
+  if (cachedContents.module_titles && cachedContents.module_titles[modId]) {
+    return cachedContents.module_titles[modId];
+  }
+  if (cachedContents.module_title && modId === '1') {
+    return cachedContents.module_title;
+  }
+  if (modId === '1') return 'Electricity and Magnetism';
+  if (modId === '2') return 'Magnetism';
+  return 'Module ' + modId;
 }
 
 function loadVideo(videoId) {
