@@ -321,7 +321,7 @@ document.body.classList.add('watch-page');
 var homeBtn = document.getElementById('homeBtn');
 if (homeBtn) homeBtn.remove();
 
-// Make the guest button of the header as Home button with only home icon, navigating to /auth/
+// Make the guest button of the header as Home button with only home icon, navigating to root (auth page)
 var userLabel = document.querySelector('.user-label');
 if (userLabel) {
   userLabel.removeAttribute('for');
@@ -333,11 +333,19 @@ if (userLabel) {
   userLabel.style.pointerEvents = 'auto';
   userLabel.onclick = function(e){
     e.preventDefault();
-    window.location.href = '/auth/';
+    window.location.href = '/';
   };
 }
 var navToggle = document.getElementById('nav-toggle');
 if (navToggle) navToggle.checked = false;
+
+// Redirect to root (auth page) when no video id is provided
+var watchId = (function(){
+  try { return new URLSearchParams(window.location.search).get('id'); } catch(_) { return null; }
+})();
+if (!watchId) {
+  window.location.replace('/');
+}
 
 // Check and initialize sidebar if needed (for environments without Jekyll preprocessing)
 var sidebar = document.querySelector('.sidebar');
