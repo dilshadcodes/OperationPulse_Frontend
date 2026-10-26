@@ -862,6 +862,39 @@
     --sidebar-w: 390px;
   }
 
+  body.watch-page #homeBtn {
+    display: none !important;
+  }
+
+  body.watch-page .user-label {
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    padding: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 999px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    text-decoration: none !important;
+    flex-shrink: 0 !important;
+  }
+
+  body.watch-page .user-label .user-name {
+    display: none !important;
+  }
+
+  body.watch-page .user-label .material-symbols-outlined {
+    font-size: 22px !important;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    body.watch-page .user-label:hover {
+      background: #0a2a7a !important;
+    }
+  }
+
   body.watch-page .watch-sidebar {
     padding: 16px 14px 24px 14px;
     display: flex;
@@ -1160,16 +1193,24 @@
     </div>
     <div class="header">
       <div class="header-long">
+        {% if page.is_watch %}
+        <a class="user-label" href="/auth/" role="button" aria-label="Go to Auth page" title="Go to Auth page" style="text-decoration:none;">
+          <span class="material-symbols-outlined">home</span>
+        </a>
+        {% else %}
         <label class="user-label" for="nav-toggle">
           <span class="material-symbols-outlined">person_text</span>
           <span class="user-name" data-user-name>Guest</span>
         </label>
+        {% endif %}
 
         <input class="search" type="text" placeholder="Search" />
       </div>
 
       <div class="header-small">
+        {% unless page.is_watch %}
         <div class="auth-btn auth-hide auth-keep" id="homeBtn" role="button" tabindex="0" title="Back to the landing page">Home</div>
+        {% endunless %}
         <div class="auth-btn" id="themeBtn" role="button" tabindex="0" title="Toggle dark / light mode"><span class="material-symbols-outlined" id="themeIcon">dark_mode</span></div>
         <div class="auth-btn" id="authBtn" role="button" tabindex="0" title="Log in or out"><span id="authBtnText">Log In</span></div>
       </div>

@@ -65,7 +65,7 @@ is_watch: true
     width: 100%;
     aspect-ratio: 16 / 9;
     background: #000;
-    border-radius: 12px;
+    border-radius: 0;
     overflow: hidden;
     border: 1px solid var(--line);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
@@ -102,7 +102,7 @@ is_watch: true
 
   .watch-title {
     font-family: 'Montserrat', sans-serif;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--ink);
     line-height: 1.35;
@@ -317,9 +317,25 @@ var currentVideoId = null;
 document.documentElement.classList.add('watch-page');
 document.body.classList.add('watch-page');
 
-// Prevent user-label from toggling nav drawer on watch page
+// Remove home button on watch page
+var homeBtn = document.getElementById('homeBtn');
+if (homeBtn) homeBtn.remove();
+
+// Make the guest button of the header as Home button with only home icon, navigating to /auth/
 var userLabel = document.querySelector('.user-label');
-if (userLabel) userLabel.removeAttribute('for');
+if (userLabel) {
+  userLabel.removeAttribute('for');
+  userLabel.innerHTML = '<span class="material-symbols-outlined">home</span>';
+  userLabel.setAttribute('role', 'button');
+  userLabel.setAttribute('aria-label', 'Go to Auth page');
+  userLabel.setAttribute('title', 'Go to Auth page');
+  userLabel.style.cursor = 'pointer';
+  userLabel.style.pointerEvents = 'auto';
+  userLabel.onclick = function(e){
+    e.preventDefault();
+    window.location.href = '/auth/';
+  };
+}
 var navToggle = document.getElementById('nav-toggle');
 if (navToggle) navToggle.checked = false;
 
