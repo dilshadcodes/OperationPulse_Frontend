@@ -95,6 +95,64 @@ title: User Authentication
     font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-align: center; }
   .auth-msg.ok { display: block; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
   .auth-msg.err { display: block; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+
+  @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  /* StudiTube CEE Solution */
+  :root {
+    --st-bg: #101216;
+    --st-surface: #181b21;
+    --st-ink: #eceef1;
+    --st-muted: #98a1ae;
+    --st-line: #2a2f38;
+    --st-accent: #ff6a4d;
+    --st-accent-ink: #1a0a06;
+    --st-accent-soft: #3a1d17;
+    --st-font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --st-font-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    --st-font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  }
+  .st-wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+  .st-cards { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+  .st-header { display: flex; flex-direction: column; gap: 10px; }
+  .st-h1 {
+    font-family: var(--st-font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .st-lede { color: var(--st-muted); margin: 0; max-width: 62ch; font-size: 16px; }
+  .st-stage { flex: 0 1 300px; width: 100%; max-width: 300px; min-width: 0; }
+  .st-meta { font-family: var(--st-font-mono); font-size: 12px; color: var(--st-muted); font-variant-numeric: tabular-nums; }
+  .st-fname { font-weight: 600; overflow-wrap: anywhere; }
+  .st-btn {
+    font-family: var(--st-font-body); font-weight: 600; font-size: 13px; padding: 7px 12px;
+    border: 1px solid var(--st-ink); background: var(--st-ink); color: var(--st-bg); pointer-events: none;
+  }
+  .st-btn.ghost { background: transparent; color: var(--st-ink); border-color: var(--st-line); }
+  .st-chip { font-size: 12px; padding: 2px 8px; border: 1px solid var(--st-line); color: var(--st-muted); }
+  .st-pill { display: inline-block; padding: 2px 10px; border-radius: 999px; background: #dc2626; color: #ffffff; font-family: var(--st-font-mono); font-size: 11px; font-weight: 500; }
+  .st-c-detail { background: var(--st-surface); border: 1px solid var(--st-line); padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+  .st-top { display: flex; gap: 10px; align-items: flex-start; }
+  .st-ico { font-family: var(--st-font-mono); font-size: 11px; font-weight: 500; padding: 2px 8px; border: 1px solid var(--st-line); border-radius: 4px; background: var(--st-bg); color: var(--st-ink); min-width: 26px; text-align: center; }
+  .st-thumb { position: relative; width: 100%; aspect-ratio: 3/4; background: var(--st-bg); border: 1px solid var(--st-line); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--st-muted); font-size: 12px; }
+  .st-vthumb { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border: 1px solid var(--st-line); border-radius: 6px; overflow: hidden; }
+  .st-vthumb .st-play { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); background: var(--st-accent); display: grid; place-items: center; border-radius: 50%; }
+  .st-vthumb .st-play::after { content: ""; margin-left: 3px; border-left: 14px solid var(--st-accent-ink); border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
+  .st-vthumb .st-dur { position: absolute; right: 8px; bottom: 8px; font-family: var(--st-font-mono); font-size: 11px; color: #ffffff; background: rgba(0,0,0,.75); padding: 1px 6px; border-radius: 3px; }
+  .st-chips { display: flex; gap: 8px; margin-top: 6px; }
+  .st-rule { height: 1px; background: var(--st-line); border: none; margin: 8px 0; }
+  .st-acts { display: flex; gap: 8px; margin-top: 6px; }
+
+  @media (max-width: 640px) {
+    .st-cards { flex-direction: column; }
+    .st-stage { flex: 0 0 100%; width: 100%; max-width: 100%; }
+    .st-header { width: 100%; margin-left: 0; }
+    .st-h1 { text-align: left; width: 100%; }
+    .st-lede { max-width: none; width: 100%; text-align: left; }
+  }
 </style>
 <div class="page-header">
   <div class="title-row">
@@ -153,6 +211,45 @@ title: User Authentication
   </div>
   <div class="auth-msg" id="msgLogin"></div>
 </form>
+<div class="st-wrap">
+  <div class="st-header">
+    <h1 class="st-h1">StudiTube CEE Solution</h1>
+    <p class="st-lede">Self-paced online learning modules designed to help medical entrance preparing student master the concepts themselves.</p>
+  </div>
+
+  <div class="st-cards">
+    <div class="st-stage">
+      <div class="st-c-detail">
+        <div class="st-top">
+          <div class="st-ico">PDF</div>
+          <div><span class="st-fname">CEE 2082 | MBBS PAST QUESTION</span><span class="st-meta"><span class="st-pill">PDF</span> · Updated Oct 21</span></div>
+        </div>
+        <div class="st-thumb" role="img" aria-label="Preview of page 1">
+          <span class="st-pgnum">1</span>
+        </div>
+        <div class="st-chips"><span class="st-chip">36 pages</span><span class="st-chip">4.8 MB</span></div>
+        <div class="st-rule"></div>
+        <div class="st-acts"><span class="st-btn">Open</span><span class="st-btn ghost">Share</span></div>
+      </div>
+    </div>
+
+    <div class="st-stage">
+      <div class="st-c-detail">
+        <div class="st-top">
+          <div class="st-ico">VID</div>
+          <div><span class="st-fname">Cell-Division-Lecture-1.mp4</span><span class="st-meta"><span class="st-pill">MP4</span> · Updated Oct 21</span></div>
+        </div>
+        <div class="st-vthumb" role="img" aria-label="Video preview, 42 minutes 18 seconds">
+          <span class="st-play" aria-hidden="true"></span>
+          <span class="st-dur">42:18</span>
+        </div>
+        <div class="st-chips"><span class="st-chip">42 min</span><span class="st-chip">1080p</span></div>
+        <div class="st-rule"></div>
+        <div class="st-acts"><span class="st-btn">Watch</span><span class="st-btn ghost">Share</span></div>
+      </div>
+    </div>
+  </div>
+</div>
 <script src="/assets/js/auth.js?v=2"></script>
 <script>
 (function(){
