@@ -412,7 +412,27 @@ function friendly(e){
 }
 function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 && p.length <= 72 && !/^\s|\s$/.test(p); }
 function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
-function goB(){ window.location.href = '/branches/'; }
+function hideAuthForms(){
+  var ph = document.querySelector('.page-header');
+  if (ph) ph.style.display = 'none';
+  if (fS) fS.style.display = 'none';
+  if (fL) fL.style.display = 'none';
+  try {
+    var u = (window.DilshadAuth && DilshadAuth.me && DilshadAuth.me());
+    var name = (u && (u.full_name || u.email)) || 'User';
+    document.querySelectorAll('[data-user-name]').forEach(function(el){ el.textContent = name; });
+    var t = document.getElementById('authBtnText');
+    if (t) t.textContent = 'Log Out';
+    var b = document.getElementById('authBtn');
+    if (b) b.setAttribute('aria-label', 'Log out');
+  } catch(_) {}
+}
+function goB(){ hideAuthForms(); }
+try {
+  if (window.DilshadAuth && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())) {
+    hideAuthForms();
+  }
+} catch(_) {}
 function busy(btn){ btn.disabled = true; btn.innerHTML = 'Processing...'; }
 /* Back-navigation recovery.
    A successful login calls goB() while the Submit button still reads
