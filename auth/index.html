@@ -281,6 +281,10 @@ title: User Authentication
     margin-left: -24px; /* cancel .main's 24px left padding so the pill touches the sidebar border */
     margin-top: 16px;   /* push pill down from the auth form border */
   }
+  .section-title .module-title-text {
+    opacity: 0.88;
+    font-weight: 700;
+  }
   .empty-state {
     grid-column: 1 / -1;
     width: 100%;
@@ -352,7 +356,7 @@ title: User Authentication
   </div>
   <div class="auth-msg" id="msgLogin"></div>
 </form>
-<div class="page-title section-title" id="sectionTitle" aria-current="page"><span class="material-symbols-outlined">list</span> <span id="sectionTitleText">Popular Stuffs</span></div>
+<div class="page-title section-title" id="sectionTitle" aria-current="page"><span class="material-symbols-outlined">list</span> <span id="moduleTitleText" class="module-title-text" style="display:none;"></span><span id="sectionTitleText">Popular Stuffs</span></div>
 <div class="cards" id="cardsContainer"></div>
 
 <script src="/assets/js/auth.js?v=2"></script>
@@ -622,10 +626,66 @@ function renderStuffsCard(item) {
   }
 }
 
+function getModuleTitle(chapterId) {
+  if (!cachedContents) return 'Electricity and Magnetism';
+  if (cachedContents.module_title) return cachedContents.module_title;
+  if (cachedContents.modules) {
+    if (chapterId && cachedContents.modules[chapterId]) return cachedContents.modules[chapterId];
+    var p = chapterId ? String(chapterId).split('.')[0] : '1';
+    if (cachedContents.modules[p]) return cachedContents.modules[p];
+  }
+  if (cachedContents.chapters) {
+    if (chapterId && cachedContents.chapters[chapterId] && !/^\d+\.\d+\.?\s+/.test(cachedContents.chapters[chapterId])) {
+      return cachedContents.chapters[chapterId];
+    }
+    if (cachedContents.chapters['2.1']) {
+      return cachedContents.chapters['2.1'];
+    }
+    if (cachedContents.chapters['1']) {
+      return cachedContents.chapters['1'];
+    }
+    if (cachedContents.chapters['module']) {
+      return cachedContents.chapters['module'];
+    }
+  }
+  return 'Electricity and Magnetism';
+}
+
+function updateSidebarContent(activeChapter) {
+  if (!cachedContents) return;
+  var modTitle = getModuleTitle(activeChapter);
+  document.querySelectorAll('.sidebar .group-title').forEach(function(el){
+    el.textContent = modTitle.toUpperCase();
+  });
+
+  if (!cachedContents.chapters) return;
+  var sideGroup = document.querySelector('.sidebar .side-group');
+  if (!sideGroup) return;
+
+  var chapterKeys = Object.keys(cachedContents.chapters);
+  chapterKeys.forEach(function(key){
+    var rawTitle = cachedContents.chapters[key];
+    var existing = sideGroup.querySelector('a.side-item[href*="chapter=' + key + '"]');
+    if (existing) {
+      var label = existing.querySelector('.label');
+      if (label) {
+        label.innerHTML = '<span class="material-symbols-outlined">list</span> ' + escapeHtml(rawTitle);
+      }
+    } else {
+      var a = document.createElement('a');
+      a.className = 'side-item';
+      a.href = '/auth/?chapter=' + encodeURIComponent(key);
+      a.innerHTML = '<span class="label"><span class="material-symbols-outlined">list</span> ' + escapeHtml(rawTitle) + '</span>';
+      sideGroup.appendChild(a);
+    }
+  });
+}
+
 function renderContent() {
   if (!cachedContents) return;
   var chapter = getQueryChapter();
   var titleText = 'Popular Stuffs';
+  var modTitle = getModuleTitle(chapter);
   if (chapter) {
     if (cachedContents.chapters && cachedContents.chapters[chapter]) {
       titleText = cachedContents.chapters[chapter];
@@ -634,11 +694,23 @@ function renderContent() {
     }
   }
 
+  var modEl = document.getElementById('moduleTitleText');
+  if (modEl) {
+    if (chapter) {
+      modEl.textContent = modTitle + ' \u00B7 ';
+      modEl.style.display = 'inline';
+    } else {
+      modEl.textContent = '';
+      modEl.style.display = 'none';
+    }
+  }
+
   var titleEl = document.getElementById('sectionTitleText');
   if (titleEl) {
     titleEl.textContent = titleText;
   }
 
+  updateSidebarContent(chapter);
   updateSidebarActive(chapter);
 
   var pdfs = (cachedContents.pdf_stuffs || []).map(function(item){

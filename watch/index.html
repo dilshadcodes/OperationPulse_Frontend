@@ -302,7 +302,7 @@ is_watch: true
         </div>
         <div class="watch-channel-meta">
           <span class="watch-author-name" id="watchAuthor">StudiTube CEE</span>
-          <span class="watch-chapter-name" id="watchChapter">Loading chapter...</span>
+          <span class="watch-chapter-name"><span id="watchModule" class="watch-module-name" style="display:none;"></span><span id="watchChapter">Loading chapter...</span></span>
         </div>
       </div>
     </div>
@@ -440,6 +440,31 @@ function renderRecommendedCard(item) {
   '</div>';
 }
 
+function getModuleTitle(chapterId) {
+  if (!cachedContents) return 'Electricity and Magnetism';
+  if (cachedContents.module_title) return cachedContents.module_title;
+  if (cachedContents.modules) {
+    if (chapterId && cachedContents.modules[chapterId]) return cachedContents.modules[chapterId];
+    var p = chapterId ? String(chapterId).split('.')[0] : '1';
+    if (cachedContents.modules[p]) return cachedContents.modules[p];
+  }
+  if (cachedContents.chapters) {
+    if (chapterId && cachedContents.chapters[chapterId] && !/^\d+\.\d+\.?\s+/.test(cachedContents.chapters[chapterId])) {
+      return cachedContents.chapters[chapterId];
+    }
+    if (cachedContents.chapters['2.1']) {
+      return cachedContents.chapters['2.1'];
+    }
+    if (cachedContents.chapters['1']) {
+      return cachedContents.chapters['1'];
+    }
+    if (cachedContents.chapters['module']) {
+      return cachedContents.chapters['module'];
+    }
+  }
+  return 'Electricity and Magnetism';
+}
+
 function loadVideo(videoId) {
   if (!cachedContents || !cachedContents.video_stuffs || cachedContents.video_stuffs.length === 0) return;
 
@@ -489,6 +514,13 @@ function loadVideo(videoId) {
   var chapterName = (cachedContents.chapters && cachedContents.chapters[current.chapter_id]) || ('Chapter ' + current.chapter_id);
   var chapterEl = document.getElementById('watchChapter');
   if (chapterEl) chapterEl.textContent = chapterName;
+
+  var modTitle = getModuleTitle(current.chapter_id);
+  var modEl = document.getElementById('watchModule');
+  if (modEl) {
+    modEl.textContent = modTitle + ' \u00B7 ';
+    modEl.style.display = 'inline';
+  }
 
   // Recommendation sidebar: display remaining videos from same chapter in order of date
   var currentChapter = current.chapter_id;
