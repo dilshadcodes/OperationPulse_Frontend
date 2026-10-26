@@ -545,8 +545,8 @@ function updateSidebarActive(ch) {
 
 function renderStuffsCard(item) {
   var isPdf = (item.stuff_type === 'pdf');
-  var typeIco = isPdf ? 'picture_as_pdf' : 'smart_display';
-  var typePill = isPdf ? 'picture_as_pdf' : 'smart_display';
+  var typeIco = isPdf ? 'PDF' : 'VID';
+  var typePill = isPdf ? 'PDF' : 'MP4';
   var author = item.author || 'StudiTube CEE';
   var dateStr = formatDate(item.created_at);
   var title = item.title || 'Untitled';
@@ -558,10 +558,10 @@ function renderStuffsCard(item) {
     return '<div class="stage">' +
       '<div class="c-detail">' +
         '<div class="top">' +
-          '<div class="ico"><span class="material-symbols-outlined">' + typeIco + '</span></div>' +
+          '<div class="ico">' + escapeHtml(typeIco) + '</div>' +
           '<div>' +
             '<span class="fname">' + escapeHtml(author) + '</span>' +
-            '<span class="meta"><span class="pill"><span class="material-symbols-outlined">' + typePill + '</span></span> ' +
+            '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
             (dateStr ? '<span class="pill pill-yellow">' + escapeHtml(dateStr) + '</span>' : '') +
             '</span>' +
           '</div>' +
@@ -588,10 +588,10 @@ function renderStuffsCard(item) {
     return '<div class="stage">' +
       '<div class="c-detail">' +
         '<div class="top">' +
-          '<div class="ico"><span class="material-symbols-outlined">' + typeIco + '</span></div>' +
+          '<div class="ico">' + escapeHtml(typeIco) + '</div>' +
           '<div>' +
             '<span class="fname">' + escapeHtml(author) + '</span>' +
-            '<span class="meta"><span class="pill"><span class="material-symbols-outlined">' + typePill + '</span></span> ' +
+            '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
             (dateStr ? '<span class="pill pill-yellow">' + escapeHtml(dateStr) + '</span>' : '') +
             '</span>' +
           '</div>' +
