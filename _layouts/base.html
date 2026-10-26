@@ -2,7 +2,7 @@
 <html lang="en"{% if page.is_watch %} class="watch-page"{% endif %}>
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet" />
@@ -11,12 +11,90 @@
   href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap&icon_names=home,explore,notifications,mail,bookmark,list,person,more_horiz,settings,help,dashboard_2_gear,person_text,login,logout,apartment,bed,event_seat,person_add,group,feedback,price_change,receipt_long,payments,history,receipt,assessment,manage_accounts,add,checklist,edit,edit_note,edit_square,add_card,check,expand_less,expand_more,visibility,visibility_off,dark_mode,light_mode,smart_display,picture_as_pdf"
   rel="stylesheet"
 />
-<!-- Favicon: inlined 180x180 PNG derived from images/concept_blitz.png (the brand logo). Kept inline so every page stays self-contained. -->
-<link rel="icon" type="image/png" sizes="180x180" href="data:image/png;base64,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
-" />
-<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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
-" />
-<title>{{ page.title | default: "StudiTube" }}</title>
+<!-- Primary Meta Tags -->
+<title>{% if page.title and page.title != "StudiTube - Learning Platform" and page.title != "StudiTube" %}{{ page.title }} | StudiTube - Learning Platform{% else %}StudiTube - Learning Platform{% endif %}</title>
+<meta name="title" content="{% if page.title and page.title != 'StudiTube' and page.title != 'StudiTube - Learning Platform' %}{{ page.title }} | StudiTube - Learning Platform{% else %}StudiTube - Learning Platform{% endif %}" />
+<meta name="description" content="{{ page.description | default: 'Self-paced online learning platform designed to help students with learning stuffs.' }}" />
+<link rel="canonical" href="https://studitube.dilshadalam.com.np{{ page.url | default: '/' }}" />
+<meta name="robots" content="index, follow" />
+
+<!-- Open Graph / Facebook / WhatsApp -->
+<meta property="og:site_name" content="StudiTube" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="{% if page.title and page.title != 'StudiTube' and page.title != 'StudiTube - Learning Platform' %}{{ page.title }} | StudiTube - Learning Platform{% else %}StudiTube - Learning Platform{% endif %}" />
+<meta property="og:description" content="{{ page.description | default: 'Self-paced online learning platform designed to help students with learning stuffs.' }}" />
+<meta property="og:url" content="https://studitube.dilshadalam.com.np{{ page.url | default: '/' }}" />
+<meta property="og:image" content="https://studitube.dilshadalam.com.np/apple-touch-icon.png" />
+<meta property="og:image:width" content="180" />
+<meta property="og:image:height" content="180" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:alt" content="StudiTube Logo" />
+
+<!-- Twitter / X Cards -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{% if page.title and page.title != 'StudiTube' and page.title != 'StudiTube - Learning Platform' %}{{ page.title }} | StudiTube - Learning Platform{% else %}StudiTube - Learning Platform{% endif %}" />
+<meta name="twitter:description" content="{{ page.description | default: 'Self-paced online learning platform designed to help students with learning stuffs.' }}" />
+<meta name="twitter:image" content="https://studitube.dilshadalam.com.np/apple-touch-icon.png" />
+
+<!-- Favicons & App Icons for Desktop, Android, and iPhone -->
+<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="64x64" href="/StudiTube_logo.png" />
+<link rel="icon" type="image/png" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
+<link rel="shortcut icon" href="/StudiTube_logo.png" />
+
+<!-- Apple Touch Icon for iOS Safari Home Screen (iPhone / iPad) -->
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="StudiTube" />
+
+<!-- Web App Manifest & Mobile Meta for Android Chrome Home Screen -->
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#111111" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="application-name" content="StudiTube" />
+
+<!-- Search Engine Site Verifications -->
+<meta name="msvalidate.01" content="077310A9F377835D7F3C704BA032C8CD" />
+<meta name="google-site-verification" content="Replace_With_Your_Verification_Code" />
+
+<!-- Structured Data (JSON-LD Schema) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://studitube.dilshadalam.com.np/#website",
+      "url": "https://studitube.dilshadalam.com.np/",
+      "name": "StudiTube - Learning Platform",
+      "description": "Self-paced online learning platform designed to help students with learning stuffs.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "StudiTube",
+        "url": "https://studitube.dilshadalam.com.np/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://studitube.dilshadalam.com.np/StudiTube_logo.png"
+        }
+      }
+    },
+    {
+      "@type": "EducationalOrganization",
+      "@id": "https://studitube.dilshadalam.com.np/#organization",
+      "name": "StudiTube",
+      "url": "https://studitube.dilshadalam.com.np/",
+      "logo": "https://studitube.dilshadalam.com.np/StudiTube_logo.png",
+      "description": "Self-paced online learning platform designed to help students with learning stuffs."
+    }
+  ]
+}
+</script>
 <script>
 /* Theme first: avoids a dark flash on light-mode reloads. Defaults to dark. */
 (function(){try{if(localStorage.getItem('dilshad.theme')==='light'){document.documentElement.className+=' pre-light';}}catch(_){}})();
