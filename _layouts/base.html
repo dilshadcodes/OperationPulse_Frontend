@@ -889,17 +889,24 @@
       <div class="side-group">
         <div class="group-title">ELECTRICITY AND MAGNETISM</div>
 
-        <a class="side-item" href="/electrostatics/">
+        <a class="side-item" href="/auth/?chapter=1.1">
           <span class="label">
             <span class="material-symbols-outlined">list</span>
             1.1. Electrostatics
           </span>
         </a>
 
-        <a class="side-item" href="/electric-current/">
+        <a class="side-item" href="/auth/?chapter=1.2">
           <span class="label">
             <span class="material-symbols-outlined">list</span>
             1.2. Electric Current
+          </span>
+        </a>
+
+        <a class="side-item" href="/auth/?chapter=1.3">
+          <span class="label">
+            <span class="material-symbols-outlined">list</span>
+            1.3. Capacitors
           </span>
         </a>
       </div>
@@ -990,6 +997,20 @@ function onHome(e){if(e)e.preventDefault();window.location.href='/';}
 homeBtn.addEventListener('click',onHome);
 homeBtn.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){onHome(e);}});}
 }
+/* Highlight active sidebar chapter item based on ?chapter=X.X */
+try {
+  var ch = new URLSearchParams(window.location.search).get('chapter');
+  if (ch) {
+    document.querySelectorAll('.sidebar .side-item').forEach(function(item){
+      var href = item.getAttribute('href') || '';
+      if (href.indexOf('chapter=' + ch) !== -1) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  }
+} catch(_) {}
 })();
 </script>
 </body>

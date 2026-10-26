@@ -273,6 +273,18 @@ title: User Authentication
     margin-left: -24px; /* cancel .main's 24px left padding so the pill touches the sidebar border */
     margin-top: 16px;   /* push pill down from the auth form border */
   }
+  .empty-state {
+    width: 100%;
+    padding: 36px 20px;
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px dashed var(--line);
+    box-sizing: border-box;
+  }
 </style>
 <div class="page-header">
   <div class="title-row">
@@ -331,57 +343,8 @@ title: User Authentication
   </div>
   <div class="auth-msg" id="msgLogin"></div>
 </form>
-<div class="page-title section-title" aria-current="page"><span class="material-symbols-outlined">list</span> Popular Stuffs</div>
-<div class="cards">
-  <div class="stage">
-    <div class="c-detail">
-      <div class="top">
-        <div class="ico">PDF</div>
-        <div>
-          <span class="fname">StudiTube CEE</span>
-          <span class="meta"><span class="pill">PDF</span> <span class="pill pill-yellow">12 OCT 2026</span></span>
-        </div>
-      </div>
-      <div class="thumb" role="img" aria-label="Preview of page 1">
-        <div class="txt" aria-hidden="true">
-          <div class="kicker"></div>
-          <div class="h"></div><div class="h s"></div>
-          <div class="l a"></div><div class="l b"></div><div class="l c"></div><div class="l d"></div>
-        </div>
-        <div class="fig" aria-hidden="true"><i style="height:38%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:86%"></i><i style="height:70%"></i></div>
-        <span class="thumb-badge">36 pages · 4.8 MB</span>
-      </div>
-      <div class="card-title" title="CEE 2082 | MBBS PAST QUESTION">CEE 2082 | MBBS PAST QUESTION</div>
-      <div class="rule"></div>
-      <div class="acts"><span class="btn">Download</span><span class="btn btn-share">Share</span></div>
-    </div>
-  </div>
-
-  <div class="stage">
-    <div class="c-detail">
-      <div class="top">
-        <div class="ico">VID</div>
-        <div>
-          <span class="fname">StudiTube CEE</span>
-          <span class="meta"><span class="pill">MP4</span> <span class="pill pill-yellow">12 OCT 2026</span></span>
-        </div>
-      </div>
-      <div class="vthumb" role="img" aria-label="Video preview, 42 minutes 18 seconds">
-        <div class="txt" aria-hidden="true">
-          <div class="kicker"></div>
-          <div class="h"></div><div class="h s"></div>
-          <div class="l a"></div><div class="l b"></div>
-        </div>
-        <span class="play" aria-hidden="true"></span>
-        <span class="thumb-badge">42:18 · 1080p</span>
-        <div class="seen" aria-hidden="true"><i></i></div>
-      </div>
-      <div class="card-title" title="ELECTROSTATICS LEC 1 | CEE 2027">Cell-Division-Lecture-1.mp4</div>
-      <div class="rule"></div>
-      <div class="acts"><span class="btn">Watch</span><span class="btn btn-share">Share</span></div>
-    </div>
-  </div>
-</div>
+<div class="page-title section-title" id="sectionTitle" aria-current="page"><span class="material-symbols-outlined">list</span> <span id="sectionTitleText">Popular Stuffs</span></div>
+<div class="cards" id="cardsContainer"></div>
 
 <script src="/assets/js/auth.js?v=2"></script>
 <script>
@@ -460,16 +423,7 @@ function resetSignupForm(){
   var foot = document.querySelector('#signupForm .form-foot'); if(foot) foot.classList.remove('is-submitted');
 }
 function restoreOnBack(){
-  if (window.DilshadAuth && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())) {
-    DilshadAuth.ensureAuth().then(function(){
-      window.location.replace('/branches/');
-    }, function(){
-      try { DilshadAuth.clear(); } catch(_) {}
-      resetLoginForm(); resetSignupForm();
-    });
-  } else {
-    resetLoginForm(); resetSignupForm();
-  }
+  resetLoginForm(); resetSignupForm();
 }
 window.addEventListener('pageshow', function(e){ if(e.persisted) restoreOnBack(); });
 function idleS(btn){ btn.disabled = false; btn.classList.remove('is-done'); btn.type = 'submit'; btn.onclick = null; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; var fr = document.getElementById('btnSignupFresh'); var ft = btn.closest ? btn.closest('.form-foot') : null; if(btn.id === 'btnSignupSubmit' && fr && document.activeElement !== fr){ fr.hidden = true; if(ft) ft.classList.remove('is-submitted'); } }
@@ -538,8 +492,235 @@ fL.addEventListener('submit', function(e){
     else { bad(box, friendly(x)); }
   });
 });
-if(typeof DilshadAuth !== 'undefined' && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())){
-  DilshadAuth.ensureAuth().then(function(){ window.location.href = '/branches/'; }, function(){ DilshadAuth.clear(); });
+/* --- Dynamic Content Loading from contents.json --- */
+var cachedContents = null;
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
+
+function formatDate(dStr) {
+  if (!dStr) return '';
+  var d = new Date(dStr);
+  if (isNaN(d.getTime())) return dStr;
+  var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  var day = d.getDate();
+  var mon = months[d.getMonth()];
+  var yr = d.getFullYear();
+  return (day < 10 ? '0' + day : day) + ' ' + mon + ' ' + yr;
+}
+
+function getQueryChapter() {
+  try {
+    return new URLSearchParams(window.location.search).get('chapter');
+  } catch(_) {
+    return null;
+  }
+}
+
+function updateSidebarActive(ch) {
+  try {
+    document.querySelectorAll('.sidebar .side-item').forEach(function(item){
+      var href = item.getAttribute('href') || '';
+      if (ch && (href.indexOf('chapter=' + encodeURIComponent(ch)) !== -1 || href.indexOf('chapter=' + ch) !== -1)) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
+  } catch(_) {}
+}
+
+function renderStuffsCard(item) {
+  var isPdf = (item.stuff_type === 'pdf');
+  var typeIco = isPdf ? 'PDF' : 'VID';
+  var typePill = isPdf ? 'PDF' : 'MP4';
+  var author = item.author || 'StudiTube CEE';
+  var dateStr = formatDate(item.created_at);
+  var title = item.title || 'Untitled';
+  var badge = item.badge || (isPdf ? 'PDF Document' : 'Video Lecture');
+
+  if (isPdf) {
+    var pdfPath = item.pdf_path || '#';
+    var fileName = pdfPath.split('/').pop() || 'document.pdf';
+    return '<div class="stage">' +
+      '<div class="c-detail">' +
+        '<div class="top">' +
+          '<div class="ico">' + escapeHtml(typeIco) + '</div>' +
+          '<div>' +
+            '<span class="fname">' + escapeHtml(author) + '</span>' +
+            '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
+            (dateStr ? '<span class="pill pill-yellow">' + escapeHtml(dateStr) + '</span>' : '') +
+            '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="thumb" role="img" aria-label="Preview of page 1">' +
+          '<div class="txt" aria-hidden="true">' +
+            '<div class="kicker"></div>' +
+            '<div class="h"></div><div class="h s"></div>' +
+            '<div class="l a"></div><div class="l b"></div><div class="l c"></div><div class="l d"></div>' +
+          '</div>' +
+          '<div class="fig" aria-hidden="true"><i style="height:38%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:86%"></i><i style="height:70%"></i></div>' +
+          '<span class="thumb-badge">' + escapeHtml(badge) + '</span>' +
+        '</div>' +
+        '<div class="card-title" title="' + escapeHtml(title) + '">' + escapeHtml(title) + '</div>' +
+        '<div class="rule"></div>' +
+        '<div class="acts">' +
+          '<a class="btn" href="' + escapeHtml(pdfPath) + '" download="' + escapeHtml(fileName) + '" target="_blank" rel="noopener">Download</a>' +
+          '<button type="button" class="btn btn-share" data-title="' + escapeHtml(title) + '" data-url="' + escapeHtml(pdfPath) + '">Share</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  } else {
+    var videoUrl = item.video_url || '#';
+    return '<div class="stage">' +
+      '<div class="c-detail">' +
+        '<div class="top">' +
+          '<div class="ico">' + escapeHtml(typeIco) + '</div>' +
+          '<div>' +
+            '<span class="fname">' + escapeHtml(author) + '</span>' +
+            '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
+            (dateStr ? '<span class="pill pill-yellow">' + escapeHtml(dateStr) + '</span>' : '') +
+            '</span>' +
+          '</div>' +
+        '</div>' +
+        '<div class="vthumb" role="img" aria-label="Video preview">' +
+          '<div class="txt" aria-hidden="true">' +
+            '<div class="kicker"></div>' +
+            '<div class="h"></div><div class="h s"></div>' +
+            '<div class="l a"></div><div class="l b"></div>' +
+          '</div>' +
+          '<span class="play" aria-hidden="true"></span>' +
+          '<span class="thumb-badge">' + escapeHtml(badge) + '</span>' +
+          '<div class="seen" aria-hidden="true"><i></i></div>' +
+        '</div>' +
+        '<div class="card-title" title="' + escapeHtml(title) + '">' + escapeHtml(title) + '</div>' +
+        '<div class="rule"></div>' +
+        '<div class="acts">' +
+          '<a class="btn" href="' + escapeHtml(videoUrl) + '" target="_blank" rel="noopener noreferrer">Watch</a>' +
+          '<button type="button" class="btn btn-share" data-title="' + escapeHtml(title) + '" data-url="' + escapeHtml(videoUrl) + '">Share</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+}
+
+function renderContent() {
+  if (!cachedContents) return;
+  var chapter = getQueryChapter();
+  var titleText = 'Popular Stuffs';
+  if (chapter) {
+    if (cachedContents.chapters && cachedContents.chapters[chapter]) {
+      titleText = cachedContents.chapters[chapter];
+    } else {
+      titleText = 'Chapter ' + chapter;
+    }
+  }
+
+  var titleEl = document.getElementById('sectionTitleText');
+  if (titleEl) {
+    titleEl.textContent = titleText;
+  }
+
+  updateSidebarActive(chapter);
+
+  var pdfs = (cachedContents.pdf_stuffs || []).map(function(item){
+    return Object.assign({ stuff_type: 'pdf' }, item);
+  });
+  var videos = (cachedContents.video_stuffs || []).map(function(item){
+    return Object.assign({ stuff_type: 'video' }, item);
+  });
+  var merged = pdfs.concat(videos);
+
+  if (chapter) {
+    merged = merged.filter(function(item){
+      return String(item.chapter_id).trim() === String(chapter).trim();
+    });
+  }
+
+  merged.sort(function(a, b){
+    var timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+    var timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+    return timeB - timeA;
+  });
+
+  var container = document.getElementById('cardsContainer');
+  if (!container) return;
+
+  if (merged.length === 0) {
+    container.innerHTML = '<div class="empty-state">No stuffs available for this chapter yet.</div>';
+    return;
+  }
+
+  container.innerHTML = merged.map(renderStuffsCard).join('');
+}
+
+function fetchAndLoad() {
+  fetch('/contents.json')
+    .then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .catch(function(){
+      return fetch('../contents.json').then(function(r){ return r.json(); });
+    })
+    .then(function(data){
+      cachedContents = data;
+      renderContent();
+    })
+    .catch(function(err){
+      console.error('Error loading contents.json:', err);
+      var container = document.getElementById('cardsContainer');
+      if (container) {
+        container.innerHTML = '<div class="empty-state">Unable to load stuffs at this time.</div>';
+      }
+    });
+}
+
+// In-page navigation for sidebar chapter links
+document.addEventListener('click', function(e){
+  var link = e.target.closest('a.side-item');
+  if (link) {
+    var href = link.getAttribute('href') || '';
+    if (href.indexOf('chapter=') !== -1) {
+      e.preventDefault();
+      window.history.pushState({}, '', href);
+      renderContent();
+      var navToggle = document.getElementById('nav-toggle');
+      if (navToggle) navToggle.checked = false;
+    }
+  }
+
+  var shareBtn = e.target.closest('.btn-share');
+  if (shareBtn) {
+    e.preventDefault();
+    var shareUrl = shareBtn.getAttribute('data-url') || window.location.href;
+    var shareTitle = shareBtn.getAttribute('data-title') || document.title;
+    if (shareUrl.charAt(0) === '/') {
+      shareUrl = window.location.origin + shareUrl;
+    }
+    if (navigator.share) {
+      navigator.share({ title: shareTitle, url: shareUrl }).catch(function(){});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareUrl).then(function(){
+        var orig = shareBtn.textContent;
+        shareBtn.textContent = 'Copied!';
+        setTimeout(function(){ shareBtn.textContent = orig; }, 1500);
+      }).catch(function(){});
+    }
+  }
+});
+
+window.addEventListener('popstate', function(){
+  renderContent();
+});
+
+fetchAndLoad();
 })();
 </script>
