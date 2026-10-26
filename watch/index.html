@@ -1,0 +1,568 @@
+---
+layout: base
+title: Watch Video
+is_watch: true
+---
+<style>
+  /* StudiTube / Video Watch Styles */
+  :root {
+    --bg: #eceef1;
+    --surface: #ffffff;
+    --ink: #14171c;
+    --muted: #5b6470;
+    --line: #d3d8df;
+    --accent: #d4351c;
+    --accent-ink: #ffffff;
+    --accent-soft: #fbe4df;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101216; --surface: #181b21; --ink: #eceef1; --muted: #98a1ae;
+      --line: #2a2f38; --accent: #ff6a4d; --accent-ink: #1a0a06; --accent-soft: #3a1d17;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"], body:not(.light) {
+    --bg: #101216; --surface: #181b21; --ink: #eceef1; --muted: #98a1ae;
+    --line: #2a2f38; --accent: #ff6a4d; --accent-ink: #1a0a06; --accent-soft: #3a1d17;
+  }
+  body.light {
+    --bg: #eceef1; --surface: #ffffff; --ink: #14171c; --muted: #5b6470;
+    --line: #d3d8df; --accent: #d4351c; --accent-ink: #ffffff; --accent-soft: #fbe4df;
+  }
+
+  /* Watch Page Main Layout */
+  .watch-main-wrap {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Player container: same YouTube player size (16:9) */
+  .watch-player-box {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .watch-player-box iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
+  .player-placeholder {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: #111;
+    color: #888;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* Video Details */
+  .watch-video-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .watch-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.35;
+    margin: 0;
+  }
+
+  .watch-meta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 12px;
+    padding-bottom: 14px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .watch-channel-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .watch-channel-avatar {
+    width: 42px;
+    height: 42px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    flex-shrink: 0;
+  }
+
+  .watch-channel-avatar .material-symbols-outlined {
+    font-size: 24px;
+  }
+
+  .watch-channel-meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .watch-channel-name {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .watch-chapter-badge {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .watch-action-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  /* Card Components from auth/index.html */
+  .stage { width: 100%; min-width: 0; height: 100%; box-sizing: border-box; }
+  .c-detail {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 8px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .c-detail .top { display: flex; gap: 12px; align-items: flex-start; }
+  .c-detail .top .ico {
+    flex: none; width: 40px; height: 40px;
+    background: var(--accent-soft); color: var(--accent);
+    display: grid; place-items: center;
+    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+    border: 1px solid var(--accent);
+  }
+  .c-detail .top .ico .material-symbols-outlined { font-size: 22px; }
+  .c-detail .top > div { min-width: 0; display: flex; flex-direction: column; }
+  .fname {
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
+    color: var(--ink); overflow-wrap: anywhere;
+  }
+  .meta {
+    display: flex; align-items: center; gap: 6px; margin-top: 3px;
+    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+    color: var(--muted);
+  }
+  .pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 2px 10px; border-radius: 999px;
+    background: #dc2626; color: #ffffff;
+    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
+    line-height: 1.2;
+  }
+  .pill.pill-yellow {
+    background: #fbbf24; color: #111111; border: 0.4px solid #f59e0b;
+  }
+  .vthumb {
+    position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
+    background: #14171c; border: 1px solid var(--line);
+    display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; padding: 7% 6%;
+    cursor: pointer;
+  }
+  .vthumb .txt { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  .vthumb .kicker { height: 6px; width: 30%; background: var(--accent); }
+  .vthumb .h { height: 12px; width: 88%; background: #f2f4f7; margin-top: 3px; }
+  .vthumb .h.s { width: 62%; }
+  .vthumb .l { height: 5px; background: #4a5260; }
+  .vthumb .l.a { width: 90%; margin-top: 6px; }
+  .vthumb .l.b { width: 70%; }
+  .vthumb .play {
+    position: absolute; left: 50%; top: 50%; width: 44px; height: 44px;
+    transform: translate(-50%, -50%); background: var(--accent); display: grid; place-items: center;
+  }
+  .vthumb .play::after {
+    content: ""; margin-left: 3px; border-left: 14px solid var(--accent-ink);
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+  }
+  .vthumb .thumb-badge {
+    position: absolute; right: 8px; bottom: 10px;
+    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #ffffff;
+    background: #000000; padding: 2px 6px; border-radius: 2px;
+    white-space: nowrap; z-index: 2;
+  }
+  .vthumb .seen { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #4a5260; }
+  .vthumb .seen i { display: block; height: 100%; width: 35%; background: var(--accent); }
+
+  .card-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700; font-size: 14px; color: var(--ink);
+    overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
+    line-height: 1.3;
+  }
+  .rule { height: 1px; background: var(--line); }
+  .acts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    height: 32px; padding: 0 18px;
+    border: 0.4px solid var(--ink); border-radius: 999px;
+    background: var(--ink); color: var(--bg);
+    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px;
+    white-space: nowrap; cursor: pointer; text-decoration: none;
+    transition: opacity 0.15s ease, background 0.15s ease;
+  }
+  .btn:hover { opacity: 0.85; }
+
+  .btn-share {
+    background: #0a2a7a !important;
+    border-color: #0a2a7a !important;
+    color: #ffffff !important;
+  }
+  .btn-share:hover {
+    background: #0c3598 !important;
+    border-color: #0c3598 !important;
+    opacity: 1 !important;
+  }
+
+  .empty-state {
+    width: 100%;
+    padding: 32px 16px;
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    background: var(--surface);
+    border: 1px dashed var(--line);
+    box-sizing: border-box;
+    border-radius: 8px;
+  }
+</style>
+
+<div class="watch-main-wrap">
+  <!-- YouTube player: exact YouTube player sizing (16:9) -->
+  <div class="watch-player-box" id="playerBox">
+    <div class="player-placeholder" id="playerLoading">Loading player...</div>
+    <iframe id="watchIframe" src="" title="Video Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <!-- Video Details Section -->
+  <div class="watch-video-details">
+    <h1 class="watch-title" id="watchTitle">Loading video...</h1>
+
+    <div class="watch-meta-bar">
+      <div class="watch-channel-info">
+        <div class="watch-channel-avatar">
+          <span class="material-symbols-outlined">smart_display</span>
+        </div>
+        <div class="watch-channel-meta">
+          <span class="watch-author-name" id="watchAuthor">StudiTube CEE</span>
+          <span class="watch-chapter-name" id="watchChapter">Loading chapter...</span>
+        </div>
+      </div>
+
+      <div class="watch-action-bar">
+        <span class="pill" id="watchTypePill">MP4</span>
+        <span class="pill pill-yellow" id="watchDate"></span>
+        <span class="pill" id="watchBadge" style="background:#0a2a7a; color:#ffffff;"></span>
+        <button type="button" class="btn btn-share" id="btnShareCurrent" data-title="" data-url="">
+          <span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">share</span> Share
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+var cachedContents = null;
+var currentVideoId = null;
+
+// Ensure watch-page class is present on body
+document.body.classList.add('watch-page');
+
+// Check and initialize sidebar if needed (for environments without Jekyll preprocessing)
+var sidebar = document.querySelector('.sidebar');
+if (sidebar && !document.getElementById('watchCards')) {
+  sidebar.classList.add('watch-sidebar');
+  sidebar.innerHTML = '<div class="watch-sidebar-header">' +
+    '<div class="page-title section-title watch-section-title" aria-current="page">' +
+      '<span class="material-symbols-outlined">smart_display</span>' +
+      '<span id="suggestedStuffsText">Suggested Stuffs</span>' +
+    '</div>' +
+  '</div>' +
+  '<div class="cards watch-cards" id="watchCards"></div>';
+}
+
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatDate(dStr) {
+  if (!dStr) return '';
+  var d = new Date(dStr);
+  if (isNaN(d.getTime())) return dStr;
+  var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  var day = d.getDate();
+  var mon = months[d.getMonth()];
+  var yr = d.getFullYear();
+  return (day < 10 ? '0' + day : day) + ' ' + mon + ' ' + yr;
+}
+
+function getQueryParam(key) {
+  try {
+    return new URLSearchParams(window.location.search).get(key);
+  } catch(_) {
+    return null;
+  }
+}
+
+function getYoutubeEmbedUrl(url) {
+  if (!url) return '';
+  if (url.indexOf('/embed/') !== -1) return url;
+  var match = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if (match && match[1]) {
+    return 'https://www.youtube-nocookie.com/embed/' + match[1] + '?autoplay=1&rel=0';
+  }
+  return url;
+}
+
+function renderRecommendedCard(item) {
+  var author = item.author || 'StudiTube CEE';
+  var dateStr = formatDate(item.created_at);
+  var title = item.title || 'Untitled';
+  var badge = item.badge || 'Video Lecture';
+  var watchUrl = '/watch/?id=' + encodeURIComponent(item.id || '');
+
+  return '<div class="stage">' +
+    '<div class="c-detail">' +
+      '<div class="top">' +
+        '<div class="ico"><span class="material-symbols-outlined">smart_display</span></div>' +
+        '<div>' +
+          '<span class="fname">' + escapeHtml(author) + '</span>' +
+          '<span class="meta"><span class="pill">MP4</span> ' +
+          (dateStr ? '<span class="pill pill-yellow">' + escapeHtml(dateStr) + '</span>' : '') +
+          '</span>' +
+        '</div>' +
+      '</div>' +
+      '<a href="' + escapeHtml(watchUrl) + '" class="watch-thumb-link" style="display:block; text-decoration:none;" aria-label="Watch ' + escapeHtml(title) + '">' +
+        '<div class="vthumb" role="img" aria-label="Video preview">' +
+          '<div class="txt" aria-hidden="true">' +
+            '<div class="kicker"></div>' +
+            '<div class="h"></div><div class="h s"></div>' +
+            '<div class="l a"></div><div class="l b"></div>' +
+          '</div>' +
+          '<span class="play" aria-hidden="true"></span>' +
+          '<span class="thumb-badge">' + escapeHtml(badge) + '</span>' +
+          '<div class="seen" aria-hidden="true"><i></i></div>' +
+        '</div>' +
+      '</a>' +
+      '<div class="card-title" title="' + escapeHtml(title) + '">' + escapeHtml(title) + '</div>' +
+      '<div class="rule"></div>' +
+      '<div class="acts">' +
+        '<a class="btn btn-watch" href="' + escapeHtml(watchUrl) + '" data-id="' + escapeHtml(item.id) + '">Watch</a>' +
+        '<button type="button" class="btn btn-share" data-title="' + escapeHtml(title) + '" data-url="' + escapeHtml(watchUrl) + '">Share</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function loadVideo(videoId) {
+  if (!cachedContents || !cachedContents.video_stuffs || cachedContents.video_stuffs.length === 0) return;
+
+  var videos = cachedContents.video_stuffs;
+  var current = null;
+
+  if (videoId) {
+    current = videos.find(function(v){ return String(v.id).trim() === String(videoId).trim(); });
+  }
+
+  // Fallback: check chapter query param or first video
+  if (!current) {
+    var ch = getQueryParam('chapter');
+    if (ch) {
+      current = videos.find(function(v){ return String(v.chapter_id).trim() === String(ch).trim(); });
+    }
+  }
+
+  if (!current) {
+    current = videos[0];
+  }
+
+  currentVideoId = current.id;
+
+  // Update Player
+  var iframe = document.getElementById('watchIframe');
+  var placeholder = document.getElementById('playerLoading');
+  var embedUrl = getYoutubeEmbedUrl(current.video_url);
+
+  if (iframe) {
+    if (iframe.src !== embedUrl) {
+      iframe.src = embedUrl;
+    }
+    iframe.onload = function(){
+      if (placeholder) placeholder.style.display = 'none';
+    };
+  }
+
+  // Update Details
+  var titleEl = document.getElementById('watchTitle');
+  if (titleEl) titleEl.textContent = current.title || 'Untitled Video';
+  document.title = (current.title ? current.title + ' | ConceptBlitz' : 'Watch Video | ConceptBlitz');
+
+  var authorEl = document.getElementById('watchAuthor');
+  if (authorEl) authorEl.textContent = current.author || 'StudiTube CEE';
+
+  var chapterName = (cachedContents.chapters && cachedContents.chapters[current.chapter_id]) || ('Chapter ' + current.chapter_id);
+  var chapterEl = document.getElementById('watchChapter');
+  if (chapterEl) chapterEl.textContent = chapterName;
+
+  var dateEl = document.getElementById('watchDate');
+  if (dateEl) {
+    var dStr = formatDate(current.created_at);
+    dateEl.textContent = dStr;
+    dateEl.style.display = dStr ? 'inline-flex' : 'none';
+  }
+
+  var badgeEl = document.getElementById('watchBadge');
+  if (badgeEl) {
+    badgeEl.textContent = current.badge || '1080p';
+    badgeEl.style.display = current.badge ? 'inline-flex' : 'none';
+  }
+
+  var mainShareBtn = document.getElementById('btnShareCurrent');
+  if (mainShareBtn) {
+    mainShareBtn.setAttribute('data-title', current.title || document.title);
+    mainShareBtn.setAttribute('data-url', window.location.href);
+  }
+
+  // Recommendation sidebar: display remaining videos from same chapter in order of date
+  var currentChapter = current.chapter_id;
+  var remainingVideos = videos.filter(function(v){
+    return String(v.chapter_id).trim() === String(currentChapter).trim() && String(v.id).trim() !== String(current.id).trim();
+  });
+
+  // Sort remaining videos in order of date (newest first)
+  remainingVideos.sort(function(a, b){
+    var timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+    var timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+    return timeB - timeA;
+  });
+
+  var container = document.getElementById('watchCards');
+  if (container) {
+    if (remainingVideos.length === 0) {
+      container.innerHTML = '<div class="empty-state">No other videos in this chapter yet.</div>';
+    } else {
+      container.innerHTML = remainingVideos.map(renderRecommendedCard).join('');
+    }
+  }
+}
+
+function fetchAndInit() {
+  fetch('/contents.json')
+    .then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    })
+    .catch(function(){
+      return fetch('../contents.json').then(function(r){ return r.json(); });
+    })
+    .then(function(data){
+      cachedContents = data;
+      var targetId = getQueryParam('id');
+      loadVideo(targetId);
+    })
+    .catch(function(err){
+      console.error('Error loading contents.json:', err);
+      var titleEl = document.getElementById('watchTitle');
+      if (titleEl) titleEl.textContent = 'Unable to load video.';
+    });
+}
+
+// In-page navigation for recommendation cards
+document.addEventListener('click', function(e){
+  var watchLink = e.target.closest('a.btn-watch, a.watch-thumb-link');
+  if (watchLink) {
+    var href = watchLink.getAttribute('href') || '';
+    var match = href.match(/[?&]id=([^&#]+)/);
+    if (match && match[1]) {
+      e.preventDefault();
+      var newId = decodeURIComponent(match[1]);
+      window.history.pushState({}, '', href);
+      loadVideo(newId);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      var mainEl = document.querySelector('.main');
+      if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+  }
+
+  // Share handler
+  var shareBtn = e.target.closest('.btn-share');
+  if (shareBtn) {
+    e.preventDefault();
+    var shareUrl = shareBtn.getAttribute('data-url') || window.location.href;
+    var shareTitle = shareBtn.getAttribute('data-title') || document.title;
+    if (shareUrl.charAt(0) === '/') {
+      shareUrl = window.location.origin + shareUrl;
+    }
+    if (navigator.share) {
+      navigator.share({ title: shareTitle, url: shareUrl }).catch(function(){});
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareUrl).then(function(){
+        var origText = shareBtn.innerHTML;
+        shareBtn.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">check</span> Copied!';
+        setTimeout(function(){ shareBtn.innerHTML = origText; }, 1500);
+      }).catch(function(){});
+    }
+  }
+});
+
+window.addEventListener('popstate', function(){
+  var id = getQueryParam('id');
+  loadVideo(id);
+});
+
+fetchAndInit();
+})();
+</script>

@@ -856,9 +856,160 @@
       -ms-overflow-style: none;
     }
   }
+
+  /* ---------- Watch Page Layout & Responsiveness ---------- */
+  body.watch-page .layout {
+    --sidebar-w: 390px;
+  }
+
+  body.watch-page .watch-sidebar {
+    padding: 16px 14px 24px 14px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  body.watch-page .watch-sidebar-header {
+    flex-shrink: 0;
+    margin-bottom: 16px;
+  }
+
+  body.watch-page .watch-sidebar .watch-section-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 18px 0 14px;
+    border-radius: 0 999px 999px 0;
+    background: #0a2a7a;
+    color: #fff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+    cursor: default;
+    width: fit-content;
+    margin-left: -14px;
+  }
+
+  body.watch-page .watch-sidebar .watch-section-title .material-symbols-outlined {
+    font-size: 20px;
+  }
+
+  body.watch-page .watch-sidebar .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Tablet & Mobile: recommendation cards go down to the player */
+  @media (max-width: 1024px) {
+    body.watch-page,
+    body.watch-page html {
+      overflow-y: auto !important;
+      position: static !important;
+      height: auto !important;
+    }
+
+    body.watch-page .layout {
+      display: flex !important;
+      flex-direction: column !important;
+      height: auto !important;
+      min-height: 100vh !important;
+      max-height: none !important;
+      overflow: visible !important;
+      position: static !important;
+    }
+
+    body.watch-page .profile,
+    body.watch-page .footer {
+      display: none !important;
+    }
+
+    body.watch-page .header {
+      order: 1;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      width: 100%;
+    }
+
+    body.watch-page .main {
+      order: 2;
+      overflow: visible !important;
+      height: auto !important;
+      padding: 20px 20px 0 20px !important;
+    }
+
+    body.watch-page .sidebar.watch-sidebar {
+      order: 3;
+      display: block !important;
+      position: static !important;
+      width: 100% !important;
+      height: auto !important;
+      border-right: none !important;
+      border-top: 0.4px solid #999;
+      overflow: visible !important;
+      padding: 20px 20px 48px 20px !important;
+      margin-top: 24px;
+    }
+
+    body.light.watch-page .sidebar.watch-sidebar {
+      border-color: #c9c9ce !important;
+    }
+
+    body.watch-page .watch-sidebar .watch-section-title {
+      margin-left: -20px;
+      margin-bottom: 20px;
+    }
+
+    /* Tablet mode: 2 columns covering full width */
+    body.watch-page .watch-sidebar .cards {
+      display: grid !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 20px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: 100% !important;
+    }
+
+    body.watch-page .nav-toggle:checked ~ .profile,
+    body.watch-page .nav-toggle:checked ~ .sidebar,
+    body.watch-page .nav-toggle:checked ~ .footer,
+    body.watch-page .nav-toggle:checked ~ .nav-overlay {
+      display: none !important;
+    }
+  }
+
+  /* Mobile mode: 1 column covering full width */
+  @media (max-width: 640px) {
+    body.watch-page .main {
+      padding: 12px 14px 0 14px !important;
+    }
+
+    body.watch-page .sidebar.watch-sidebar {
+      padding: 16px 14px 36px 14px !important;
+      margin-top: 18px;
+    }
+
+    body.watch-page .watch-sidebar .watch-section-title {
+      margin-left: -14px;
+      margin-bottom: 16px;
+    }
+
+    body.watch-page .watch-sidebar .cards {
+      grid-template-columns: 1fr !important;
+      gap: 16px !important;
+    }
+  }
 </style>
 </head>
-<body oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false" onselectstart="return false" ondragstart="return false">
+<body {% if page.is_watch %}class="watch-page" {% endif %}oncontextmenu="return false" oncopy="return false" oncut="return false" onpaste="return false" onselectstart="return false" ondragstart="return false">
   <div class="layout">
     <input type="checkbox" id="nav-toggle" class="nav-toggle" />
     <label class="nav-overlay" for="nav-toggle"></label>
@@ -885,31 +1036,41 @@
         <div class="auth-btn" id="authBtn" role="button" tabindex="0" title="Log in or out"><span id="authBtnText">Log In</span></div>
       </div>
     </div>
-    <div class="sidebar">
-      <div class="side-group">
-        <div class="group-title">ELECTRICITY AND MAGNETISM</div>
+    <div class="sidebar{% if page.is_watch %} watch-sidebar{% endif %}">
+      {% if page.is_watch %}
+        <div class="watch-sidebar-header">
+          <div class="page-title section-title watch-section-title" aria-current="page">
+            <span class="material-symbols-outlined">smart_display</span>
+            <span id="suggestedStuffsText">Suggested Stuffs</span>
+          </div>
+        </div>
+        <div class="cards watch-cards" id="watchCards"></div>
+      {% else %}
+        <div class="side-group">
+          <div class="group-title">ELECTRICITY AND MAGNETISM</div>
 
-        <a class="side-item" href="/auth/?chapter=1.1">
-          <span class="label">
-            <span class="material-symbols-outlined">list</span>
-            1.1. Electrostatics
-          </span>
-        </a>
+          <a class="side-item" href="/auth/?chapter=1.1">
+            <span class="label">
+              <span class="material-symbols-outlined">list</span>
+              1.1. Electrostatics
+            </span>
+          </a>
 
-        <a class="side-item" href="/auth/?chapter=1.2">
-          <span class="label">
-            <span class="material-symbols-outlined">list</span>
-            1.2. Electric Current
-          </span>
-        </a>
+          <a class="side-item" href="/auth/?chapter=1.2">
+            <span class="label">
+              <span class="material-symbols-outlined">list</span>
+              1.2. Electric Current
+            </span>
+          </a>
 
-        <a class="side-item" href="/auth/?chapter=1.3">
-          <span class="label">
-            <span class="material-symbols-outlined">list</span>
-            1.3. Capacitors
-          </span>
-        </a>
-      </div>
+          <a class="side-item" href="/auth/?chapter=1.3">
+            <span class="label">
+              <span class="material-symbols-outlined">list</span>
+              1.3. Capacitors
+            </span>
+          </a>
+        </div>
+      {% endif %}
     </div>
     <div class="main">{{ content }}</div>
     <div class="footer">

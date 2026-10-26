@@ -587,6 +587,7 @@ function renderStuffsCard(item) {
     '</div>';
   } else {
     var videoUrl = item.video_url || '#';
+    var watchUrl = '/watch/?id=' + encodeURIComponent(item.id || '');
     return '<div class="stage">' +
       '<div class="c-detail">' +
         '<div class="top">' +
@@ -598,21 +599,23 @@ function renderStuffsCard(item) {
             '</span>' +
           '</div>' +
         '</div>' +
-        '<div class="vthumb" role="img" aria-label="Video preview">' +
-          '<div class="txt" aria-hidden="true">' +
-            '<div class="kicker"></div>' +
-            '<div class="h"></div><div class="h s"></div>' +
-            '<div class="l a"></div><div class="l b"></div>' +
+        '<a href="' + escapeHtml(watchUrl) + '" style="display:block; text-decoration:none;" aria-label="Watch ' + escapeHtml(title) + '">' +
+          '<div class="vthumb" role="img" aria-label="Video preview">' +
+            '<div class="txt" aria-hidden="true">' +
+              '<div class="kicker"></div>' +
+              '<div class="h"></div><div class="h s"></div>' +
+              '<div class="l a"></div><div class="l b"></div>' +
+            '</div>' +
+            '<span class="play" aria-hidden="true"></span>' +
+            '<span class="thumb-badge">' + escapeHtml(badge) + '</span>' +
+            '<div class="seen" aria-hidden="true"><i></i></div>' +
           '</div>' +
-          '<span class="play" aria-hidden="true"></span>' +
-          '<span class="thumb-badge">' + escapeHtml(badge) + '</span>' +
-          '<div class="seen" aria-hidden="true"><i></i></div>' +
-        '</div>' +
+        '</a>' +
         '<div class="card-title" title="' + escapeHtml(title) + '">' + escapeHtml(title) + '</div>' +
         '<div class="rule"></div>' +
         '<div class="acts">' +
-          '<a class="btn" href="' + escapeHtml(videoUrl) + '" target="_blank" rel="noopener noreferrer">Watch</a>' +
-          '<button type="button" class="btn btn-share" data-title="' + escapeHtml(title) + '" data-url="' + escapeHtml(videoUrl) + '">Share</button>' +
+          '<a class="btn" href="' + escapeHtml(watchUrl) + '">Watch</a>' +
+          '<button type="button" class="btn btn-share" data-title="' + escapeHtml(title) + '" data-url="' + escapeHtml(watchUrl) + '">Share</button>' +
         '</div>' +
       '</div>' +
     '</div>';
