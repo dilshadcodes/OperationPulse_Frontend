@@ -124,11 +124,22 @@ title: User Authentication
   }
 
   .cards {
-    display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start;
-    margin-top: 24px; color: var(--ink); font-family: 'Montserrat', sans-serif;
-    font-size: 15px; line-height: 1.5;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+    box-sizing: border-box;
+    margin-top: 24px;
+    margin-left: -24px;
+    margin-right: -24px;
+    padding-left: 20px;
+    padding-right: 16px;
+    color: var(--ink);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
   }
-  .stage { flex: 0 1 300px; width: 100%; max-width: 300px; min-width: 0; }
+  .stage { width: 100%; min-width: 0; height: 100%; box-sizing: border-box; }
   .meta {
     display: flex; align-items: center; gap: 6px; margin-top: 3px;
     font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
@@ -175,6 +186,8 @@ title: User Authentication
     background: var(--surface); border: 1px solid var(--line);
     padding: 12px; display: flex; flex-direction: column; gap: 10px;
     font-family: 'Montserrat', sans-serif;
+    height: 100%;
+    box-sizing: border-box;
   }
   .c-detail .top { display: flex; gap: 12px; align-items: flex-start; }
   .c-detail .top .ico {
@@ -242,25 +255,17 @@ title: User Authentication
 
   @media (prefers-reduced-motion: reduce) { .cards * { transition: none !important; } }
 
-  @media (max-width: 768px) {
+  /* Tablet mode: 2 columns covering full width */
+  @media (max-width: 1024px) {
     .cards {
-      flex-direction: column;
-      margin-left: -24px;
-      margin-right: -24px;
-      padding-left: 20px;
-      padding-right: 16px;
-      box-sizing: border-box;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .stage {
-      flex: 0 0 100%;
-      width: 100%;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
-    .c-detail {
-      width: 100%;
-      margin-left: 0;
-      box-sizing: border-box;
+  }
+
+  /* Mobile mode: 1 column covering full width */
+  @media (max-width: 640px) {
+    .cards {
+      grid-template-columns: 1fr;
     }
   }
 
@@ -274,6 +279,7 @@ title: User Authentication
     margin-top: 16px;   /* push pill down from the auth form border */
   }
   .empty-state {
+    grid-column: 1 / -1;
     width: 100%;
     padding: 36px 20px;
     text-align: center;
