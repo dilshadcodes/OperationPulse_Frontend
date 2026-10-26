@@ -31,6 +31,24 @@ is_watch: true
     --line: #d3d8df; --accent: #d4351c; --accent-ink: #ffffff; --accent-soft: #fbe4df;
   }
 
+  /* Ensure page scrolling on mobile and tablet */
+  @media (max-width: 1024px) {
+    html.watch-page,
+    html.watch-page body,
+    body.watch-page {
+      position: static !important;
+      inset: auto !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 100% !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-y: auto !important;
+      touch-action: pan-y !important;
+    }
+  }
+
   /* Watch Page Main Layout */
   .watch-main-wrap {
     width: 100%;
@@ -143,13 +161,6 @@ is_watch: true
     font-weight: 700;
     color: var(--muted);
     margin-top: 2px;
-  }
-
-  .watch-action-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
   }
 
   /* Card Components from auth/index.html */
@@ -293,15 +304,6 @@ is_watch: true
           <span class="watch-chapter-name" id="watchChapter">Loading chapter...</span>
         </div>
       </div>
-
-      <div class="watch-action-bar">
-        <span class="pill" id="watchTypePill">MP4</span>
-        <span class="pill pill-yellow" id="watchDate"></span>
-        <span class="pill" id="watchBadge" style="background:#0a2a7a; color:#ffffff;"></span>
-        <button type="button" class="btn btn-share" id="btnShareCurrent" data-title="" data-url="">
-          <span class="material-symbols-outlined" style="font-size:18px; margin-right:4px;">share</span> Share
-        </button>
-      </div>
     </div>
   </div>
 </div>
@@ -311,8 +313,15 @@ is_watch: true
 var cachedContents = null;
 var currentVideoId = null;
 
-// Ensure watch-page class is present on body
+// Ensure watch-page class is present on html and body
+document.documentElement.classList.add('watch-page');
 document.body.classList.add('watch-page');
+
+// Prevent user-label from toggling nav drawer on watch page
+var userLabel = document.querySelector('.user-label');
+if (userLabel) userLabel.removeAttribute('for');
+var navToggle = document.getElementById('nav-toggle');
+if (navToggle) navToggle.checked = false;
 
 // Check and initialize sidebar if needed (for environments without Jekyll preprocessing)
 var sidebar = document.querySelector('.sidebar');
@@ -455,25 +464,6 @@ function loadVideo(videoId) {
   var chapterName = (cachedContents.chapters && cachedContents.chapters[current.chapter_id]) || ('Chapter ' + current.chapter_id);
   var chapterEl = document.getElementById('watchChapter');
   if (chapterEl) chapterEl.textContent = chapterName;
-
-  var dateEl = document.getElementById('watchDate');
-  if (dateEl) {
-    var dStr = formatDate(current.created_at);
-    dateEl.textContent = dStr;
-    dateEl.style.display = dStr ? 'inline-flex' : 'none';
-  }
-
-  var badgeEl = document.getElementById('watchBadge');
-  if (badgeEl) {
-    badgeEl.textContent = current.badge || '1080p';
-    badgeEl.style.display = current.badge ? 'inline-flex' : 'none';
-  }
-
-  var mainShareBtn = document.getElementById('btnShareCurrent');
-  if (mainShareBtn) {
-    mainShareBtn.setAttribute('data-title', current.title || document.title);
-    mainShareBtn.setAttribute('data-url', window.location.href);
-  }
 
   // Recommendation sidebar: display remaining videos from same chapter in order of date
   var currentChapter = current.chapter_id;

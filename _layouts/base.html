@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"{% if page.is_watch %} class="watch-page"{% endif %}>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -907,23 +907,34 @@
     box-sizing: border-box;
   }
 
-  /* Tablet & Mobile: recommendation cards go down to the player */
+  /* Tablet & Mobile: recommendation cards go down to the player & full page scrolling */
   @media (max-width: 1024px) {
-    body.watch-page,
-    body.watch-page html {
-      overflow-y: auto !important;
+    html.watch-page,
+    html.watch-page body,
+    body.watch-page {
       position: static !important;
+      inset: auto !important;
+      width: 100% !important;
       height: auto !important;
+      min-height: 100% !important;
+      overflow-x: hidden !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      overscroll-behavior-y: auto !important;
+      touch-action: pan-y !important;
     }
 
     body.watch-page .layout {
+      position: static !important;
+      inset: auto !important;
       display: flex !important;
       flex-direction: column !important;
       height: auto !important;
       min-height: 100vh !important;
       max-height: none !important;
       overflow: visible !important;
-      position: static !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
 
     body.watch-page .profile,
@@ -931,32 +942,118 @@
       display: none !important;
     }
 
+    /* Fixed / sticky header at top */
     body.watch-page .header {
       order: 1;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      width: 100%;
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 100 !important;
+      width: 100% !important;
+      height: 54px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      padding: 0 14px !important;
+      background: #000 !important;
+      border-bottom: 0.4px solid #999 !important;
+      box-sizing: border-box !important;
     }
 
+    body.light.watch-page .header {
+      background: #f4f4f5 !important;
+      border-bottom: 0.4px solid #c9c9ce !important;
+    }
+
+    body.watch-page .header-long {
+      display: flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      flex: 1 !important;
+      min-width: 0 !important;
+      padding: 0 !important;
+      background: transparent !important;
+    }
+
+    body.watch-page .header-small {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: flex-end !important;
+      gap: 8px !important;
+      flex-shrink: 0 !important;
+      padding: 0 0 0 10px !important;
+      background: transparent !important;
+    }
+
+    body.watch-page .user-label {
+      cursor: default !important;
+      pointer-events: none !important;
+      flex-shrink: 0 !important;
+      height: 32px !important;
+      padding: 0 12px !important;
+      font-size: 13px !important;
+      gap: 6px !important;
+    }
+
+    body.watch-page .search {
+      width: 100% !important;
+      max-width: 380px !important;
+      min-width: 60px !important;
+      height: 32px !important;
+      font-size: 13px !important;
+      padding: 0 12px !important;
+    }
+
+    body.watch-page .auth-btn {
+      height: 32px !important;
+      padding: 0 12px !important;
+      font-size: 13px !important;
+      display: inline-flex !important;
+    }
+
+    body.watch-page #themeBtn {
+      display: inline-flex !important;
+      padding: 0 !important;
+      width: 32px !important;
+      height: 32px !important;
+      justify-content: center !important;
+      align-items: center !important;
+    }
+
+    body.watch-page #themeBtn .material-symbols-outlined {
+      font-size: 18px !important;
+    }
+
+    body.watch-page .auth-keep {
+      display: inline-flex !important;
+    }
+
+    /* Main section below header */
     body.watch-page .main {
       order: 2;
       overflow: visible !important;
       height: auto !important;
-      padding: 20px 20px 0 20px !important;
+      min-height: 0 !important;
+      max-height: none !important;
+      padding: 16px 16px 0 16px !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
     }
 
+    /* Sidebar goes down to the player */
     body.watch-page .sidebar.watch-sidebar {
       order: 3;
       display: block !important;
       position: static !important;
       width: 100% !important;
       height: auto !important;
+      min-height: 0 !important;
+      max-height: none !important;
       border-right: none !important;
-      border-top: 0.4px solid #999;
+      border-top: 0.4px solid #999 !important;
       overflow: visible !important;
-      padding: 20px 20px 48px 20px !important;
-      margin-top: 24px;
+      padding: 20px 16px 48px 16px !important;
+      margin-top: 20px !important;
+      box-sizing: border-box !important;
     }
 
     body.light.watch-page .sidebar.watch-sidebar {
@@ -964,7 +1061,7 @@
     }
 
     body.watch-page .watch-sidebar .watch-section-title {
-      margin-left: -20px;
+      margin-left: -16px;
       margin-bottom: 20px;
     }
 
@@ -978,6 +1075,7 @@
       width: 100% !important;
     }
 
+    /* Disable drawer overlay on watch page */
     body.watch-page .nav-toggle:checked ~ .profile,
     body.watch-page .nav-toggle:checked ~ .sidebar,
     body.watch-page .nav-toggle:checked ~ .footer,
@@ -986,19 +1084,59 @@
     }
   }
 
-  /* Mobile mode: 1 column covering full width */
+  /* Mobile mode: 1 column covering full width & compact header */
   @media (max-width: 640px) {
+    body.watch-page .header {
+      padding: 0 8px !important;
+    }
+
+    body.watch-page .header-long {
+      gap: 6px !important;
+    }
+
+    body.watch-page .header-small {
+      gap: 6px !important;
+      padding-left: 6px !important;
+    }
+
+    body.watch-page .user-name {
+      display: none !important;
+    }
+
+    body.watch-page .user-label {
+      padding: 0 !important;
+      width: 32px !important;
+      height: 32px !important;
+      border-radius: 999px !important;
+      justify-content: center !important;
+      gap: 0 !important;
+    }
+
+    body.watch-page .user-label .material-symbols-outlined {
+      font-size: 20px !important;
+    }
+
+    body.watch-page .auth-btn {
+      padding: 0 10px !important;
+      font-size: 12px !important;
+    }
+
+    body.watch-page .search {
+      padding: 0 10px !important;
+      font-size: 12px !important;
+    }
+
     body.watch-page .main {
-      padding: 12px 14px 0 14px !important;
+      padding: 12px 12px 0 12px !important;
     }
 
     body.watch-page .sidebar.watch-sidebar {
-      padding: 16px 14px 36px 14px !important;
-      margin-top: 18px;
+      padding: 16px 12px 36px 12px !important;
+      margin-top: 16px !important;
     }
 
     body.watch-page .watch-sidebar .watch-section-title {
-      margin-left: -14px;
+      margin-left: -12px;
       margin-bottom: 16px;
     }
 
