@@ -197,6 +197,9 @@ title: User Authentication
     font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
     border: 1px solid var(--accent);
   }
+  .c-detail .top .ico .material-symbols-outlined {
+    font-size: 22px;
+  }
   .c-detail .top > div { min-width: 0; display: flex; flex-direction: column; }
   .c-detail .chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .c-detail .rule { height: 1px; background: var(--line); }
@@ -545,7 +548,6 @@ function updateSidebarActive(ch) {
 
 function renderStuffsCard(item) {
   var isPdf = (item.stuff_type === 'pdf');
-  var typeIco = isPdf ? 'PDF' : 'VID';
   var typePill = isPdf ? 'PDF' : 'MP4';
   var author = item.author || 'StudiTube CEE';
   var dateStr = formatDate(item.created_at);
@@ -558,7 +560,7 @@ function renderStuffsCard(item) {
     return '<div class="stage">' +
       '<div class="c-detail">' +
         '<div class="top">' +
-          '<div class="ico">' + escapeHtml(typeIco) + '</div>' +
+          '<div class="ico"><span class="material-symbols-outlined">picture_as_pdf</span></div>' +
           '<div>' +
             '<span class="fname">' + escapeHtml(author) + '</span>' +
             '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
@@ -588,7 +590,7 @@ function renderStuffsCard(item) {
     return '<div class="stage">' +
       '<div class="c-detail">' +
         '<div class="top">' +
-          '<div class="ico">' + escapeHtml(typeIco) + '</div>' +
+          '<div class="ico"><span class="material-symbols-outlined">smart_display</span></div>' +
           '<div>' +
             '<span class="fname">' + escapeHtml(author) + '</span>' +
             '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
