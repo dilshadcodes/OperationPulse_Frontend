@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage / Core Platform -->
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Video Watch Main Portal -->
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/watch/</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Individual Lectures & Video Content -->
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/watch/?v=vid-1</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/watch/?v=vid-2</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/watch/?v=vid-3</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/watch/?v=vid-4</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/watch/?v=vid-5</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Auth Portal -->
+  <url>
+    <loc>https://studitube.dilshadalam.com.np/auth/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+</urlset>
