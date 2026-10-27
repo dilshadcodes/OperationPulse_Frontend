@@ -1,126 +1,19 @@
 {
   "modules": {
-    "1": "Electricity and Magnetism",
-    "2": "Magnetism"
+    "1": "CEE PAST QUESTIONS"
   },
   "chapters": {
-    "1.1": "1.1. Electrostatics",
-    "1.2": "1.2. Electric Current",
-    "1.3": "1.3. Capacitors",
-    "2.1": "2.1. Magnetism"
+    "1.1": "1.1. CEE MBBS PYQ"
   },
   "pdf_stuffs": [
     {
       "id": "pdf-1",
       "stuff_type": "pdf",
-      "title": "CEE 2082 | Electrostatics Past Questions & Solutions",
+      "title": "CEE MBBS PAST QUESTION 2026 [2083]",
       "chapter_id": "1.1",
-      "created_at": "2026-10-25T14:30:00Z",
-      "pdf_path": "/pdf_stuffs/electrostatics-past-questions.pdf",
-      "badge": "36 pages · 4.8 MB",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "pdf-2",
-      "stuff_type": "pdf",
-      "title": "Current Electricity Practice Problems & Solved Numericals",
-      "chapter_id": "1.2",
-      "created_at": "2026-10-22T16:45:00Z",
-      "pdf_path": "/pdf_stuffs/electric-current-problems.pdf",
-      "badge": "24 pages · 3.2 MB",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "pdf-3",
-      "stuff_type": "pdf",
-      "title": "Electrostatics Complete Formula Sheet & Quick Revision",
-      "chapter_id": "1.1",
-      "created_at": "2026-10-20T09:15:00Z",
-      "pdf_path": "/pdf_stuffs/electrostatics-formula-sheet.pdf",
-      "badge": "12 pages · 1.9 MB",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "pdf-4",
-      "stuff_type": "pdf",
-      "title": "Electric Current and Circuits Study Guide",
-      "chapter_id": "1.2",
-      "created_at": "2026-10-17T11:20:00Z",
-      "pdf_path": "/pdf_stuffs/electric-current-guide.pdf",
-      "badge": "18 pages · 2.5 MB",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "pdf-5",
-      "stuff_type": "pdf",
-      "title": "Capacitance & Dielectrics Comprehensive Lecture Notes",
-      "chapter_id": "1.3",
-      "created_at": "2026-10-15T12:00:00Z",
-      "pdf_path": "/pdf_stuffs/capacitance-notes.pdf",
-      "badge": "28 pages · 3.7 MB",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "pdf-6",
-      "stuff_type": "pdf",
-      "title": "Capacitor Circuits and Combinations Cheatsheet",
-      "chapter_id": "1.3",
-      "created_at": "2026-10-14T08:00:00Z",
-      "pdf_path": "/pdf_stuffs/capacitors-circuits-cheatsheet.pdf",
-      "badge": "8 pages · 1.1 MB",
-      "author": "StudiTube CEE"
+      "pdf_path": "/pdf_stuffs/CEE_MBBS_PYQ_2026.pdf",
+      "badge": "12 pages • 868 kb"
     }
   ],
-  "video_stuffs": [
-    {
-      "id": "vid-1",
-      "stuff_type": "video",
-      "title": "Capacitor Combinations & Energy Stored - Masterclass",
-      "chapter_id": "1.3",
-      "created_at": "2026-10-26T17:00:00Z",
-      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "badge": "48:15 · 1080p",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "vid-2",
-      "stuff_type": "video",
-      "title": "Kirchhoff's Laws and Complex Circuit Analysis Tricks",
-      "chapter_id": "1.2",
-      "created_at": "2026-10-24T18:00:00Z",
-      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "badge": "52:40 · 1080p",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "vid-3",
-      "stuff_type": "video",
-      "title": "Capacitance Fundamentals & Parallel Plate Capacitors",
-      "chapter_id": "1.3",
-      "created_at": "2026-10-19T13:10:00Z",
-      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "badge": "38:22 · 1080p",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "vid-4",
-      "stuff_type": "video",
-      "title": "ELECTROSTATICS LEC 1 | Electric Charges & Coulomb's Law",
-      "chapter_id": "1.1",
-      "created_at": "2026-10-18T14:00:00Z",
-      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "badge": "42:18 · 1080p",
-      "author": "StudiTube CEE"
-    },
-    {
-      "id": "vid-5",
-      "stuff_type": "video",
-      "title": "Current Electricity | Drift Velocity and Ohm's Law",
-      "chapter_id": "1.2",
-      "created_at": "2026-10-16T15:00:00Z",
-      "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "badge": "45:10 · 1080p",
-      "author": "StudiTube CEE"
-    }
-  ]
+  "video_stuffs": []
 }
