@@ -106,7 +106,7 @@
 <script>
 /* Guard: logged-out visits bounce to the auth page before anything paints.
    Auth page has no `active`, so it is skipped. */
-(function(){try{if(!localStorage.getItem('dilshad.access')&&!localStorage.getItem('dilshad.refresh')){window.location.replace('/auth/');}}catch(_){}})();
+(function(){try{if(!localStorage.getItem('dilshad.access')&&!localStorage.getItem('dilshad.refresh')){window.location.replace('/');}}catch(_){}})();
 </script>
 {% endif %}
 <style>
@@ -1306,21 +1306,21 @@
         <div class="side-group" data-module="1">
           <div class="group-title">ELECTRICITY AND MAGNETISM</div>
 
-          <a class="side-item" href="/auth/?chapter=1.1">
+          <a class="side-item" href="/?chapter=1.1">
             <span class="label">
               <span class="material-symbols-outlined">list</span>
               1.1. Electrostatics
             </span>
           </a>
 
-          <a class="side-item" href="/auth/?chapter=1.2">
+          <a class="side-item" href="/?chapter=1.2">
             <span class="label">
               <span class="material-symbols-outlined">list</span>
               1.2. Electric Current
             </span>
           </a>
 
-          <a class="side-item" href="/auth/?chapter=1.3">
+          <a class="side-item" href="/?chapter=1.3">
             <span class="label">
               <span class="material-symbols-outlined">list</span>
               1.3. Capacitors
@@ -1331,7 +1331,7 @@
         <div class="side-group" data-module="2">
           <div class="group-title">MAGNETISM</div>
 
-          <a class="side-item" href="/auth/?chapter=2.1">
+          <a class="side-item" href="/?chapter=2.1">
             <span class="label">
               <span class="material-symbols-outlined">list</span>
               2.1. Magnetism
@@ -1403,17 +1403,17 @@ if(window.DilshadAuth){
 DilshadAuth.ensureAuth().then(function(u){try{localStorage.setItem('dilshad.user',JSON.stringify(u));}catch(_){}paint(u);},function(){
 /* Guard: inner pages bounce to the auth page when the session is dead. Auth page has no `active`, so it is skipped. */
 paint(null);
-{% if page.active %}DilshadAuth.clear();window.location.replace('/auth/');{% endif %}
+{% if page.active %}DilshadAuth.clear();window.location.replace('/');{% endif %}
 });
 var btn=document.getElementById('authBtn');
 if(btn){btn.style.cursor='pointer';
 function onAuthBtn(e){if(e)e.preventDefault();
 if(!window.DilshadAuth)return;
 var hasSession=!!(DilshadAuth.getAccess()||DilshadAuth.getRefresh());
-/* Signed out -> the auth page (unless we are already on it); signing out -> the auth page too. */
-if(!hasSession){if(!/^\/auth\/?$/.test(location.pathname)){window.location.href='/auth/';}return;}
+/* Signed out -> go to main page login; signing out -> reset on main page. */
+if(!hasSession){if(location.pathname!=='/'&&location.pathname!=='/index.html'){window.location.href='/?mode=login';}else{var ph=document.querySelector('.page-header'),fL=document.getElementById('loginForm'),tabL=document.getElementById('btnLogin');if(ph)ph.style.display='';if(fL){fL.style.display='';fL.hidden=false;}if(tabL)tabL.click();window.scrollTo({top:0,behavior:'smooth'});}return;}
 var rt=DilshadAuth.getRefresh();
-function done(){DilshadAuth.clear();paint(null);window.location.href='/auth/';}
+function done(){DilshadAuth.clear();paint(null);if(location.pathname!=='/'&&location.pathname!=='/index.html'){window.location.href='/';}else{window.location.reload();}}
 if(!rt){done();return;}
 btn.style.opacity='.6';
 DilshadAuth.api('/api/v1/auth/logout',{method:'POST',auth:false,body:{refresh_token:rt}}).then(done,done);}

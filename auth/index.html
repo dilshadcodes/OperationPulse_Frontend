@@ -2,6 +2,9 @@
 layout: base
 title: User Authentication
 ---
+<script>
+window.location.replace('/' + (window.location.search || ''));
+</script>
 <style>
   /* Header styles live in base.html */
   .toolbar-actions {
@@ -706,7 +709,7 @@ function updateSidebarContent(activeChapter) {
     keys.forEach(function(key){
       var chapterTitle = cachedContents.chapters[key];
       var isActive = (activeChapter && String(activeChapter).trim() === String(key).trim());
-      html += '<a class="side-item' + (isActive ? ' active' : '') + '" href="/auth/?chapter=' + encodeURIComponent(key) + '">';
+      html += '<a class="side-item' + (isActive ? ' active' : '') + '" href="/?chapter=' + encodeURIComponent(key) + '">';
       html += '<span class="label"><span class="material-symbols-outlined">list</span> ' + escapeHtml(chapterTitle) + '</span>';
       html += '</a>';
     });
