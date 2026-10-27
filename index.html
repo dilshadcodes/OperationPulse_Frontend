@@ -1,857 +1,324 @@
----
-layout: base
-title: StudiTube - Learning Platform
-description: Self-paced online learning platform designed to help students with learning stuffs.
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>StudiTube CEE Solution</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-  /* Header styles live in base.html */
-  .toolbar-actions {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 12px;
-  }
-  .toolbar-left { display: flex; justify-content: flex-start; gap: 10px; }
-  .toolbar-right { display: flex; justify-content: flex-end; gap: 10px; }
-  .tool-btn {
-    display: flex; align-items: center; justify-content: center;
-    gap: 8px; height: 32px; padding: 0 18px;
-    border: 0.4px solid #999; border-radius: 999px;
-    background: #111; color: #fff;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
-    white-space: nowrap; cursor: pointer;
-  }
-  .tool-btn .material-symbols-outlined { font-size: 20px; }
-  @media (hover: hover) and (pointer: fine) { .tool-btn:hover { background: #0a2a7a; } }
-  .tool-btn:active { background: #0a2a7a; }
-  @media (max-width: 480px) {
-    .toolbar-actions { grid-template-columns: 1fr; }
-    .toolbar-right { justify-content: flex-start; }
-  }
-  /* Auth form slides open right under the header */
-  .branch-form {
-    box-sizing: border-box; margin: 0 -24px; padding: 14px 16px 14px 20px;
-    border-bottom: 0.4px solid #999;
-  }
-  .form-body {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;
-  }
-  .form-field { position: relative; display: block; }
-  .form-field input {
-    box-sizing: border-box; width: 100%; height: 56px; padding: 22px 14px 8px;
-    border: 0.4px solid #999; border-radius: 0; background: #111; color: #fff;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
-    outline: none; -webkit-touch-callout: default; -webkit-user-select: text;
-    user-select: text; touch-action: manipulation;
-  }
-  .form-field input:focus { border-color: #0a2a7a; }
-  /* Autofill stays dark via the site-wide rule in base.html */
-  /* Label floats up and shrinks once you type */
-  .form-field input:focus + label,
-  .form-field input:not(:placeholder-shown) + label {
-    top: 7px; color: #aaa; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;
-  }
-  .form-field.has-eye input { padding-right: 48px; }
-  .form-field label {
-    position: absolute; left: 14px; top: 18px; max-width: calc(100% - 28px);
-    overflow: hidden; white-space: nowrap; color: #888;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
-    pointer-events: none; transition: top 0.15s ease, font-size 0.15s ease, color 0.15s ease;
-  }
-  /* Show/hide eye pinned inside password fields */
-  .eye-btn {
-    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-    display: grid; place-items: center; width: 36px; height: 36px;
-    padding: 0; border: none; background: none; color: #888; cursor: pointer;
-  }
-  .eye-btn .material-symbols-outlined { font-size: 22px; }
-  .eye-btn:hover { color: #fff; }
-  .form-foot {
-    display: flex; justify-content: flex-end; gap: 10px;
-    margin-top: 10px; padding-top: 10px; border-top: 0.4px solid #999;
-  }
-  .foot-submit {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    height: 32px; padding: 0 18px; border: 0.4px solid #fbbf24; border-radius: 999px;
-    background: #fbbf24; color: #111;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
-    white-space: nowrap; cursor: pointer;
-  }
-  .foot-submit .material-symbols-outlined { font-size: 20px; }
-  .foot-submit:disabled { opacity: 0.6; cursor: wait; }
-  /* Signup done state: green pill that opens Gmail */
-  .foot-submit.is-done { background: #16a34a; border-color: #16a34a; color: #fff; }
-  /* After submit: green Gmail pill on top, fresh Submit stacked below it */
-  #signupForm .form-foot.is-submitted { flex-direction: column; align-items: flex-end; }
-  .tool-btn.is-open { background: #0a2a7a; }
-  /* Author display rules override the UA [hidden]; force it back */
-  [hidden] { display: none !important; }
-  /* Verify notice sits between fields and footer */
-  .verify-box {
-    box-sizing: border-box; width: 100%; margin-top: 10px; padding: 14px 16px;
-    border: 0.4px solid #999; border-radius: 0; background: #111; color: #fff;
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
-  }
-  .auth-msg { display: none; margin-top: 10px; padding: 10px 14px; border-radius: 0;
-    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; text-align: center; }
-  .auth-msg.ok { display: block; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
-  .auth-msg.err { display: block; background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
-
-  /* StudiTube Cards */
-  :root {
-    --bg: #eceef1;
-    --surface: #ffffff;
-    --ink: #14171c;
-    --muted: #5b6470;
-    --line: #d3d8df;
-    --accent: #d4351c;
-    --accent-ink: #ffffff;
-    --accent-soft: #fbe4df;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #101216; --surface: #181b21; --ink: #eceef1; --muted: #98a1ae;
-      --line: #2a2f38; --accent: #ff6a4d; --accent-ink: #1a0a06; --accent-soft: #3a1d17;
-      color-scheme: dark;
-    }
-  }
-  :root[data-theme="dark"], body:not(.light) {
+:root {
+  --bg: #eceef1;
+  --surface: #ffffff;
+  --ink: #14171c;
+  --muted: #5b6470;
+  --line: #d3d8df;
+  --accent: #d4351c;
+  --hover: #f5f6f8;
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
     --bg: #101216; --surface: #181b21; --ink: #eceef1; --muted: #98a1ae;
-    --line: #2a2f38; --accent: #ff6a4d; --accent-ink: #1a0a06; --accent-soft: #3a1d17;
+    --line: #2a2f38; --accent: #ff6a4d; --hover: #1f232a;
+    color-scheme: dark;
   }
-  body.light {
-    --bg: #eceef1; --surface: #ffffff; --ink: #14171c; --muted: #5b6470;
-    --line: #d3d8df; --accent: #d4351c; --accent-ink: #ffffff; --accent-soft: #fbe4df;
-  }
+}
+:root[data-theme="dark"] {
+  --bg: #101216; --surface: #181b21; --ink: #eceef1; --muted: #98a1ae;
+  --line: #2a2f38; --accent: #ff6a4d; --hover: #1f232a;
+  color-scheme: dark;
+}
 
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
-    align-items: stretch;
-    box-sizing: border-box;
-    margin-top: 24px;
-    margin-left: -24px;
-    margin-right: -24px;
-    padding-left: 20px;
-    padding-right: 16px;
-    color: var(--ink);
-    font-family: 'Montserrat', sans-serif;
-    font-size: 15px;
-    line-height: 1.5;
-  }
-  .stage { width: 100%; min-width: 0; height: 100%; box-sizing: border-box; }
-  .meta {
-    display: flex; align-items: center; gap: 6px; margin-top: 3px;
-    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
-    color: var(--muted);
-  }
-  .fname {
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px;
-    color: var(--ink); overflow-wrap: anywhere;
-  }
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    height: 32px; padding: 0 18px;
-    border: 0.4px solid var(--ink); border-radius: 999px;
-    background: var(--ink); color: var(--bg);
-    font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px;
-    white-space: nowrap; cursor: pointer; text-decoration: none;
-    transition: opacity 0.15s ease, background 0.15s ease;
-  }
-  .btn:hover { opacity: 0.85; }
-  .btn-share {
-    background: #0a2a7a !important;
-    border-color: #0a2a7a !important;
-    color: #ffffff !important;
-  }
-  .btn-share:hover {
-    background: #0c3598 !important;
-    border-color: #0c3598 !important;
-    opacity: 1 !important;
-  }
-  .chip { font-size: 12px; padding: 2px 8px; border: 1px solid var(--line); color: var(--muted); }
-  .pill {
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: 2px 10px; border-radius: 999px;
-    background: #dc2626; color: #ffffff;
-    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
-    line-height: 1.2;
-  }
-  .pill.pill-yellow {
-    background: #fbbf24; color: #111111; border: 0.4px solid #f59e0b;
-  }
+* { box-sizing: border-box; }
 
-  /* Detail card */
-  .c-detail {
-    background: var(--surface); border: 1px solid var(--line);
-    padding: 12px; display: flex; flex-direction: column; gap: 10px;
-    font-family: 'Montserrat', sans-serif;
-    height: 100%;
-    box-sizing: border-box;
-  }
-  .c-detail .top { display: flex; gap: 12px; align-items: flex-start; }
-  .c-detail .top .ico {
-    flex: none; width: 40px; height: 40px;
-    background: var(--accent-soft); color: var(--accent);
-    display: grid; place-items: center;
-    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
-    border: 1px solid var(--accent);
-  }
-  .c-detail .top .ico .material-symbols-outlined {
-    font-size: 22px;
-  }
-  .c-detail .top > div { min-width: 0; display: flex; flex-direction: column; }
-  .c-detail .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .c-detail .rule { height: 1px; background: var(--line); }
-  .c-detail .acts { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+  padding-block: 32px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
 
-  /* Single page preview at 16:9 */
-  .thumb {
-    position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
-    background: #ffffff; border: 1px solid var(--line);
-    display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; padding: 7% 6%;
-  }
-  .thumb .txt { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-  .thumb .kicker { height: 6px; width: 30%; background: var(--accent); }
-  .thumb .h { height: 12px; width: 88%; background: #14171c; margin-top: 3px; }
-  .thumb .h.s { width: 62%; }
-  .thumb .l { height: 5px; background: #cdd2d9; }
-  .thumb .l.a { width: 96%; margin-top: 6px; }
-  .thumb .l.b { width: 84%; }
-  .thumb .l.c { width: 90%; }
-  .thumb .l.d { width: 58%; }
-  .thumb .fig { align-self: stretch; display: flex; align-items: flex-end; gap: 6%; border-left: 1px solid #cdd2d9; border-bottom: 1px solid #cdd2d9; padding: 0 6%; min-height: 0; }
-  .thumb .fig i { flex: 1; display: block; background: var(--accent); }
-  .thumb .fig i:nth-child(even) { background: #14171c; }
-  .thumb .thumb-badge,
-  .vthumb .thumb-badge {
-    position: absolute; right: 8px; bottom: 8px;
-    font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: #ffffff;
-    background: #000000; padding: 2px 6px; border-radius: 2px;
-    white-space: nowrap; z-index: 2;
-  }
-  .card-title {
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700; font-size: 14px; color: var(--ink);
-    overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2;
-    line-height: 1.3;
-  }
+.wrap { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
 
-  /* Video thumbnail at 16:9 */
-  .vthumb {
-    position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
-    background: #14171c; border: 1px solid var(--line);
-    display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; padding: 7% 6%;
-  }
-  .vthumb .txt { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-  .vthumb .kicker { height: 6px; width: 30%; background: var(--accent); }
-  .vthumb .h { height: 12px; width: 88%; background: #f2f4f7; margin-top: 3px; }
-  .vthumb .h.s { width: 62%; }
-  .vthumb .l { height: 5px; background: #4a5260; }
-  .vthumb .l.a { width: 90%; margin-top: 6px; }
-  .vthumb .l.b { width: 70%; }
-  .vthumb .play { position: absolute; left: 50%; top: 50%; width: 44px; height: 44px; transform: translate(-50%, -50%); background: var(--accent); display: grid; place-items: center; }
-  .vthumb .play::after { content: ""; margin-left: 3px; border-left: 14px solid var(--accent-ink); border-top: 8px solid transparent; border-bottom: 8px solid transparent; }
-  .vthumb .thumb-badge { bottom: 10px; }
-  .vthumb .seen { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: #4a5260; }
-  .vthumb .seen i { display: block; height: 100%; width: 35%; background: var(--accent); }
+header { display: flex; flex-direction: column; gap: 10px; }
+h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 1.1;
+  margin: 0;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+.lede { color: var(--muted); margin: 0; max-width: 62ch; }
 
-  @media (prefers-reduced-motion: reduce) { .cards * { transition: none !important; } }
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+.theme {
+  font-family: var(--font-body); font-size: 13px; font-weight: 600;
+  padding: 7px 12px; min-height: 36px;
+  color: var(--ink); background: transparent;
+  border: 1px solid var(--line); cursor: pointer;
+}
+.theme:hover { background: var(--hover); }
 
-  /* Tablet mode: 2 columns covering full width */
-  @media (max-width: 1024px) {
-    .cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
+.status {
+  margin: 0;
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+.status.error { color: var(--accent); }
 
-  /* Mobile mode: 1 column covering full width */
-  @media (max-width: 640px) {
-    .cards {
-      grid-template-columns: 1fr;
-    }
-  }
+/* Module and chapter headings */
+.module { display: flex; flex-direction: column; gap: 24px; }
+.module > h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.chapter { display: flex; flex-direction: column; gap: 10px; }
+.chapter > h3 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
 
-  /* Reduce the page title pill font size a little bit. */
-  .page-title { font-size: 14px; }
+/* List rows with serial numbers */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  counter-reset: item;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
 
-  /* Section title pill: match User Authentication pill — small/content-width and flush with the sidebar border. */
-  .section-title {
-    width: fit-content;
-    margin-left: -24px; /* cancel .main's 24px left padding so the pill touches the sidebar border */
-    margin-top: 16px;   /* push pill down from the auth form border */
-  }
-  .section-title .module-title-text {
-    opacity: 0.88;
-    font-weight: 700;
-  }
-  .empty-state {
-    grid-column: 1 / -1;
-    width: 100%;
-    padding: 36px 20px;
-    text-align: center;
-    color: var(--muted);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 14px;
-    background: var(--surface);
-    border: 1px dashed var(--line);
-    box-sizing: border-box;
-  }
+.row {
+  counter-increment: item;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 6px 12px 6px 16px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.15s;
+}
+.row:last-child { border-bottom: 0; }
+.row:hover { background: var(--hover); }
+
+.row::before {
+  content: counter(item, decimal-leading-zero);
+  flex: none;
+  min-width: 2.2ch;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.info { flex: 1; min-width: 0; padding: 8px 0; display: flex; flex-direction: column; gap: 2px; }
+.title { margin: 0; font-size: 16px; font-weight: 500; overflow-wrap: anywhere; }
+.badge { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
+
+.pdf {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+.pdf svg { width: 18px; height: 18px; }
+.pdf:hover { border-color: var(--line); background: var(--surface); }
+.pdf:focus-visible, .theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (max-width: 480px) {
+  .row { gap: 10px; padding-left: 12px; }
+  .pdf .txt { display: none; }
+  .pdf { padding: 0 10px; }
+}
 </style>
-<div class="page-header">
-  <div class="title-row">
-    <div class="page-title" aria-current="page"><span class="material-symbols-outlined">login</span> User Authentication</div>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>StudiTube CEE Solution</h1>
+    <p class="lede">Self-paced online learning modules designed to help medical entrance preparing student master the concepts themselves.</p>
+  </header>
+
+  <div class="toolbar">
+    <span class="count" id="count"></span>
+    <button class="theme" id="theme" type="button">Switch theme</button>
   </div>
-  <div class="toolbar-actions">
-    <div class="toolbar-left">
-      <div class="tool-btn is-open" id="btnSignup" role="button" tabindex="0" aria-selected="true" aria-controls="signupForm"><span class="material-symbols-outlined">person_add</span> Signup</div>
-      <div class="tool-btn" id="btnLogin" role="button" tabindex="0" aria-selected="false" aria-controls="loginForm"><span class="material-symbols-outlined">login</span> Login</div>
-    </div>
-  </div>
+
+  <main id="content">
+    <p class="status">Loading PDFs…</p>
+  </main>
 </div>
-<form class="branch-form" id="signupForm" novalidate>
-  <div class="form-body">
-    <div class="form-field">
-      <input id="suName" type="text" placeholder=" " autocomplete="name" />
-      <label for="suName">Full Name</label>
-    </div>
-    <div class="form-field">
-      <input id="suEmail" type="email" placeholder=" " autocomplete="email" />
-      <label for="suEmail">Enter Email</label>
-    </div>
-    <div class="form-field has-eye">
-      <input id="suPw1" type="password" placeholder=" " autocomplete="new-password" />
-      <label for="suPw1">Enter Password</label>
-      <button type="button" class="eye-btn" id="suEye1" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
-    </div>
-    <div class="form-field has-eye">
-      <input id="suPw2" type="password" placeholder=" " autocomplete="new-password" />
-      <label for="suPw2">Re-Enter Password</label>
-      <button type="button" class="eye-btn" id="suEye2" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
-    </div>
-  </div>
-  <div class="verify-box" id="verifySignup" hidden>Check your inbox for the verification Email.</div>
-  <div class="form-foot">
-    <button type="submit" class="foot-submit" id="btnSignupSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
-    <button type="submit" class="foot-submit" id="btnSignupFresh" hidden><span class="material-symbols-outlined">check</span> Submit</button>
-  </div>
-  <div class="auth-msg" id="msgSignup"></div>
-</form>
-<form class="branch-form" id="loginForm" hidden novalidate>
-  <div class="form-body">
-    <div class="form-field">
-      <input id="liEmail" type="email" placeholder=" " autocomplete="email" />
-      <label for="liEmail">Enter Email</label>
-    </div>
-    <div class="form-field has-eye">
-      <input id="liPw" type="password" placeholder=" " autocomplete="current-password" />
-      <label for="liPw">Enter Password</label>
-      <button type="button" class="eye-btn" id="liEye" aria-label="Show password"><span class="material-symbols-outlined">visibility_off</span></button>
-    </div>
-  </div>
-  <div class="verify-box" id="verifyLogin" hidden>Check your inbox for the verification Email.</div>
-  <div class="form-foot">
-    <button type="submit" class="foot-submit" id="btnLoginSubmit"><span class="material-symbols-outlined">check</span> Submit</button>
-  </div>
-  <div class="auth-msg" id="msgLogin"></div>
-</form>
-<div class="page-title section-title" id="sectionTitle" aria-current="page"><span class="material-symbols-outlined">list</span> <span id="sectionTitleText">Popular Stuffs</span></div>
-<div class="cards" id="cardsContainer"></div>
 
-<script src="/assets/js/auth.js?v=2"></script>
 <script>
-(function(){
-var tabS = document.getElementById('btnSignup');
-var tabL = document.getElementById('btnLogin');
-var fS = document.getElementById('signupForm');
-var fL = document.getElementById('loginForm');
-function setMode(w){
-  var s = (w === 'signup');
-  fS.hidden = !s; fL.hidden = s;
-  tabS.classList.toggle('is-open', s); tabL.classList.toggle('is-open', !s);
-  tabS.setAttribute('aria-selected', s ? 'true' : 'false');
-  tabL.setAttribute('aria-selected', !s ? 'true' : 'false');
-}
-function goS(e){ if(e) e.preventDefault(); setMode('signup'); }
-function goL(e){ if(e) e.preventDefault(); setMode('login'); }
-tabS.addEventListener('click', goS); tabL.addEventListener('click', goL);
-tabS.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goS(e); } });
-tabL.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ goL(e); } });
-/* Deep link from the landing page pills: /auth/?mode=signup or ?mode=login.
-   Signup is the default tab, so only an explicit mode=login switches. */
-(function(){
-  try {
-    var mode = new URLSearchParams(window.location.search).get('mode');
-    if (mode === 'login') { setMode('login'); }
-  } catch(_) {}
-})();
-function wireEye(b, i){
-  var btn = document.getElementById(b), inp = document.getElementById(i);
-  if(!btn || !inp) return;
-  btn.addEventListener('click', function(){
-    var show = (inp.type === 'password');
-    inp.type = show ? 'text' : 'password';
-    btn.querySelector('.material-symbols-outlined').textContent = show ? 'visibility' : 'visibility_off';
-    btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
-  });
-}
-wireEye('suEye1', 'suPw1'); wireEye('suEye2', 'suPw2'); wireEye('liEye', 'liPw');
-function bad(b, x){ b.textContent = x; b.className = 'auth-msg err'; autoHide(b); }
-function ok(b, x){ b.textContent = x; b.className = 'auth-msg ok'; autoHide(b); }
-function clr(b){ if(b._t) clearTimeout(b._t); b.textContent = ''; b.className = 'auth-msg'; }
-/* Errors vanish after ~3s so they never stick on screen. */
-function autoHide(b){ if(b._t) clearTimeout(b._t); b._t = setTimeout(function(){ b.textContent = ''; b.className = 'auth-msg'; }, 3000); }
-function friendly(e){
-  if(!navigator.onLine) return 'No internet connection.';
-  if(e.status === 409) return 'Email already registered. Try login.';
-  if(e.status === 429) return 'Too many attempts - try later.';
-  if(e.status === 401) return 'Wrong email or password.';
-  return e.message || 'Something went wrong.';
-}
-function vPw(p){ return /[A-Za-z]/.test(p) && /[0-9]/.test(p) && p.length >= 8 && p.length <= 72 && !/^\s|\s$/.test(p); }
-function vEm(e){ return e.indexOf('@') > 0 && e.indexOf('.') > 0; }
-function hideAuthForms(){
-  var ph = document.querySelector('.page-header');
-  if (ph) ph.style.display = 'none';
-  if (fS) fS.style.display = 'none';
-  if (fL) fL.style.display = 'none';
-  try {
-    var u = (window.DilshadAuth && DilshadAuth.me && DilshadAuth.me());
-    var name = (u && (u.full_name || u.email)) || 'User';
-    document.querySelectorAll('[data-user-name]').forEach(function(el){ el.textContent = name; });
-    var t = document.getElementById('authBtnText');
-    if (t) t.textContent = 'Log Out';
-    var b = document.getElementById('authBtn');
-    if (b) b.setAttribute('aria-label', 'Log out');
-  } catch(_) {}
-}
-function goB(){ hideAuthForms(); }
-try {
-  if (window.DilshadAuth && (DilshadAuth.getAccess() || DilshadAuth.getRefresh())) {
-    hideAuthForms();
+  const CONTENTS_URL = "contents.json";
+
+  const ICON =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+    '<path d="M14 3v4a1 1 0 0 0 1 1h4"/>' +
+    '<path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/>' +
+    '<path d="M9 13h6"/><path d="M9 17h6"/></svg>';
+
+  const content = document.getElementById("content");
+  const countEl = document.getElementById("count");
+
+  // contents.json stores paths like "/pdf_stuffs/file.pdf".
+  // The files sit together, so treat them as relative to this page.
+  function pdfHref(path) {
+    return encodeURI(String(path).replace(/^\/+/, ""));
   }
-} catch(_) {}
-function busy(btn){ btn.disabled = true; btn.innerHTML = 'Processing...'; }
-/* Back-navigation recovery.
-   A successful login calls goB() while the Submit button still reads
-   "Processing...". Back then restores this page from bfcache with that DOM
-   intact, so the frozen label would otherwise stick forever. On restore we
-   re-run the session check: a live session goes straight back to the
-   dashboard (same as a fresh load), otherwise the forms are reset so they
-   are usable again. `replace` is deliberate — pushing /branches/ again would
-   leave /auth/ in the history and trap the user in a back-and-forth loop. */
-function resetLoginForm(){
-  fL.reset();
-  document.querySelectorAll('#loginForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
-  document.querySelectorAll('#loginForm .eye-btn').forEach(function(b){ b.setAttribute('aria-label', 'Show password'); });
-  var v = document.getElementById('verifyLogin'); if(v) v.hidden = true;
-  var li = document.getElementById('btnLoginSubmit'); if(li){ li.hidden = false; idleS(li); }
-}
-function resetSignupForm(){
-  idleS(document.getElementById('btnSignupSubmit'));
-  var sub = document.getElementById('btnSignupSubmit'); if(sub) sub.hidden = false;
-  var vs = document.getElementById('verifySignup'); if(vs) vs.hidden = true;
-  var fresh = document.getElementById('btnSignupFresh'); if(fresh) fresh.hidden = true;
-  var foot = document.querySelector('#signupForm .form-foot'); if(foot) foot.classList.remove('is-submitted');
-}
-function restoreOnBack(){
-  resetLoginForm(); resetSignupForm();
-}
-window.addEventListener('pageshow', function(e){ if(e.persisted) restoreOnBack(); });
-function idleS(btn){ btn.disabled = false; btn.classList.remove('is-done'); btn.type = 'submit'; btn.onclick = null; btn.innerHTML = '<span class="material-symbols-outlined">check</span> Submit'; var fr = document.getElementById('btnSignupFresh'); var ft = btn.closest ? btn.closest('.form-foot') : null; if(btn.id === 'btnSignupSubmit' && fr && document.activeElement !== fr){ fr.hidden = true; if(ft) ft.classList.remove('is-submitted'); } }
-function submitted(btn){
-  /* Signup done: clear fields at once, green pill opens Gmail, fresh Submit appears below it. */
-  fS.reset();
-  document.querySelectorAll('#signupForm .eye-btn .material-symbols-outlined').forEach(function(ic){ ic.textContent = 'visibility_off'; });
-  document.querySelectorAll('#signupForm .eye-btn').forEach(function(b){ b.setAttribute('aria-label', 'Show password'); });
-  btn.disabled = false; btn.classList.add('is-done'); btn.type = 'button';
-  btn.innerHTML = '<span class="material-symbols-outlined">mail</span> Submitted !! Open Email';
-  btn.onclick = function(){ window.open('https://mail.google.com/', '_blank', 'noopener'); };
-  var fresh = document.getElementById('btnSignupFresh');
-  if(fresh) fresh.hidden = false;
-  var foot = btn.closest('.form-foot');
-  if(foot) foot.classList.add('is-submitted');
-}
-function showV(k){
-  var box = document.getElementById(k === 's' ? 'verifySignup' : 'verifyLogin');
-  var sub = document.getElementById(k === 's' ? 'btnSignupSubmit' : 'btnLoginSubmit');
-  if(box) box.hidden = false;
-  if(sub) sub.hidden = true;
-}
-function resend(em, box){
-  if(em.indexOf('@') < 0){ bad(box, 'Enter your email first.'); return; }
-  ok(box, 'Sending...');
-  DilshadAuth.api('/api/v1/auth/resend-verification', { method: 'POST', auth: false, body: { email: em } }).then(function(){
-    ok(box, 'If that address needs verification, a new link is on its way.');
-  }).catch(function(x){ bad(box, friendly(x)); });
-}
-fS.addEventListener('submit', function(e){
-  e.preventDefault();
-  var box = document.getElementById('msgSignup'); clr(box);
-  var btn = document.getElementById('btnSignupSubmit');
-  var n = document.getElementById('suName').value.trim();
-  var em = document.getElementById('suEmail').value.trim().toLowerCase();
-  var p1 = document.getElementById('suPw1').value, p2 = document.getElementById('suPw2').value;
-  if(n.length < 2){ bad(box, 'Please enter your name.'); return; }
-  if(!vEm(em)){ bad(box, 'Please enter a valid email.'); return; }
-  if(!vPw(p1)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
-  if(p1 !== p2){ bad(box, 'Passwords do not match.'); return; }
-  if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
-  var fr0 = document.getElementById('btnSignupFresh'); if(fr0){ fr0.hidden = true; }
-  var ft0 = btn.closest ? btn.closest('.form-foot') : null; if(ft0){ ft0.classList.remove('is-submitted'); }
-  busy(btn);
-  DilshadAuth.api('/api/v1/auth/signup', { method: 'POST', auth: false, body: { email: em, password: p1, full_name: n || null } }).then(function(){
-    return DilshadAuth.login(em, p1);
-  }).then(function(){ goB(); }).catch(function(x){
-    if(x.status === 403){ submitted(btn); }
-    else if(x.status === 409){ fS.reset(); idleS(btn); bad(box, friendly(x)); }
-    else { idleS(btn); bad(box, friendly(x)); }
-  });
-});
-fL.addEventListener('submit', function(e){
-  e.preventDefault();
-  var box = document.getElementById('msgLogin'); clr(box);
-  var btn = document.getElementById('btnLoginSubmit');
-  var em = document.getElementById('liEmail').value.trim().toLowerCase();
-  var pw = document.getElementById('liPw').value;
-  if(!vEm(em)){ bad(box, 'Please enter a valid email.'); return; }
-  if(!vPw(pw)){ bad(box, 'Password: 8-72 chars, letters + numbers.'); return; }
-  if(typeof DilshadAuth === 'undefined'){ bad(box, 'Auth script blocked (adblock?) - disable it and reload.'); return; }
-  busy(btn);
-  DilshadAuth.login(em, pw).then(function(){ goB(); }).catch(function(x){
-    resetLoginForm();
-    if(x.status === 403){ showV('l'); bad(box, 'Email not verified - check inbox, then retry.'); }
-    else { bad(box, friendly(x)); }
-  });
-});
-/* --- Dynamic Content Loading from contents.json --- */
-var cachedContents = null;
 
-function escapeHtml(str) {
-  if (str == null) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function formatDate(dStr) {
-  if (!dStr) return '';
-  var d = new Date(dStr);
-  if (isNaN(d.getTime())) return dStr;
-  var months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  var day = d.getDate();
-  var mon = months[d.getMonth()];
-  var yr = d.getFullYear();
-  return (day < 10 ? '0' + day : day) + ' ' + mon + ' ' + yr;
-}
-
-function getQueryChapter() {
-  try {
-    return new URLSearchParams(window.location.search).get('chapter');
-  } catch(_) {
-    return null;
+  function showStatus(message, isError) {
+    content.innerHTML = "";
+    const p = document.createElement("p");
+    p.className = "status" + (isError ? " error" : "");
+    p.textContent = message;
+    content.appendChild(p);
   }
-}
 
-function updateSidebarActive(ch) {
-  try {
-    document.querySelectorAll('.sidebar .side-item').forEach(function(item){
-      var href = item.getAttribute('href') || '';
-      if (ch && (href.indexOf('chapter=' + encodeURIComponent(ch)) !== -1 || href.indexOf('chapter=' + ch) !== -1)) {
-        item.classList.add('active');
-      } else {
-        item.classList.remove('active');
-      }
-    });
-  } catch(_) {}
-}
+  function buildRow(item) {
+    const li = document.createElement("li");
+    li.className = "row";
 
-function renderStuffsCard(item) {
-  var isPdf = (item.stuff_type === 'pdf');
-  var typePill = isPdf ? 'PDF' : 'MP4';
-  var author = item.author || 'StudiTube CEE';
-  var dateStr = formatDate(item.created_at);
-  var title = item.title || 'Untitled';
-  var badge = item.badge || (isPdf ? 'PDF Document' : 'Video Lecture');
+    const info = document.createElement("div");
+    info.className = "info";
 
-  if (isPdf) {
-    var pdfPath = item.pdf_path || '#';
-    var fileName = pdfPath.split('/').pop() || 'document.pdf';
-    return '<div class="stage">' +
-      '<div class="c-detail">' +
-        '<div class="top">' +
-          '<div class="ico"><span class="material-symbols-outlined">picture_as_pdf</span></div>' +
-          '<div>' +
-            '<span class="fname">' + escapeHtml(author) + '</span>' +
-            '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
-            (dateStr ? '<span class="pill pill-yellow">' + escapeHtml(dateStr) + '</span>' : '') +
-            '</span>' +
-          '</div>' +
-        '</div>' +
-        '<div class="thumb" role="img" aria-label="Preview of page 1">' +
-          '<div class="txt" aria-hidden="true">' +
-            '<div class="kicker"></div>' +
-            '<div class="h"></div><div class="h s"></div>' +
-            '<div class="l a"></div><div class="l b"></div><div class="l c"></div><div class="l d"></div>' +
-          '</div>' +
-          '<div class="fig" aria-hidden="true"><i style="height:38%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:86%"></i><i style="height:70%"></i></div>' +
-          '<span class="thumb-badge">' + escapeHtml(badge) + '</span>' +
-        '</div>' +
-        '<div class="card-title" title="' + escapeHtml(title) + '">' + escapeHtml(title) + '</div>' +
-        '<div class="rule"></div>' +
-        '<div class="acts">' +
-          '<a class="btn" href="' + escapeHtml(pdfPath) + '" download="' + escapeHtml(fileName) + '" target="_blank" rel="noopener">Download</a>' +
-          '<button type="button" class="btn btn-share" data-title="' + escapeHtml(title) + '" data-url="' + escapeHtml(pdfPath) + '">Share</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  } else {
-    var videoUrl = item.video_url || '#';
-    var watchUrl = '/watch/?id=' + encodeURIComponent(item.id || '');
-    return '<div class="stage">' +
-      '<div class="c-detail">' +
-        '<div class="top">' +
-          '<div class="ico"><span class="material-symbols-outlined">smart_display</span></div>' +
-          '<div>' +
-            '<span class="fname">' + escapeHtml(author) + '</span>' +
-            '<span class="meta"><span class="pill">' + escapeHtml(typePill) + '</span> ' +
-            (dateStr ? '<span class="pill pill-yellow">' + escapeHtml(dateStr) + '</span>' : '') +
-            '</span>' +
-          '</div>' +
-        '</div>' +
-        '<a href="' + escapeHtml(watchUrl) + '" style="display:block; text-decoration:none;" aria-label="Watch ' + escapeHtml(title) + '">' +
-          '<div class="vthumb" role="img" aria-label="Video preview">' +
-            '<div class="txt" aria-hidden="true">' +
-              '<div class="kicker"></div>' +
-              '<div class="h"></div><div class="h s"></div>' +
-              '<div class="l a"></div><div class="l b"></div>' +
-            '</div>' +
-            '<span class="play" aria-hidden="true"></span>' +
-            '<span class="thumb-badge">' + escapeHtml(badge) + '</span>' +
-            '<div class="seen" aria-hidden="true"><i></i></div>' +
-          '</div>' +
-        '</a>' +
-        '<div class="card-title" title="' + escapeHtml(title) + '">' + escapeHtml(title) + '</div>' +
-        '<div class="rule"></div>' +
-        '<div class="acts">' +
-          '<a class="btn" href="' + escapeHtml(watchUrl) + '">Watch</a>' +
-          '<button type="button" class="btn btn-share" data-title="' + escapeHtml(title) + '" data-url="' + escapeHtml(watchUrl) + '">Share</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
-  }
-}
+    const h4 = document.createElement("h4");
+    h4.className = "title";
+    h4.textContent = item.title;
+    info.appendChild(h4);
 
-function getModuleTitle(modOrChapterId) {
-  if (!cachedContents) return 'Electricity and Magnetism';
-  var modId = '1';
-  if (modOrChapterId != null) {
-    var str = String(modOrChapterId).trim();
-    modId = str.indexOf('.') !== -1 ? str.split('.')[0] : str;
-  }
-  if (cachedContents.modules && cachedContents.modules[modId]) {
-    return cachedContents.modules[modId];
-  }
-  if (cachedContents.module_titles && cachedContents.module_titles[modId]) {
-    return cachedContents.module_titles[modId];
-  }
-  if (cachedContents.module_title && modId === '1') {
-    return cachedContents.module_title;
-  }
-  if (modId === '1') return 'Electricity and Magnetism';
-  if (modId === '2') return 'Magnetism';
-  return 'Module ' + modId;
-}
-
-function updateSidebarContent(activeChapter) {
-  if (!cachedContents || !cachedContents.chapters) return;
-  var sidebarEl = document.querySelector('.sidebar:not(.watch-sidebar)');
-  if (!sidebarEl) return;
-
-  var chapterKeys = Object.keys(cachedContents.chapters);
-  var moduleGroups = {};
-  chapterKeys.forEach(function(key){
-    var modId = key.indexOf('.') !== -1 ? key.split('.')[0] : '1';
-    if (!moduleGroups[modId]) {
-      moduleGroups[modId] = [];
+    if (item.badge) {
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = item.badge;
+      info.appendChild(badge);
     }
-    moduleGroups[modId].push(key);
-  });
 
-  if (cachedContents.modules) {
-    Object.keys(cachedContents.modules).forEach(function(mId){
-      if (!moduleGroups[mId]) {
-        moduleGroups[mId] = [];
-      }
-    });
+    const a = document.createElement("a");
+    a.className = "pdf";
+    a.href = pdfHref(item.pdf_path);
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.setAttribute("aria-label", "View PDF: " + item.title);
+    a.innerHTML = ICON + '<span class="txt">View PDF</span>';
+
+    li.append(info, a);
+    return li;
   }
 
-  var sortedModIds = Object.keys(moduleGroups).sort(function(a, b){
-    var numA = parseFloat(a), numB = parseFloat(b);
-    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
-    return a.localeCompare(b);
-  });
+  function render(data) {
+    const modules = data.modules || {};
+    const chapters = data.chapters || {};
+    const pdfs = (data.pdf_stuffs || []).filter(
+      (s) => s.stuff_type === "pdf" && s.pdf_path
+    );
 
-  var html = '';
-  sortedModIds.forEach(function(modId){
-    var modTitle = getModuleTitle(modId);
-    html += '<div class="side-group" data-module="' + escapeHtml(modId) + '">';
-    html += '<div class="group-title">' + escapeHtml(modTitle.toUpperCase()) + '</div>';
-    
-    var keys = moduleGroups[modId];
-    keys.forEach(function(key){
-      var chapterTitle = cachedContents.chapters[key];
-      var isActive = (activeChapter && String(activeChapter).trim() === String(key).trim());
-      html += '<a class="side-item' + (isActive ? ' active' : '') + '" href="/?chapter=' + encodeURIComponent(key) + '">';
-      html += '<span class="label"><span class="material-symbols-outlined">list</span> ' + escapeHtml(chapterTitle) + '</span>';
-      html += '</a>';
-    });
-    html += '</div>';
-  });
-
-  sidebarEl.innerHTML = html;
-}
-
-function renderContent() {
-  if (!cachedContents) return;
-  var chapter = getQueryChapter();
-  var titleText = 'Popular Stuffs';
-  if (chapter) {
-    if (cachedContents.chapters && cachedContents.chapters[chapter]) {
-      titleText = cachedContents.chapters[chapter];
-    } else {
-      titleText = 'Chapter ' + chapter;
+    if (!pdfs.length) {
+      countEl.textContent = "0 PDFs";
+      showStatus("No PDFs yet.", false);
+      return;
     }
-  }
 
-  var fullTitle = titleText;
-  var displayTitle = titleText;
-  if (displayTitle.length > 30) {
-    displayTitle = displayTitle.slice(0, 30) + '...';
-  }
-
-  var titleEl = document.getElementById('sectionTitleText');
-  if (titleEl) {
-    titleEl.textContent = displayTitle;
-    if (fullTitle !== displayTitle) {
-      titleEl.setAttribute('title', fullTitle);
-    } else {
-      titleEl.removeAttribute('title');
-    }
-  }
-
-  var modEl = document.getElementById('moduleTitleText');
-  if (modEl) {
-    modEl.textContent = '';
-    modEl.style.display = 'none';
-  }
-
-  updateSidebarContent(chapter);
-  updateSidebarActive(chapter);
-
-  var pdfs = (cachedContents.pdf_stuffs || []).map(function(item){
-    return Object.assign({ stuff_type: 'pdf' }, item);
-  });
-  var videos = (cachedContents.video_stuffs || []).map(function(item){
-    return Object.assign({ stuff_type: 'video' }, item);
-  });
-  var merged = pdfs.concat(videos);
-
-  if (chapter) {
-    merged = merged.filter(function(item){
-      return String(item.chapter_id).trim() === String(chapter).trim();
+    // Group: module id -> chapter id -> items (keeps the order in contents.json)
+    const byModule = new Map();
+    pdfs.forEach((item) => {
+      const chapterId = String(item.chapter_id || "");
+      const moduleId = chapterId.split(".")[0];
+      if (!byModule.has(moduleId)) byModule.set(moduleId, new Map());
+      const chMap = byModule.get(moduleId);
+      if (!chMap.has(chapterId)) chMap.set(chapterId, []);
+      chMap.get(chapterId).push(item);
     });
+
+    content.innerHTML = "";
+    const frag = document.createDocumentFragment();
+
+    byModule.forEach((chMap, moduleId) => {
+      const section = document.createElement("section");
+      section.className = "module";
+
+      const h2 = document.createElement("h2");
+      h2.textContent = modules[moduleId] || "PDFs";
+      section.appendChild(h2);
+
+      chMap.forEach((items, chapterId) => {
+        const chapter = document.createElement("div");
+        chapter.className = "chapter";
+
+        const h3 = document.createElement("h3");
+        h3.textContent = chapters[chapterId] || chapterId;
+        chapter.appendChild(h3);
+
+        const ol = document.createElement("ol");
+        ol.className = "list";
+        items.forEach((item) => ol.appendChild(buildRow(item)));
+        chapter.appendChild(ol);
+
+        section.appendChild(chapter);
+      });
+
+      frag.appendChild(section);
+    });
+
+    content.appendChild(frag);
+    countEl.textContent = pdfs.length + (pdfs.length === 1 ? " PDF" : " PDFs");
   }
 
-  merged.sort(function(a, b){
-    var timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
-    var timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
-    return timeB - timeA;
-  });
-
-  var container = document.getElementById('cardsContainer');
-  if (!container) return;
-
-  if (merged.length === 0) {
-    container.innerHTML = '<div class="empty-state">No stuffs available for this chapter yet.</div>';
-    return;
-  }
-
-  container.innerHTML = merged.map(renderStuffsCard).join('');
-}
-
-function fetchAndLoad() {
-  fetch('/contents.json')
-    .then(function(res){
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+  fetch(CONTENTS_URL, { cache: "no-cache" })
+    .then((res) => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
       return res.json();
     })
-    .catch(function(){
-      return fetch('../contents.json').then(function(r){ return r.json(); });
-    })
-    .then(function(data){
-      cachedContents = data;
-      renderContent();
-    })
-    .catch(function(err){
-      console.error('Error loading contents.json:', err);
-      var container = document.getElementById('cardsContainer');
-      if (container) {
-        container.innerHTML = '<div class="empty-state">Unable to load stuffs at this time.</div>';
-      }
+    .then(render)
+    .catch((err) => {
+      console.error(err);
+      countEl.textContent = "";
+      showStatus(
+        "Couldn't load contents.json. Open this page through a local server (for example, python -m http.server) instead of double-clicking the file.",
+        true
+      );
     });
-}
 
-// In-page navigation for sidebar chapter links
-document.addEventListener('click', function(e){
-  var link = e.target.closest('a.side-item');
-  if (link) {
-    var href = link.getAttribute('href') || '';
-    if (href.indexOf('chapter=') !== -1) {
-      e.preventDefault();
-      window.history.pushState({}, '', href);
-      renderContent();
-      var navToggle = document.getElementById('nav-toggle');
-      if (navToggle) navToggle.checked = false;
-    }
-  }
+  // Theme toggle (follows the device setting until you press the button)
+  const root = document.documentElement;
+  const saved = localStorage.getItem("theme");
+  if (saved) root.setAttribute("data-theme", saved);
 
-  var shareBtn = e.target.closest('.btn-share');
-  if (shareBtn) {
-    e.preventDefault();
-    var shareUrl = shareBtn.getAttribute('data-url') || window.location.href;
-    var shareTitle = shareBtn.getAttribute('data-title') || document.title;
-    if (shareUrl.charAt(0) === '/') {
-      shareUrl = window.location.origin + shareUrl;
-    }
-    if (navigator.share) {
-      navigator.share({ title: shareTitle, url: shareUrl }).catch(function(){});
-    } else if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(shareUrl).then(function(){
-        var orig = shareBtn.textContent;
-        shareBtn.textContent = 'Copied!';
-        setTimeout(function(){ shareBtn.textContent = orig; }, 1500);
-      }).catch(function(){});
-    }
-  }
-});
-
-window.addEventListener('popstate', function(){
-  renderContent();
-});
-
-fetchAndLoad();
-
-  // Keep pinch-zoom disabled on all devices, even when the sidebar/overlay is open.
-  document.addEventListener('touchmove', function(e) {
-    if (e.touches && e.touches.length > 1) {
-      e.preventDefault();
-    }
-  }, { passive: false });
-})();
+  document.getElementById("theme").addEventListener("click", () => {
+    const current = root.getAttribute("data-theme");
+    const isDark = current
+      ? current === "dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const next = isDark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    localStorage.setItem("theme", next);
+  });
 </script>
+</body>
+</html>
