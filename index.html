@@ -75,6 +75,14 @@ h1 {
 [data-theme="dark"] .theme-icon.sun { display: block; }
 [data-theme="light"] .theme-icon.moon { display: block; }
 
+/* Right-aligned group: theme toggle + OMR download button */
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
 /* OMR download button beside the theme toggle */
 .omr-btn {
   font-family: var(--font-body); font-size: 13px; font-weight: 600;
@@ -207,7 +215,8 @@ input, textarea, select {
 
   <div class="toolbar">
     <span class="count" id="count"></span>
-    <button class="theme" id="theme" type="button" aria-label="Toggle theme">
+    <div class="toolbar-right">
+      <button class="theme" id="theme" type="button" aria-label="Toggle theme">
   <span class="theme-icon sun" aria-hidden="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
   </span>
@@ -215,9 +224,12 @@ input, textarea, select {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79"/></svg>
   </span>
 </button>
-  <a class="omr-btn" href="pdf_stuffs/StudiTube%20CEE%20Solution%20-%20OMR%20Sheet%20(A4%20Size%20-%20210mm%20x%20297mm).pdf" download="StudiTube CEE Solution - OMR Sheet (A4 Size - 210mm x 297mm).pdf" aria-label="Download OMR Sheet" title="Download OMR Sheet">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <a class="omr-btn" id="omrBtn" href="pdf_stuffs/StudiTube%20CEE%20Solution%20-%20OMR%20Sheet%20(A4%20Size%20-%20210mm%20x%20297mm).pdf" aria-label="Download OMR Sheet" title="Download OMR Sheet">
+    OMR <span class="omr-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    </span>
   </a>
+    </div>
   </div>
 
   <main id="content">
@@ -423,6 +435,22 @@ input, textarea, select {
   const initialTheme = root.getAttribute("data-theme") ||
     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   updateThemeIcons(initialTheme);
+
+  // OMR button: open PDF in new tab (view) + auto-download
+  document.getElementById("omrBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    const url = e.currentTarget.getAttribute("href");
+    // Open PDF in a new tab for viewing
+    window.open(url, "_blank");
+    // Trigger auto-download
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = url.split("/").pop();
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
 </script>
 </body>
 </html>
