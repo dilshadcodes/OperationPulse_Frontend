@@ -54,7 +54,6 @@ body {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
-
 * { -webkit-tap-highlight-color: transparent; }
 
 .wrap { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px; }
@@ -272,14 +271,9 @@ h1 {
 @media (max-width:560px){
   .skill-label { flex-basis: 100%; }
 }
-@media (max-width: 768px) {
-  .profile { display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
-  .photo { align-self: center; width: 90vw; height: 90vw; }
-  .profile-text { flex: none; }
-}
 @media (max-width:480px){
-  .profile { gap: 16px; }
-  .photo { flex-basis: 90vw; width: 90vw; height: 90vw; font-size: 30px; }
+  .profile { gap: 14px; }
+  .photo { flex-basis: 96px; width: 96px; height: 96px; font-size: 30px; }
   .profile-text p { font-size: 15px; }
   .pc{display:grid;grid-template-columns:130px minmax(0,1fr);column-gap:12px;row-gap:10px;align-items:start}
   .pc-body{display:contents}
@@ -652,7 +646,6 @@ h1 {
     root.getAttribute("data-theme") ||
     (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
   );
-
 })();
 </script>
 </body>
