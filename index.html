@@ -168,7 +168,16 @@ h1 {
 .pc-more .pc-updown::before,.pc-more .pc-updown::after{border-color:#fff}
 .pc-icdoc{width:15px;height:19px;border:2px solid #fff;border-radius:3px;position:relative;flex:none}
 .pc-icdoc::before{content:"";position:absolute;left:2px;right:2px;top:4px;height:2px;background:#fff;box-shadow:0 4px 0 #fff,0 8px 0 #fff}
-@media (max-width:420px){.pc-thumb{flex-basis:130px;height:86px}.pc-paper{left:20px;width:90px}.pc-title{font-size:15px}}
+.pc{min-width:0;max-width:100%}
+.pc-actions{flex-wrap:wrap}
+@media (max-width:480px){
+.pc{display:grid;grid-template-columns:130px minmax(0,1fr);column-gap:12px;row-gap:10px;align-items:start}
+.pc-body{display:contents}
+.pc-thumb{grid-column:1;grid-row:1;width:130px;height:86px}
+.pc-paper{left:20px;width:90px}
+.pc-title{grid-column:2;grid-row:1;font-size:15px}
+.pc-actions{grid-column:1 / -1;grid-row:2;margin-top:0;width:100%;flex-wrap:nowrap}
+}
 /* --- Interaction protection: no copy, no double-tap / long-press menu, no zoom --- */
 html, body {
   touch-action: manipulation;            /* disables double-tap-to-zoom; keeps tap + scroll */
