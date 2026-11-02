@@ -123,65 +123,52 @@ h1 {
   color: var(--muted);
 }
 
-/* List rows with serial numbers */
+/* List: plain vertical stack */
 .list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  counter-reset: item;
-  background: var(--surface);
-  border: 1px solid var(--line);
-}
-
-.row {
-  counter-increment: item;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 6px 12px 6px 16px;
-  border-bottom: 1px solid var(--line);
-  transition: background 0.15s;
+  flex-direction: column;
+  gap: 14px;
+  background: none;
+  border: 0;
 }
-.row:last-child { border-bottom: 0; }
-.row:hover { background: var(--hover); }
+.theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-.row::before {
-  content: counter(item, decimal-leading-zero);
-  flex: none;
-  min-width: 2.2ch;
-  font-family: var(--font-mono);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-
-.info { flex: 1; min-width: 0; padding: 8px 0; display: flex; flex-direction: column; gap: 2px; }
-.title { margin: 0; font-size: 16px; font-weight: 500; overflow-wrap: anywhere; }
-.badge { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
-
-.pdf {
-  flex: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding: 0 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--ink);
-  text-decoration: none;
-  border: 1px solid transparent;
-}
-.pdf svg { width: 18px; height: 18px; }
-.pdf:hover { border-color: var(--line); background: var(--surface); }
-.pdf:focus-visible, .theme:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-@media (max-width: 480px) {
-  .row { gap: 10px; padding-left: 12px; }
-  .pdf .txt { display: none; }
-  .pdf { padding: 0 10px; }
-}
+.pc{position:relative;display:flex;gap:12px;width:100%;padding:12px;list-style:none;background:#18171c;border:1px solid #2c2b32;border-radius:10px;color:#f2f2f5;font-family:var(--font-body)}
+.pc-thumb{position:relative;flex:0 0 176px;height:100px;border-radius:7px;overflow:hidden;background:linear-gradient(135deg,#1f3a5f,#2b6cb0)}
+.pc-paper{position:absolute;left:34px;top:9px;width:108px;bottom:-14px;background:#fafafa;border-radius:3px;box-shadow:0 2px 8px #0008;padding:9px 9px 0;overflow:hidden}
+.pc-paper b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:8px;line-height:1.15;color:#a31621;font-weight:800;margin-bottom:5px}
+.pc-paper i{display:block;height:3px;background:#c9ccd3;border-radius:2px;margin-bottom:4px}
+.pc-paper i:nth-of-type(3n){width:70%}
+.pc-vignette{position:absolute;inset:0;box-shadow:inset 0 0 14px #0006;border-radius:7px}
+.pc-meta{position:absolute;left:8px;bottom:8px;display:flex;align-items:center;gap:7px;background:#14131a;border-radius:6px;padding:4px 7px;font-size:15px;font-weight:600;color:#fff;white-space:nowrap}
+.pc-pdfmark{width:20px;height:14px;background:#e11d2e;border-radius:3px;color:#fff;font-size:7px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.pc-star{color:#f4c430;font-size:17px;line-height:1}
+.pc-body{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+.pc-title{margin:0;font-size:17px;font-weight:500;line-height:1.3;padding-right:18px;color:#f2f2f5;overflow-wrap:anywhere}
+.pc-fmt{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.3px;color:#6cc3f5;border:1px solid #2b7db3;background:#0d2a40;border-radius:3px;padding:0 4px;line-height:14px;vertical-align:2px;margin-right:6px}
+.pc-edit{display:inline-block;width:14px;height:14px;border:1.5px solid #9a9aa5;border-radius:3px;margin-left:6px;vertical-align:-1px;position:relative;opacity:.8}
+.pc-edit::after{content:"";position:absolute;right:-3px;top:-2px;width:2px;height:9px;background:#9a9aa5;transform:rotate(40deg)}
+.pc-close{position:absolute;top:10px;right:12px;width:14px;height:14px;opacity:.6}
+.pc-close::before,.pc-close::after{content:"";position:absolute;left:6px;top:-1px;width:1.5px;height:16px;background:#bbb}
+.pc-close::before{transform:rotate(45deg)}
+.pc-close::after{transform:rotate(-45deg)}
+.pc-actions{display:flex;align-items:center;gap:10px;margin-top:8px}
+.pc-select{display:flex;align-items:center;gap:6px;flex-shrink:0;white-space:nowrap;border:1px solid #3a3942;border-radius:8px;padding:4px 6px 4px 8px;font-size:12px;font-weight:600;color:#c9c9d1;font-family:var(--font-mono);background:#1c1b21}
+.pc-res{border:1px solid #2b7db3;background:#0d2a40;color:#6cc3f5;border-radius:5px;padding:3px 6px;font-weight:700;white-space:nowrap}
+.pc-updown{width:8px;height:14px;position:relative;margin-left:2px;flex:none}
+.pc-updown::before,.pc-updown::after{content:"";position:absolute;left:0;width:5px;height:5px;border:solid #aaa;border-width:1.5px 1.5px 0 0}
+.pc-updown::before{top:3px;transform:rotate(-45deg)}
+.pc-updown::after{top:8px;transform:rotate(135deg)}
+.pc-dl{display:flex;align-items:stretch;flex-shrink:0;white-space:nowrap;background:#0ea5e9;border-radius:999px;margin-left:auto;overflow:hidden;color:#fff;font-weight:600}
+.pc-main{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 11px;font-size:16px;color:#fff;text-decoration:none;white-space:nowrap}
+.pc-main:hover,.pc-more:hover{background:#0b94d3}
+.pc-main:focus-visible{outline:2px solid #fff;outline-offset:-3px}
+.pc-more{display:flex;align-items:center;padding:0 10px;border-left:1.5px solid #0a4d70}
+.pc-more .pc-updown{margin:0}
+.pc-more .pc-updown::before,.pc-more .pc-updown::after{border-color:#fff}
+.pc-icdoc{width:15px;height:19px;border:2px solid #fff;border-radius:3px;position:relative;flex:none}
+.pc-icdoc::before{content:"";position:absolute;left:2px;right:2px;top:4px;height:2px;background:#fff;box-shadow:0 4px 0 #fff,0 8px 0 #fff}
+@media (max-width:420px){.pc-thumb{flex-basis:130px;height:86px}.pc-paper{left:20px;width:90px}.pc-title{font-size:15px}}
 /* --- Interaction protection: no copy, no double-tap / long-press menu, no zoom --- */
 html, body {
   touch-action: manipulation;            /* disables double-tap-to-zoom; keeps tap + scroll */
@@ -276,12 +263,6 @@ input, textarea, select {
 
   const CONTENTS_URL = "contents.json";
 
-  const ICON =
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
-    '<path d="M14 3v4a1 1 0 0 0 1 1h4"/>' +
-    '<path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2z"/>' +
-    '<path d="M9 13h6"/><path d="M9 17h6"/></svg>';
-
   const content = document.getElementById("content");
   const countEl = document.getElementById("count");
 
@@ -299,34 +280,54 @@ input, textarea, select {
     content.appendChild(p);
   }
 
+  function pagesText(item) {
+    const raw = item.pages || item.badge || "";
+    return String(raw).split("•")[0].trim();
+  }
+
   function buildRow(item) {
+    const pages = pagesText(item);
+    const hasPages = pages.length > 0;
+
     const li = document.createElement("li");
-    li.className = "row";
+    li.className = "pc";
 
-    const info = document.createElement("div");
-    info.className = "info";
+    li.innerHTML =
+      '<div class="pc-thumb">' +
+      '<div class="pc-paper"><b></b><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
+      '<div class="pc-vignette"></div>' +
+      '<div class="pc-meta"><span class="pc-pdfmark">PDF</span>' +
+      (hasPages ? '<span class="pc-star" aria-hidden="true">★</span>' : '') +
+      '</div>' +
+      '</div>' +
+      '<div class="pc-body">' +
+      '<h4 class="pc-title"><span class="pc-fmt">PDF</span><span class="pc-edit" aria-hidden="true"></span></h4>' +
+      '<div class="pc-actions">' +
+      (hasPages
+        ? '<div class="pc-select"><span class="pc-res"></span><span class="pc-updown" aria-hidden="true"></span></div>'
+        : '<div class="pc-select" style="display:none"><span class="pc-res"></span><span class="pc-updown" aria-hidden="true"></span></div>') +
+      '<div class="pc-dl">' +
+      '<a class="pc-main" target="_blank" rel="noopener"><span class="pc-icdoc"></span>View PDF</a>' +
+      '<span class="pc-more" aria-hidden="true"><span class="pc-updown" aria-hidden="true"></span></span>' +
+      '</div>' +
+      '</div>' +
+      '</div>' +
+      '<span class="pc-close" aria-hidden="true"></span>';
 
-    const h4 = document.createElement("h4");
-    h4.className = "title";
-    h4.textContent = item.title;
-    info.appendChild(h4);
+    // {TITLE} inserted via textContent, never innerHTML
+    li.querySelector(".pc-paper b").textContent = item.title;
+    const h4 = li.querySelector(".pc-title");
+    h4.insertBefore(document.createTextNode(item.title), h4.querySelector(".pc-edit"));
 
-    if (item.badge) {
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = item.badge;
-      info.appendChild(badge);
+    if (hasPages) {
+      li.querySelector(".pc-meta").appendChild(document.createTextNode(pages));
+      li.querySelector(".pc-res").textContent = pages;
     }
 
-    const a = document.createElement("a");
-    a.className = "pdf";
+    const a = li.querySelector(".pc-main");
     a.href = pdfHref(item.pdf_path);
-    a.target = "_blank";
-    a.rel = "noopener";
     a.setAttribute("aria-label", "View PDF: " + item.title);
-    a.innerHTML = ICON + '<span class="txt">View PDF</span>';
 
-    li.append(info, a);
     return li;
   }
 
